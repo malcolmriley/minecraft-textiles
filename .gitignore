@@ -1,0 +1,32 @@
+# OS Infrastructure
+*.db
+*.DS_Store*
+
+# Eclipse Infrastructure
+eclipse
+bin
+*.launch
+.settings
+.metadata
+.classpath
+.project
+
+# Idea Infrastructure
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# Gradle Infrastructure
+.gradle
+
+# Local-Run Files
+build
+run
+
+# Files from Forge MDK
+forge*changelog.txt
+
+# Generated Files
+generated/

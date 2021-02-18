@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="All rights reserved"
+#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+
+[[mods]]
+modId="paragon_textiles"
+version="${file.jarVersion}"
+displayName="Wily Textiles"
+logoFile="logo.png"
+credits="The_Paragon"
+authors="Malcolm Riley"
+description='''
+Are you tired of long nights spent mugging Spiders for their String? Do you wish that leatherworking was just a bit more interesting? Well, look no further!
+
+This mod centers around leatherworking and the acquisition of textile products from alternative sources.
+'''
+
+[[dependencies.examplemod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36,)"
+    ordering="NONE"
+    side="BOTH"

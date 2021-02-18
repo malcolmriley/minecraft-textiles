@@ -1,0 +1,103 @@
+buildscript {
+    repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+    }
+}
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply from: 'project.config'
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+
+/*************************** ONLY EDIT BELOW THIS LINE ***************************/
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+minecraft {
+    mappings channel: mappings_channel, version: mappings_version
+
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
+	// "SCAN": For mods scan.
+	// "REGISTRIES": For firing of registry events.
+	// "REGISTRYDUMP": For getting the contents of all registries.
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                mainproject {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                mainproject {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', "${mod_id}".toString(), '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                mainproject {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+sourceSets.main.java { exclude "paragon/minecraft/${mod_id}/generators".toString() }
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${forge_version}".toString()
+}
+
+jar {
+    manifest {
+        attributes([
+            "Specification-Title": "${mod_id}",
+            "Specification-Vendor": "${mod_vendor}",
+            "Specification-Version": "1", // We are version 1 of ourselves
+            "Implementation-Title": project.name,
+            "Implementation-Version": "${version}",
+            "Implementation-Vendor" : "${mod_vendor}",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
