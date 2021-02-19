@@ -29,6 +29,9 @@ final class ItemModelGenerator extends ItemModelProvider {
 		String[] simpleItems = new String[] {
 			ModItems.Names.CHAIN_MESH,
 			ModItems.Names.FLAX_STALKS,
+			ModItems.Names.FLAX_PALE,
+			ModItems.Names.FLAX_VIBRANT,
+			ModItems.Names.FLAX_PURPLE,
 			ModItems.Names.TWINE,
 			ModItems.Names.WICKER
 		};

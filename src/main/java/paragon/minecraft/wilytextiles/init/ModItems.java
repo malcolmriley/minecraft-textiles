@@ -2,6 +2,7 @@ package paragon.minecraft.wilytextiles.init;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.Rarity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
@@ -23,12 +24,19 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> WICKER = this.simpleItem(Names.WICKER);
 	public final RegistryObject<Item> TWINE = this.simpleItem(Names.TWINE);
 	public final RegistryObject<Item> FLAX_STALKS = this.simpleItem(Names.FLAX_STALKS);
+	public final RegistryObject<Item> FLAX_PALE = this.simpleItem(Names.FLAX_PALE);
+	public final RegistryObject<Item> FLAX_VIBRANT = this.simpleItem(Names.FLAX_VIBRANT);
+	public final RegistryObject<Item> FLAX_PURPLE = this.simpleItem(Names.FLAX_PURPLE, new Item.Properties().group(GROUP).rarity(Rarity.UNCOMMON));
 	public final RegistryObject<Item> CHAIN_MESH = this.simpleItem(Names.CHAIN_MESH);
 	
 	/* Internal Methods */
 	
-	protected RegistryObject<Item> simpleItem(String name) {
-		return this.add(name, () -> new Item(DEFAULT));
+	protected RegistryObject<Item> simpleItem(final String name) {
+		return this.simpleItem(name, DEFAULT);
+	}
+	
+	protected RegistryObject<Item> simpleItem(final String name, final Item.Properties properties) {
+		return this.add(name, () -> new Item(properties));
 	}
 	
 	/* Item Names */
@@ -40,6 +48,9 @@ public class ModItems extends ContentProvider<Item> {
 		public static final String WICKER = "wicker";
 		public static final String TWINE = "twine";
 		public static final String FLAX_STALKS = "flax_stalks";
+		public static final String FLAX_PALE = "flax_flower_pale";
+		public static final String FLAX_VIBRANT = "flax_flower_vibrant";
+		public static final String FLAX_PURPLE = "flax_flower_purple";
 		public static final String CHAIN_MESH = "chain_mesh";
 
 	}
