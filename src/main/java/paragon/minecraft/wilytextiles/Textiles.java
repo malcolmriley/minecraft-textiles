@@ -9,7 +9,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import paragon.minecraft.wilytextiles.init.ModItems;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(Textiles.MOD_ID)
 public class Textiles {
 	

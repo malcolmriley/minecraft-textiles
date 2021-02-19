@@ -11,7 +11,7 @@ import paragon.minecraft.wilytextiles.Textiles;
 public class ModItems extends ContentProvider<Item> {
 
 	/* Internal Fields */
-	protected static final ItemGroup GROUP = Utilities.Game.createFrom(Textiles.MOD_ID, Textiles.ITEMS.FLAX_STALKS);
+	protected static final ItemGroup GROUP = Utilities.Game.createGroupFrom(Textiles.MOD_ID, () -> Textiles.ITEMS.FLAX_STALKS.get());
 	protected static final Item.Properties DEFAULT = new Item.Properties().group(GROUP);
 
 	public ModItems() {
