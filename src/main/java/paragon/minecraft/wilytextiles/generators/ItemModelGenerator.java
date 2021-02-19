@@ -7,6 +7,7 @@ import net.minecraftforge.client.model.generators.ModelFile.UncheckedModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.init.ModItems;
 
 final class ItemModelGenerator extends ItemModelProvider {
 
@@ -25,7 +26,15 @@ final class ItemModelGenerator extends ItemModelProvider {
 
 	@Override
 	protected void registerModels() {
-		
+		String[] simpleItems = new String[] {
+			ModItems.Names.CHAIN_MESH,
+			ModItems.Names.FLAX_STALKS,
+			ModItems.Names.TWINE,
+			ModItems.Names.WICKER
+		};
+		for (String iterated : simpleItems) {
+			this.simpleItem(iterated);
+		}
 	}
 
 	/* Internal Methods */
