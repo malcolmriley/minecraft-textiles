@@ -28,7 +28,10 @@ public class Generators {
 			generator.addProvider(new ItemModelGenerator(generator, helper));
 		}
 		if (event.includeServer()) {
+			final BlockTagsGenerator blockTags = new BlockTagsGenerator(generator, helper);
 			generator.addProvider(new RecipeGenerator(generator));
+			generator.addProvider(blockTags);
+			generator.addProvider(new ItemTagsGenerator(generator, helper, blockTags));
 		}
 	}
 
