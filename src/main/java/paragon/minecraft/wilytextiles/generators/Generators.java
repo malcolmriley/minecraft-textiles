@@ -28,7 +28,7 @@ public class Generators {
 			generator.addProvider(new ItemModelGenerator(generator, helper));
 		}
 		if (event.includeServer()) {
-			
+			generator.addProvider(new RecipeGenerator(generator));
 		}
 	}
 
