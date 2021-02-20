@@ -2,6 +2,7 @@ package paragon.minecraft.wilytextiles.generators;
 
 import java.util.function.Consumer;
 
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
@@ -53,12 +54,37 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.CHAIN_MESH.get(), Items.IRON_NUGGET));
 
 		// Chainmail Armor
+		final String chainmailCriterion = RecipeHelper.criterionName(Textiles.ITEMS.CHAIN_MESH);
+		final InventoryChangeTrigger.Instance chainmailTrigger = RecipeProvider.hasItem(Textiles.ITEMS.CHAIN_MESH.get());
 		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_HELMET)
 			.patternLine("###")
 			.patternLine("# #")
 			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.CHAIN_MESH), RecipeProvider.hasItem(Textiles.ITEMS.CHAIN_MESH.get()))
+			.addCriterion(chainmailCriterion, chainmailTrigger)
 			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_HELMET, Textiles.ITEMS.CHAIN_MESH.get()));
+
+		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_CHESTPLATE)
+			.patternLine("# #")
+			.patternLine("###")
+			.patternLine("###")
+			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.addCriterion(chainmailCriterion, chainmailTrigger)
+			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_CHESTPLATE, Textiles.ITEMS.CHAIN_MESH.get()));
+
+		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_BOOTS)
+			.patternLine("# #")
+			.patternLine("# #")
+			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.addCriterion(chainmailCriterion, chainmailTrigger)
+			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_BOOTS, Textiles.ITEMS.CHAIN_MESH.get()));
+
+		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_LEGGINGS)
+			.patternLine("###")
+			.patternLine("# #")
+			.patternLine("# #")
+			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.addCriterion(chainmailCriterion, chainmailTrigger)
+			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_LEGGINGS, Textiles.ITEMS.CHAIN_MESH.get()));
 	}
 
 	/* Internal Methods */
