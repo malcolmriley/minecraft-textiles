@@ -2,7 +2,7 @@ package paragon.minecraft.wilytextiles.generators;
 
 import java.util.function.Consumer;
 
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.advancements.ICriterionInstance;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
@@ -10,8 +10,10 @@ import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.RecipeHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 
@@ -55,7 +57,7 @@ final class RecipeGenerator extends RecipeHelper {
 
 		// Chainmail Armor
 		final String chainmailCriterion = RecipeHelper.criterionName(Textiles.ITEMS.CHAIN_MESH);
-		final InventoryChangeTrigger.Instance chainmailTrigger = RecipeProvider.hasItem(Textiles.ITEMS.CHAIN_MESH.get());
+		final ICriterionInstance chainmailTrigger = RecipeProvider.hasItem(Textiles.ITEMS.CHAIN_MESH.get());
 		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_HELMET)
 			.patternLine("###")
 			.patternLine("# #")
@@ -85,6 +87,61 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
 			.addCriterion(chainmailCriterion, chainmailTrigger)
 			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_LEGGINGS, Textiles.ITEMS.CHAIN_MESH.get()));
+		
+		// String tag override recipes
+		final String stringCriterion = RecipeHelper.criterionName(Items.STRING);
+		final ICriterionInstance stringTrigger = RecipeHelper.hasItem(Tags.Items.STRING);
+		
+		final String stickCriterion = RecipeHelper.criterionName(Tags.Items.RODS_WOODEN);
+		final ICriterionInstance stickTrigger = RecipeHelper.hasItem(Tags.Items.RODS_WOODEN);
+		ShapedRecipeBuilder.shapedRecipe(Items.BOW)
+			.patternLine(" IS")
+			.patternLine("I S")
+			.patternLine(" IS")
+			.key('I', Tags.Items.RODS_WOODEN)
+			.key('S', Tags.Items.STRING)
+			.addCriterion(stringCriterion, stringTrigger)
+			.build(registrar, Utilities.Strings.minecraftResource("bow"));
+		
+		ShapedRecipeBuilder.shapedRecipe(Items.CROSSBOW)
+			.patternLine("I#I")
+			.patternLine("SPS")
+			.patternLine(" I ")
+			.key('I', Tags.Items.RODS_WOODEN)
+			.key('S', Tags.Items.STRING)
+			.key('#', Tags.Items.INGOTS_IRON)
+			.key('P', Items.TRIPWIRE_HOOK)
+			.addCriterion(stringCriterion, stringTrigger)
+			.addCriterion(stickCriterion, stickTrigger)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.INGOTS_IRON), RecipeHelper.hasItem(Tags.Items.INGOTS_IRON))
+			.addCriterion(RecipeHelper.criterionName(Items.TRIPWIRE_HOOK), RecipeHelper.hasItem(Items.TRIPWIRE_HOOK))
+			.build(registrar, Utilities.Strings.minecraftResource("crossbow"));
+		
+		ShapedRecipeBuilder.shapedRecipe(Items.FISHING_ROD)
+			.patternLine("  I")
+			.patternLine(" IS")
+			.patternLine("I S")
+			.key('I', Tags.Items.RODS_WOODEN)
+			.key('S', Tags.Items.STRING)
+			.addCriterion(stringCriterion, stringTrigger)
+			.build(registrar, Utilities.Strings.minecraftResource("fishing_rod"));
+		
+		ShapedRecipeBuilder.shapedRecipe(Items.LEAD)
+			.patternLine("SS ")
+			.patternLine("SO ")
+			.patternLine("  S")
+			.key('S', Tags.Items.STRING)
+			.key('O', Tags.Items.SLIMEBALLS)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.SLIMEBALLS), RecipeHelper.hasItem(Tags.Items.SLIMEBALLS))
+			.build(registrar, Utilities.Strings.minecraftResource("lead"));
+		
+		ShapedRecipeBuilder.shapedRecipe(Items.LOOM)
+			.patternLine("SS")
+			.patternLine("##")
+			.key('S', Tags.Items.STRING)
+			.key('#', ItemTags.PLANKS)
+			.addCriterion(stringCriterion, stringTrigger)
+			.build(registrar, Utilities.Strings.minecraftResource("loom"));
 	}
 
 	/* Internal Methods */

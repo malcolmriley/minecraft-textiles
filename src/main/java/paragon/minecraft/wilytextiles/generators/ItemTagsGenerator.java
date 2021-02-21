@@ -5,6 +5,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag.INamedTag;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
@@ -19,8 +20,10 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 
 	@Override
 	protected void registerTags() {
+		// Twine is String subtype
 		final INamedTag<Item> twine = Utilities.Tags.forgeItemTag("string", "twine");
 		this.getOrCreateBuilder(twine).add(Textiles.ITEMS.TWINE.get());
+		this.getOrCreateBuilder(Tags.Items.STRING).addTag(twine);
 	}
 
 }
