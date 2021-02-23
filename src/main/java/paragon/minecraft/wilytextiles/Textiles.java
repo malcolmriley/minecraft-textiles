@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModItems;
 
 @Mod(Textiles.MOD_ID)
@@ -17,6 +18,7 @@ public class Textiles {
 	public static final Logger LOG = LogManager.getLogger();
 	
 	public static final ModItems ITEMS = new ModItems();
+	public static final ModBlocks BLOCKS = new ModBlocks();
 
 	public Textiles() {
 		// Get Bus from current loading context
@@ -24,6 +26,7 @@ public class Textiles {
 
 		// Register content providers to the bus
 		Textiles.ITEMS.registerTo(bus);
+		Textiles.BLOCKS.registerTo(bus);
 	}
 
 	/**
