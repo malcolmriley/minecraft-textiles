@@ -23,7 +23,8 @@ final class ItemModelGenerator extends ItemModelHelper {
 			ModItems.Names.FLAX_VIBRANT,
 			ModItems.Names.FLAX_PURPLE,
 			ModItems.Names.TWINE,
-			ModItems.Names.WICKER
+			ModItems.Names.WICKER,
+			ModItems.Names.PLANT_FIBERS
 		};
 		for (String iterated : simpleItems) {
 			this.simpleItem(iterated);
