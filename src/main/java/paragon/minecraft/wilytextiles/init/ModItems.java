@@ -28,6 +28,7 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FLAX_VIBRANT = this.simpleItem(Names.FLAX_VIBRANT);
 	public final RegistryObject<Item> FLAX_PURPLE = this.simpleItem(Names.FLAX_PURPLE, new Item.Properties().group(GROUP).rarity(Rarity.UNCOMMON));
 	public final RegistryObject<Item> CHAIN_MESH = this.simpleItem(Names.CHAIN_MESH);
+	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
 	
 	/* Internal Methods */
 	
@@ -52,6 +53,7 @@ public class ModItems extends ContentProvider<Item> {
 		public static final String FLAX_VIBRANT = "flax_flower_vibrant";
 		public static final String FLAX_PURPLE = "flax_flower_purple";
 		public static final String CHAIN_MESH = "chain_mesh";
+		public static final String PLANT_FIBERS = "plant_fibers";
 
 	}
 
