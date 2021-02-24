@@ -23,6 +23,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.server.ServerWorld;
+import paragon.minecraft.wilytextiles.Textiles;
 
 /**
  * Represents a block that "ages" while waterlogged.
@@ -105,7 +106,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
-		if (state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
+		if (Textiles.CONFIG.shouldBaleAge() && state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
 			int age = state.get(SoakableBlock.AGE).intValue();
 			if (age < 2) {
 				age += 1;
