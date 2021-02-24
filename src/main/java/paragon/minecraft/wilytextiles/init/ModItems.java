@@ -1,11 +1,11 @@
 package paragon.minecraft.wilytextiles.init;
 
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
+import paragon.minecraft.library.BlockItemSimpleFuel;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
@@ -33,7 +33,7 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
 	
 	// Block Items
-	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItem(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT));
+	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
 	
 	/* Internal Methods */
 	
