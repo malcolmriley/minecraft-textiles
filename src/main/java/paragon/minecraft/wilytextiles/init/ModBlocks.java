@@ -15,7 +15,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
-	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).hardnessAndResistance(0.3F)));
+	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).hardnessAndResistance(0.3F).notSolid().setOpaque((state, reader, position) -> false)));
 	
 	/* Block Names */
 	
