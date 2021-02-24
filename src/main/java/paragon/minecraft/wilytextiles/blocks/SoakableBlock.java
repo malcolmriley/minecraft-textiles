@@ -16,6 +16,10 @@ import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.server.ServerWorld;
@@ -34,10 +38,32 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	public static final int MAX_AGE = 2;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_0_2;
+	public static final VoxelShape SHAPE_1 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
+	public static final VoxelShape SHAPE_2 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
+	public static final VoxelShape SHAPE_3 = VoxelShapes.fullCube();
 
 	public SoakableBlock(Properties properties) {
 		super(properties.tickRandomly());
 		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false).with(SoakableBlock.AGE, Integer.valueOf(0)).with(SoakableBlock.COUNT, Integer.valueOf(1)));
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+		int count = state.get(SoakableBlock.COUNT);
+		switch (count) {
+			case 6:
+			case 5:
+				return SHAPE_3;
+			case 4:
+			case 3:
+				return SHAPE_2;
+		}
+		return SHAPE_1;
+	}
+
+	@Override
+	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+		return state.getFluidState().isEmpty();
 	}
 
 	@Override
@@ -50,7 +76,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
-		// If the target block is this, add one to the "count" state parameter 
+		// If the target block is this, add one to the "count" state parameter
 		if (state.isIn(this)) {
 			int currentCount = state.get(SoakableBlock.COUNT);
 			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1)));
