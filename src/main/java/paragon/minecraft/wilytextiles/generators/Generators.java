@@ -34,6 +34,7 @@ public class Generators {
 			generator.addProvider(new RecipeGenerator(generator));
 			generator.addProvider(blockTags);
 			generator.addProvider(new ItemTagsGenerator(generator, helper, blockTags));
+			generator.addProvider(new LootGenerator(generator));
 		}
 	}
 
