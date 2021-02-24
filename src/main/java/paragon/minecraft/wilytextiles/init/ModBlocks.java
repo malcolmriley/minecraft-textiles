@@ -2,6 +2,7 @@ package paragon.minecraft.wilytextiles.init;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -15,7 +16,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
-	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).hardnessAndResistance(0.3F).notSolid().setOpaque((state, reader, position) -> false)));
+	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque((state, reader, position) -> false)));
 	
 	/* Block Names */
 	
