@@ -46,6 +46,19 @@ final class RecipeGenerator extends RecipeHelper {
 			.addIngredient(Items.DEAD_BUSH, 4)
 			.addCriterion(RecipeHelper.criterionName(Items.DEAD_BUSH), RecipeHelper.hasItem(Items.DEAD_BUSH))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.DEAD_BUSH));
+		
+		// Retting fiber bundles
+		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
+			.addIngredient(Textiles.ITEMS.PLANT_FIBERS.get(), 9)
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS.get()))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get(), Textiles.ITEMS.PLANT_FIBERS.get()));
+		
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
+			.patternLine("##")
+			.patternLine("##")
+			.key('#', Textiles.ITEMS.FLAX_STALKS.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS.get()))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get(), Textiles.ITEMS.FLAX_STALKS.get()));
 
 		// Wicker
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.WICKER.get(), 3)
