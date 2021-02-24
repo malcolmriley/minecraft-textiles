@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
+import paragon.minecraft.wilytextiles.Textiles;
 
 @EventBusSubscriber(bus = Bus.MOD)
 public class Generators {
@@ -25,6 +26,7 @@ public class Generators {
 		final ExistingFileHelper helper = event.getExistingFileHelper();
 		if (event.includeClient()) {
 			generator.addProvider(new LangGenerator(generator, helper));
+			generator.addProvider(new BlockStateGenerator(generator, Textiles.MOD_ID, helper));
 			generator.addProvider(new ItemModelGenerator(generator, helper));
 		}
 		if (event.includeServer()) {
