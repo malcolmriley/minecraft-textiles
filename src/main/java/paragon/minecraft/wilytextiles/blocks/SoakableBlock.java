@@ -31,11 +31,13 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 
 	/* Blockstate Fields */
 	public static final int MAX_COUNT = 6;
+	public static final int MAX_AGE = 2;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
+	public static final IntegerProperty AGE = BlockStateProperties.AGE_0_2;
 
 	public SoakableBlock(Properties properties) {
 		super(properties.tickRandomly());
-		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false).with(BlockStateProperties.AGE_0_2, Integer.valueOf(0)).with(SoakableBlock.COUNT, Integer.valueOf(1)));
+		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false).with(SoakableBlock.AGE, Integer.valueOf(0)).with(SoakableBlock.COUNT, Integer.valueOf(1)));
 	}
 
 	@Override
@@ -78,10 +80,10 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
 		if (state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
-			int age = state.get(BlockStateProperties.AGE_0_2).intValue();
+			int age = state.get(SoakableBlock.AGE).intValue();
 			if (age < 2) {
 				age += 1;
-				world.setBlockState(position, state.with(BlockStateProperties.AGE_0_2, age));
+				world.setBlockState(position, state.with(SoakableBlock.AGE, age));
 			}
 		}
 	}
@@ -89,7 +91,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Override
 	public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(BlockStateProperties.WATERLOGGED, BlockStateProperties.AGE_0_2, SoakableBlock.COUNT);
+		builder.add(BlockStateProperties.WATERLOGGED, SoakableBlock.AGE, SoakableBlock.COUNT);
 	}
 
 	@Override
