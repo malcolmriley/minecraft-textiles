@@ -4,6 +4,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.datageneration.ItemModelHelper;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModItems;
 
 final class ItemModelGenerator extends ItemModelHelper {
@@ -16,6 +17,7 @@ final class ItemModelGenerator extends ItemModelHelper {
 
 	@Override
 	protected void registerModels() {
+		// Simple Items
 		String[] simpleItems = new String[] {
 			ModItems.Names.CHAIN_MESH,
 			ModItems.Names.FLAX_STALKS,
@@ -29,6 +31,8 @@ final class ItemModelGenerator extends ItemModelHelper {
 		for (String iterated : simpleItems) {
 			this.simpleItem(iterated);
 		}
+		// Block Items
+		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
 	}
 
 }
