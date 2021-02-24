@@ -11,7 +11,7 @@ import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 
-public final class BlockStateGenerator extends BlockStateHelper {
+final class BlockStateGenerator extends BlockStateHelper {
 	
 	/* Package-Available Fields */
 	static final String FIBER_TEXTURE_SIDES = "sides";
