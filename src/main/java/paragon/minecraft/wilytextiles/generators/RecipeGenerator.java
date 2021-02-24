@@ -43,13 +43,21 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.GRASS));
 		
 		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
+			.addIngredient(Items.TALL_GRASS, 6)
+			.addCriterion(RecipeHelper.criterionName(Items.TALL_GRASS), RecipeHelper.hasItem(Items.TALL_GRASS))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.TALL_GRASS));
+		
+		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
 			.addIngredient(Items.DEAD_BUSH, 4)
 			.addCriterion(RecipeHelper.criterionName(Items.DEAD_BUSH), RecipeHelper.hasItem(Items.DEAD_BUSH))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.DEAD_BUSH));
 		
 		// Retting fiber bundles
-		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
-			.addIngredient(Textiles.ITEMS.PLANT_FIBERS.get(), 9)
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
+			.patternLine("## ")
+			.patternLine("###")
+			.patternLine(" ##")
+			.key('#', Textiles.ITEMS.PLANT_FIBERS.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS.get()))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get(), Textiles.ITEMS.PLANT_FIBERS.get()));
 		
