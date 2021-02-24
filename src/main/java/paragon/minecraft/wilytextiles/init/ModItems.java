@@ -1,5 +1,6 @@
 package paragon.minecraft.wilytextiles.init;
 
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
@@ -21,6 +22,7 @@ public class ModItems extends ContentProvider<Item> {
 	
 	/* RegistryObject Fields */
 	
+	// Items
 	public final RegistryObject<Item> WICKER = this.simpleItem(Names.WICKER);
 	public final RegistryObject<Item> TWINE = this.simpleItem(Names.TWINE);
 	public final RegistryObject<Item> FLAX_STALKS = this.simpleItem(Names.FLAX_STALKS);
@@ -29,6 +31,9 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FLAX_PURPLE = this.simpleItem(Names.FLAX_PURPLE, new Item.Properties().group(GROUP).rarity(Rarity.UNCOMMON));
 	public final RegistryObject<Item> CHAIN_MESH = this.simpleItem(Names.CHAIN_MESH);
 	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
+	
+	// Block Items
+	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItem(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT));
 	
 	/* Internal Methods */
 	
