@@ -73,8 +73,13 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	@Override
 	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
-		int age = this.getAgeFrom(state);
-		return this.canGrow(age) || this.canGrow(world.getBlockState(position.up()));
+		if (this.canGrow(state)) {
+			return true;
+		}
+		else {
+			BlockState aboveState = world.getBlockState(position.up());
+			return aboveState.getBlock().equals(this) && this.canGrow(aboveState);
+		}
 	}
 
 	@Override
