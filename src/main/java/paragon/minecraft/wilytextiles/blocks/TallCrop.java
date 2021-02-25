@@ -123,7 +123,9 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	protected void applyBonemealGrowth(ServerWorld world, Random RNG, BlockPos position, BlockState state) {
 		int age = this.getAgeFrom(state);
-		world.setBlockState(position, state.with(TallCrop.AGE, MathHelper.clamp(age + this.getBonemealGrowth(RNG), TallCrop.MIN_AGE, TallCrop.MAX_AGE)));
+		if (this.canGrow(age)) {
+			world.setBlockState(position, state.with(TallCrop.AGE, MathHelper.clamp(age + this.getBonemealGrowth(RNG), TallCrop.MIN_AGE, TallCrop.MAX_AGE)));
+		}
 	}
 
 	protected int getAgeFrom(BlockState state) {
