@@ -106,7 +106,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
-		if (Textiles.CONFIG.shouldBaleAge() && state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
+		if (Textiles.CONFIG.shouldBaleAge(state, world, position, RNG) && state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
 			int age = state.get(SoakableBlock.AGE).intValue();
 			if (age < 2) {
 				age += 1;

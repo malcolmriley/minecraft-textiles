@@ -1,6 +1,10 @@
 package paragon.minecraft.wilytextiles.init;
 
-import io.netty.util.internal.ThreadLocalRandom;
+import java.util.Random;
+
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.fml.config.ModConfig;
@@ -9,15 +13,15 @@ import paragon.minecraft.library.AbstractConfiguration;
 public class ModConfiguration extends AbstractConfiguration {
 	
 	/* Internal Fields */
-	protected static final ThreadLocalRandom RNG = ThreadLocalRandom.current();
 	protected double BALE_PROGRESS_CHANCE = 0.65D;
+	protected double FLAX_GROWTH_MODIFIER = 1.0D;
 
 	public ModConfiguration() {
 		super(ModConfig.Type.COMMON, "WilyTextiles.toml");
 	}
 	
-	public boolean shouldBaleAge() {
-		return RNG.nextDouble() < this.BALE_PROGRESS_CHANCE;
+	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
+		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
 	}
 	
 	/* Supertype Override Methods */
