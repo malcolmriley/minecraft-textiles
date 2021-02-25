@@ -23,6 +23,10 @@ public class ModConfiguration extends AbstractConfiguration {
 	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
 		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
 	}
+
+	public boolean shouldFlaxGrow(BlockState state, ServerWorld world, BlockPos position, Random random) {
+		return random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
+	}
 	
 	/* Supertype Override Methods */
 
@@ -30,8 +34,11 @@ public class ModConfiguration extends AbstractConfiguration {
 	protected ForgeConfigSpec buildSpec(Builder builder) {
 		builder.push("General");
 		this.defineValue(value -> this.BALE_PROGRESS_CHANCE = value, builder
-			.comment("The chance that the \"age\" property of retting fiber bales will progress with each growth opportunity.", "Lower values mean a lower chance (slower progress), whereas higher values mean a higher chance (quicker progress).")
+			.comment("The chance that the \"age\" property of retting fiber bales will progress with each growth opportunity.", "Lower values mean a lower chance of progress (slower progress), whereas higher values mean a higher chance (quicker progress).")
 			.defineInRange("retting_bale_tick_age_chance", 0.65D, 0.0D, 1.0D));
+		this.defineValue(value -> this.FLAX_GROWTH_MODIFIER = value, builder
+			.comment("A global modifier for the probability that the \"age\" value of the flax crop will increase with each growth opportunity.", "Lower values mean a lower chance of increase (slower growth), whereas higher values mean a higher chance of increase (quicker growth).")
+			.defineInRange("flax_crop_growth_modifier", 1.0D, 0.0D, 1.0D));
 		builder.pop();
 		return builder.build();
 	}
