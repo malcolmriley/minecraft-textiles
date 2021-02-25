@@ -95,7 +95,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 				this.applyBonemealGrowth(world, RNG, abovePosition, aboveState);
 			}
 			else if (this.canGrowInto(world, aboveState, abovePosition)) {
-				this.growInto(world, position, state, abovePosition, this.getBonemealGrowth(RNG));
+				this.growInto(world, position, state, abovePosition, MathHelper.nextInt(RNG, 0, 2));
 			}
 		}
 	}
@@ -117,14 +117,10 @@ public class TallCrop extends BushBlock implements IGrowable {
 		world.setBlockState(position, state.with(TallCrop.BOTTOM, Boolean.TRUE));
 	}
 
-	protected int getBonemealGrowth(Random RNG) {
-		return MathHelper.nextInt(RNG, 1, 3);
-	}
-
 	protected void applyBonemealGrowth(ServerWorld world, Random RNG, BlockPos position, BlockState state) {
 		int age = this.getAgeFrom(state);
 		if (this.canGrow(age)) {
-			world.setBlockState(position, state.with(TallCrop.AGE, MathHelper.clamp(age + this.getBonemealGrowth(RNG), TallCrop.MIN_AGE, TallCrop.MAX_AGE)));
+			world.setBlockState(position, state.with(TallCrop.AGE, MathHelper.clamp(age + MathHelper.nextInt(RNG, 1, 3), TallCrop.MIN_AGE, TallCrop.MAX_AGE)));
 		}
 	}
 
