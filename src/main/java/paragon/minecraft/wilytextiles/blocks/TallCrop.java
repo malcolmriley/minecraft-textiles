@@ -77,8 +77,9 @@ public class TallCrop extends BushBlock implements IGrowable {
 			return true;
 		}
 		else {
-			BlockState aboveState = world.getBlockState(position.up());
-			return aboveState.getBlock().equals(this) && this.canGrow(aboveState);
+			BlockPos abovePosition = position.up();
+			BlockState aboveState = world.getBlockState(abovePosition);
+			return (aboveState.getBlock().equals(this) && this.canGrow(aboveState)) || this.canGrowInto(world, aboveState, abovePosition);
 		}
 	}
 
@@ -113,7 +114,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 	/* Internal Methods */
 
 	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
-	protected boolean canGrowInto(ServerWorld world, BlockState state, BlockPos position) {
+	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {
 		return state.isAir(world, position);
 	}
 
