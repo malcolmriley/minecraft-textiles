@@ -70,7 +70,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Override
 	@SuppressWarnings("deprecation") // Return super.isReplaceable as default if not this
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(SoakableBlock.COUNT) < SoakableBlock.MAX_COUNT) ? true : super.isReplaceable(state, useContext);
+		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT)  && (state.get(AGE).intValue() == 0)? true : super.isReplaceable(state, useContext);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 		// If the target block is this, add one to the "count" state parameter
 		if (state.isIn(this)) {
 			int currentCount = state.get(SoakableBlock.COUNT);
-			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1)));
+			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1))).with(AGE, Integer.valueOf(0));
 		}
 		// Otherwise, update fluid state
 		// TODO: Other forge fluids? How does that work?
