@@ -31,6 +31,8 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FLAX_PURPLE = this.simpleItem(Names.FLAX_PURPLE, new Item.Properties().group(GROUP).rarity(Rarity.UNCOMMON));
 	public final RegistryObject<Item> CHAIN_MESH = this.simpleItem(Names.CHAIN_MESH);
 	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
+	public final RegistryObject<Item> SILK = this.simpleItem(Names.SILK);
+	public final RegistryObject<Item> SILK_WISPS = this.simpleItem(Names.SILK_WISP);
 	
 	// Block Items
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
@@ -53,6 +55,8 @@ public class ModItems extends ContentProvider<Item> {
 
 		public static final String WICKER = "wicker";
 		public static final String TWINE = "twine";
+		public static final String SILK = "silk";
+		public static final String SILK_WISP = "silk_wisps";
 		public static final String FLAX_STALKS = "flax_stalks";
 		public static final String FLAX_PALE = "flax_flower_pale";
 		public static final String FLAX_VIBRANT = "flax_flower_vibrant";
