@@ -25,6 +25,8 @@ final class ItemModelGenerator extends ItemModelHelper {
 			ModItems.Names.FLAX_VIBRANT,
 			ModItems.Names.FLAX_PURPLE,
 			ModItems.Names.TWINE,
+			ModItems.Names.SILK,
+			ModItems.Names.SILK_WISP,
 			ModItems.Names.WICKER,
 			ModItems.Names.PLANT_FIBERS
 		};

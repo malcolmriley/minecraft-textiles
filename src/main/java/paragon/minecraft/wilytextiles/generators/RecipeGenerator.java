@@ -78,6 +78,17 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(CRITERION_STICKS, RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
 			.addCriterion(CRITERION_SUGARCANE, RecipeProvider.hasItem(Items.SUGAR_CANE))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER.get(), Items.SUGAR_CANE));
+		
+		// Silk from Silk Wisps
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.SILK.get())
+			.patternLine("SSS")
+			.patternLine("SIS")
+			.patternLine("SSS")
+			.key('S', Textiles.ITEMS.SILK_WISPS.get())
+			.key('I', Tags.Items.RODS_WOODEN)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.SILK_WISPS.get()), RecipeProvider.hasItem(Textiles.ITEMS.SILK_WISPS.get()))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.SILK.get(), Textiles.ITEMS.SILK_WISPS.get()));
 
 		// Chain Mesh
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CHAIN_MESH.get(), 5)

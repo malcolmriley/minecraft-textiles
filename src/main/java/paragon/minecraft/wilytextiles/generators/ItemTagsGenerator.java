@@ -20,10 +20,13 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 
 	@Override
 	protected void registerTags() {
-		// Twine is String subtype
-		final INamedTag<Item> twine = Utilities.Tags.forgeItemTag("string", "twine");
+		// Twine and Silk are String subtypes
+		final String stringTag = "string";
+		final INamedTag<Item> twine = Utilities.Tags.forgeItemTag(stringTag, "twine");
 		this.getOrCreateBuilder(twine).add(Textiles.ITEMS.TWINE.get());
-		this.getOrCreateBuilder(Tags.Items.STRING).addTag(twine);
+		final INamedTag<Item> silk = Utilities.Tags.forgeItemTag(stringTag, "silk");
+		this.getOrCreateBuilder(silk).add(Textiles.ITEMS.SILK.get());
+		this.getOrCreateBuilder(Tags.Items.STRING).addTag(twine).addTag(silk);
 	}
 
 }
