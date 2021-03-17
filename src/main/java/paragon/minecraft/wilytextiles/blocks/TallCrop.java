@@ -93,7 +93,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 		else {
 			BlockPos abovePosition = position.up();
 			BlockState aboveState = world.getBlockState(abovePosition);
-			return (aboveState.getBlock().equals(this) && this.canGrow(aboveState)) || this.canGrowInto(world, aboveState, abovePosition);
+			return (aboveState.isIn(this) && this.canGrow(aboveState)) || this.canGrowInto(world, aboveState, abovePosition);
 		}
 	}
 
@@ -111,7 +111,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 		else {
 			BlockPos abovePosition = position.up();
 			BlockState aboveState = world.getBlockState(abovePosition);
-			if (aboveState.getBlock().equals(this)) {
+			if (aboveState.isIn(this)) {
 				this.applyBonemealGrowth(world, RNG, abovePosition, aboveState);
 			}
 			else if (this.canGrowInto(world, aboveState, abovePosition)) {
@@ -122,7 +122,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	@Override
 	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
-		return facing.equals(Direction.UP) && plantable.getPlant(world, pos.offset(facing)).getBlock().equals(this);
+		return facing.equals(Direction.UP) && plantable.getPlant(world, pos.offset(facing)).isIn(this);
 	}
 
 	/* Internal Methods */
