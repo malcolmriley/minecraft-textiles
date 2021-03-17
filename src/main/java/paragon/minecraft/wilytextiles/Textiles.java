@@ -9,7 +9,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModConfiguration;
+import paragon.minecraft.wilytextiles.init.ModContainers;
 import paragon.minecraft.wilytextiles.init.ModItems;
+import paragon.minecraft.wilytextiles.init.ModTileEntities;
 
 @Mod(Textiles.MOD_ID)
 public class Textiles {
@@ -20,6 +22,8 @@ public class Textiles {
 	
 	public static final ModItems ITEMS = new ModItems();
 	public static final ModBlocks BLOCKS = new ModBlocks();
+	public static final ModTileEntities TILE_ENTITIES = new ModTileEntities();
+	public static final ModContainers CONTAINERS = new ModContainers();
 	
 	public static final ModConfiguration CONFIG = new ModConfiguration();
 
@@ -31,6 +35,8 @@ public class Textiles {
 		Textiles.ITEMS.registerTo(bus);
 		Textiles.BLOCKS.registerTo(bus);
 		Textiles.CONFIG.registerTo(bus);
+		Textiles.TILE_ENTITIES.registerTo(bus);
+		Textiles.CONTAINERS.registerTo(bus);
 	}
 
 	/**
