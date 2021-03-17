@@ -66,7 +66,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 				BlockPos abovePosition = position.up();
 				BlockState aboveState = world.getBlockState(abovePosition);
 				if (this.canGrowInto(world, aboveState, abovePosition) && ForgeHooks.onCropsGrowPre(world, abovePosition, aboveState, Textiles.CONFIG.shouldFlaxGrow(state, world, position, random))) {
-					this.growInto(world, position, state, abovePosition, TallCrop.MIN_AGE);
+					this.growInto(world, abovePosition, TallCrop.MIN_AGE);
 					ForgeHooks.onCropsGrowPost(world, abovePosition, aboveState);
 				}
 			}
@@ -115,7 +115,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 				this.applyBonemealGrowth(world, RNG, abovePosition, aboveState);
 			}
 			else if (this.canGrowInto(world, aboveState, abovePosition)) {
-				this.growInto(world, position, state, abovePosition, MathHelper.nextInt(RNG, 0, 2));
+				this.growInto(world, abovePosition, MathHelper.nextInt(RNG, 0, 2));
 			}
 		}
 	}
@@ -132,9 +132,8 @@ public class TallCrop extends BushBlock implements IGrowable {
 		return state.isAir(world, position);
 	}
 
-	protected void growInto(ServerWorld world, BlockPos position, BlockState state, BlockPos abovePosition, int age) {
-		world.setBlockState(abovePosition, this.getDefaultState().with(TallCrop.AGE, Integer.valueOf(age)));
-		world.setBlockState(position, state.with(TallCrop.BOTTOM, Boolean.TRUE));
+	protected void growInto(ServerWorld world, BlockPos abovePosition, int age) {
+		world.setBlockState(abovePosition, this.getDefaultState().with(TallCrop.AGE, Integer.valueOf(age)).with(TallCrop.BOTTOM, false));
 	}
 
 	protected void applyBonemealGrowth(ServerWorld world, Random RNG, BlockPos position, BlockState state) {
