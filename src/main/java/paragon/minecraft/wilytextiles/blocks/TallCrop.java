@@ -13,6 +13,9 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -28,12 +31,23 @@ public class TallCrop extends BushBlock implements IGrowable {
 	public static final IntegerProperty AGE = BlockStateProperties.AGE_0_5;
 	public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
 
+	private static final double HORIZONTAL_MIN = 0.25D;
+	private static final double HORIZONTAL_MAX = 0.75D;
+	public static final VoxelShape SHAPE_HALF = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
+	public static final VoxelShape SHAPE_WHOLE = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
+
 	public TallCrop(Properties builder) {
 		super(builder.tickRandomly());
-		this.setDefaultState(this.stateContainer.getBaseState().with(TallCrop.AGE, Integer.valueOf(0)).with(TallCrop.BOTTOM, Boolean.FALSE));
+		this.setDefaultState(this.stateContainer.getBaseState().with(TallCrop.AGE, Integer.valueOf(0)).with(TallCrop.BOTTOM, Boolean.TRUE));
 	}
 
 	/* Supertype Override Methods */
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+		int age = state.get(AGE).intValue();
+		return age > 2 ? SHAPE_WHOLE : SHAPE_HALF;
+	}
 
 	@Override
 	protected boolean isValidGround(BlockState state, IBlockReader world, BlockPos position) {
