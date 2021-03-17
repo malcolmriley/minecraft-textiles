@@ -32,7 +32,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 	public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
 
 	private static final double HORIZONTAL_MIN = 0.25D;
-	private static final double HORIZONTAL_MAX = 0.75D;
+	private static final double HORIZONTAL_MAX = 1.0 - HORIZONTAL_MIN;
 	public static final VoxelShape SHAPE_HALF = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
 	public static final VoxelShape SHAPE_WHOLE = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
 
