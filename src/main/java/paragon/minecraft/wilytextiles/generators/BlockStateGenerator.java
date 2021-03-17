@@ -10,6 +10,8 @@ import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
+import paragon.minecraft.wilytextiles.blocks.TallCrop;
+import paragon.minecraft.wilytextiles.init.ModBlocks;
 
 final class BlockStateGenerator extends BlockStateHelper {
 	
@@ -37,6 +39,22 @@ final class BlockStateGenerator extends BlockStateHelper {
 				fiberBuilder.addModels(state, ConfiguredModel.allYRotations(model, 0, false));
 			}
 		}
+		
+		// Flax Crop
+		final VariantBlockStateBuilder flaxBuilder = this.getVariantBuilder(Textiles.BLOCKS.FLAX_CROP.get());
+		for (int age = 0; age <= TallCrop.MAX_AGE; age += 1) {
+			final ModelFile bottomModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "bottom", age);
+			final ModelFile topModel = age > 2 ? this.crossCropModel(ModBlocks.Names.FLAX_CROP, "top", age) : bottomModel;
+			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
+			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
+		}
+	}
+	
+	/* Internal Methods */
+	
+	protected ModelFile crossCropModel(String parent, String variant, int age) {
+		final String name = Utilities.Strings.name(parent, variant, String.valueOf(age));
+		return this.models().withExistingParent(name, this.mcLoc("cross")).texture("cross", this.blockFolderTexture(name));
 	}
 
 }
