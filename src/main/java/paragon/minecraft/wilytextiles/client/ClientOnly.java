@@ -1,5 +1,7 @@
 package paragon.minecraft.wilytextiles.client;
 
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
@@ -23,12 +25,17 @@ public final class ClientOnly {
 	@SubscribeEvent
 	public static void onClientSetup(FMLClientSetupEvent event) {
 		event.enqueueWork(ClientOnly::registerScreenManagers);
+		event.enqueueWork(ClientOnly::registerRenderTypeLookups);
 	}
 	
 	/* Internal Methods */
 	
 	private static void registerScreenManagers() {
 		ClientUtilities.UI.bindGuiFactory(Textiles.CONTAINERS.BASKET, ScreenBasket::new);
+	}
+	
+	private static void registerRenderTypeLookups() {
+		RenderTypeLookup.setRenderLayer(Textiles.BLOCKS.FLAX_CROP.get(), RenderType.getCutout());
 	}
 
 }
