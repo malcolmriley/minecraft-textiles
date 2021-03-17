@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.init;
 
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
@@ -38,6 +39,7 @@ public class ModItems extends ContentProvider<Item> {
 	// Block Items
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
 	public final RegistryObject<Item> BLOCK_BASKET = this.add(ModBlocks.Names.BASKET, () -> new BlockItem(Textiles.BLOCKS.BASKET.get(), DEFAULT));
+	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new BlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT));
 	
 	/* Internal Methods */
 	
@@ -63,6 +65,7 @@ public class ModItems extends ContentProvider<Item> {
 		public static final String FLAX_PALE = "flax_flower_pale";
 		public static final String FLAX_VIBRANT = "flax_flower_vibrant";
 		public static final String FLAX_PURPLE = "flax_flower_purple";
+		public static final String FLAX_SEEDS = "flax_seeds";
 		public static final String CHAIN_MESH = "chain_mesh";
 		public static final String PLANT_FIBERS = "plant_fibers";
 
