@@ -27,6 +27,7 @@ final class LangGenerator extends LanguageProvider {
 		this.add(Textiles.ITEMS.FLAX_PALE.get(), "Pale Flax Blossom");
 		this.add(Textiles.ITEMS.FLAX_VIBRANT.get(), "Vibrant Flax Blossom");
 		this.add(Textiles.ITEMS.FLAX_PURPLE.get(), "Exquisite Flax Blossom");
+		this.add(Textiles.ITEMS.FLAX_SEEDS.get(), "Flax Seeds");
 		this.add(Textiles.ITEMS.TWINE.get(), "Twine");
 		this.add(Textiles.ITEMS.SILK.get(), "Silk Thread");
 		this.add(Textiles.ITEMS.SILK_WISPS.get(), "Silk Wisps");
