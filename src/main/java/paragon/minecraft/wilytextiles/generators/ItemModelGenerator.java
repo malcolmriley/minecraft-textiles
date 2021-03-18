@@ -36,6 +36,7 @@ final class ItemModelGenerator extends ItemModelHelper {
 		}
 		// Block Items
 		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
+		this.blockItem(ModBlocks.Names.BASKET);
 	}
 
 }

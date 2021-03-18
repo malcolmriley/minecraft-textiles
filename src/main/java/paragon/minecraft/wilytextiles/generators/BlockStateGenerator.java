@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.generators;
 
 import net.minecraft.data.DataGenerator;
+import net.minecraft.util.Direction;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
@@ -47,6 +49,19 @@ final class BlockStateGenerator extends BlockStateHelper {
 			final ModelFile topModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "top", age);
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
+		}
+		
+		// Basket
+		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(Textiles.BLOCKS.BASKET.get());
+		final ModelFile basketModel = this.models().getExistingFile(Textiles.createResource("basket"));
+		for (Direction facing : BlockBasket.FACING.getAllowedValues()) {
+			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(basketModel);
+			if (facing == Direction.UP) {
+				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.build());
+			}
+			else {
+				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationX(-90).rotationY((int)facing.getHorizontalAngle()).build());
+			}
 		}
 	}
 	
