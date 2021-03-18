@@ -1,0 +1,53 @@
+{
+	"credit": "Made with Blockbench by Malcolm Riley",
+	"parent": "paragon_textiles:block/default_block"
+	"textures": {
+		"0": "paragon_textiles:block/basket_side",
+		"1": "paragon_textiles:block/basket_top",
+		"2": "paragon_textiles:block/wicker_block",
+		"3": "paragon_textiles:block/basket_side_handles",
+		"particle": "paragon_textiles:block/wicker_block"
+	},
+	"elements": [
+		{
+			"name": "Main",
+			"from": [1, 0, 1],
+			"to": [15, 16, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 14, 16], "texture": "#0"},
+				"east": {"uv": [0, 0, 14, 16], "texture": "#3"},
+				"south": {"uv": [0, 0, 14, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 14, 16], "texture": "#3"},
+				"up": {"uv": [1, 1, 15, 15], "texture": "#1"},
+				"down": {"uv": [0, 0, 14, 14], "texture": "#2"}
+			}
+		},
+		{
+			"name": "Handle 1",
+			"from": [15, 11, 5],
+			"to": [16, 13, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"east": {"uv": [0, 0, 6, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 1], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [10, 2, 16, 3], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Handle 2",
+			"from": [0, 11, 5],
+			"to": [1, 13, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"south": {"uv": [0, 0, 1, 2], "texture": "#0"},
+				"west": {"uv": [0, 0, 6, 2], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 1], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [10, 2, 16, 3], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}
