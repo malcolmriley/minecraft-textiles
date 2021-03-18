@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.init;
 
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,13 +14,15 @@ import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
 public class ModBlocks extends ContentProvider<Block> {
+	
+	private final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
 
 	public ModBlocks() {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
-	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque((state, reader, position) -> false)));
-	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, () -> new TallCrop(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.6F).notSolid()));
+	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque(ALWAYS_FALSE)));
+	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, () -> new TallCrop(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.6F).notSolid().setOpaque(ALWAYS_FALSE)));
 	
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket(AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO).hardnessAndResistance(0.8F)));
 	
