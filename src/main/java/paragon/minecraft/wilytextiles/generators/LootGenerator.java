@@ -15,8 +15,8 @@ import net.minecraft.loot.LootParameterSet;
 import net.minecraft.loot.LootParameterSets;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
-import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.LootTable.Builder;
+import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.util.ResourceLocation;
 import paragon.minecraft.library.datageneration.LootHelper;
@@ -56,6 +56,9 @@ final class LootGenerator extends LootHelper {
 				);
 			}
 			registrar.accept(Textiles.BLOCKS.RAW_FIBERS.get().getLootTable(), baleBuilder);
+			
+			// Baskets
+			registrar.accept(Textiles.BLOCKS.BASKET.get().getLootTable(), BlockLootTables.droppingWithName(Textiles.BLOCKS.BASKET.get()));
 		}
 		
 		/* Internal Methods */
