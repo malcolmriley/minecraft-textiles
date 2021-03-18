@@ -7,7 +7,6 @@ import javax.annotation.Nullable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -23,6 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.server.ServerWorld;
+import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
 
 /**
@@ -83,9 +83,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1))).with(AGE, Integer.valueOf(0));
 		}
 		// Otherwise, update fluid state
-		// TODO: Other forge fluids? How does that work?
-		Fluid fluid = context.getWorld().getFluidState(context.getPos()).getFluid();
-		return super.getStateForPlacement(context).with(BlockStateProperties.WATERLOGGED, Boolean.valueOf((fluid == Fluids.WATER) || (fluid == Fluids.FLOWING_WATER)));
+		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context));
 	}
 
 	@Override
@@ -98,9 +96,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Override
 	@SuppressWarnings("deprecation") // Returning super.updatePostPlacement() as default if not waterlogged
 	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos position, BlockPos facingPosition) {
-		if (state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
-			world.getPendingFluidTicks().scheduleTick(position, Fluids.WATER, Fluids.WATER.getTickRate(world));
-		}
+		Utilities.States.applyWaterlogPostPlacement(state, world, position);
 		return super.updatePostPlacement(state, facing, facingState, world, position, facingPosition);
 	}
 
