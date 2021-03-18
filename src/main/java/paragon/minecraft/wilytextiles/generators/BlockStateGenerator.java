@@ -44,7 +44,7 @@ final class BlockStateGenerator extends BlockStateHelper {
 		final VariantBlockStateBuilder flaxBuilder = this.getVariantBuilder(Textiles.BLOCKS.FLAX_CROP.get());
 		for (int age = 0; age <= TallCrop.MAX_AGE; age += 1) {
 			final ModelFile bottomModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "bottom", age);
-			final ModelFile topModel = age > 2 ? this.crossCropModel(ModBlocks.Names.FLAX_CROP, "top", age) : bottomModel;
+			final ModelFile topModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "top", age);
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
 		}
