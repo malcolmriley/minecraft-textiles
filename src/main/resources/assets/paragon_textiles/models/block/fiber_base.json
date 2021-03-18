@@ -3,6 +3,7 @@
 	"textures": {
 		"particle": "#sides"
 	},
+	"ambientocclusion": false,
 	"display": {
 		"thirdperson_righthand": {
 			"rotation": [154.5, -38, 0],
