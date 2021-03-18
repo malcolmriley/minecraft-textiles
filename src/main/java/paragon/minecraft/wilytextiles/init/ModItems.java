@@ -7,9 +7,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
-import paragon.minecraft.library.BlockItemSimpleFuel;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.library.Utilities;
+import paragon.minecraft.library.item.BlockItemSimpleFuel;
 import paragon.minecraft.wilytextiles.Textiles;
 
 public class ModItems extends ContentProvider<Item> {
