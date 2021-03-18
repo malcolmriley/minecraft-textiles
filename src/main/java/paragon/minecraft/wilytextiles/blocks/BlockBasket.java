@@ -27,6 +27,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import paragon.minecraft.library.Utilities;
+import paragon.minecraft.library.capabilities.InventoryHandler;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
 public class BlockBasket extends ContainerBlock implements IWaterLoggable {
@@ -46,6 +47,13 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	}
 
 	/* Supertype Override Methods */
+
+	@Override
+	@SuppressWarnings("deprecation") // Invoke super.onReplaced after dropping contents
+	public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
+		InventoryHandler.dropContents(state, world, position, newState);
+		super.onReplaced(state, world, position, newState, isMoving);
+	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Return super.updatePostPlacement after queueing water tick
