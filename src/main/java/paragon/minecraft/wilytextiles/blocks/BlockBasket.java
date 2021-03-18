@@ -57,7 +57,8 @@ public class BlockBasket extends ContainerBlock {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(FACING, context.getFace().getOpposite());
+		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
+		return this.getDefaultState().with(FACING, facing);
 	}
 
 	@Override
