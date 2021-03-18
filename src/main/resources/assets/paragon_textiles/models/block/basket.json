@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench by Malcolm Riley",
-	"parent": "paragon_textiles:block/default_block"
+	"parent": "paragon_textiles:block/default_block",
 	"textures": {
 		"0": "paragon_textiles:block/basket_side",
 		"1": "paragon_textiles:block/basket_top",
