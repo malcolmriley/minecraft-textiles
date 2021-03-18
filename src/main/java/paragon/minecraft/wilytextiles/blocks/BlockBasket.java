@@ -15,6 +15,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import paragon.minecraft.library.Utilities;
@@ -24,6 +27,10 @@ public class BlockBasket extends ContainerBlock {
 
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
+	private static final double OFFSET = 1.0 / 16.0;
+	public static final VoxelShape SHAPE_UPRIGHT = VoxelShapes.create(OFFSET, 0.0, OFFSET, 1.0 - OFFSET, 1.0, 1.0 - OFFSET);
+	public static final VoxelShape SHAPE_EAST_WEST = VoxelShapes.create(0.0, OFFSET, OFFSET, 1.0, 1.0 - OFFSET, 1.0 - OFFSET);
+	public static final VoxelShape SHAPE_NORTH_SOUTH = VoxelShapes.create(OFFSET, OFFSET, 0.0, 1.0 - OFFSET, 1.0 - OFFSET, 1.0);
 
 	public BlockBasket(Properties builder) {
 		super(builder);
@@ -31,6 +38,20 @@ public class BlockBasket extends ContainerBlock {
 	}
 
 	/* Supertype Override Methods */
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+		switch(this.getFacingFrom(state)) {
+			case EAST:
+			case WEST:
+				return BlockBasket.SHAPE_EAST_WEST;
+			case NORTH:
+			case SOUTH:
+				return BlockBasket.SHAPE_NORTH_SOUTH;
+			default: 
+				return BlockBasket.SHAPE_UPRIGHT;
+		}
+	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
@@ -72,6 +93,12 @@ public class BlockBasket extends ContainerBlock {
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
 		builder.add(FACING);
+	}
+	
+	/* Internal Methods */
+	
+	protected Direction getFacingFrom(BlockState state) {
+		return state.get(BlockBasket.FACING);
 	}
 
 }
