@@ -4,10 +4,15 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
@@ -19,14 +24,17 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
-public class BlockBasket extends ContainerBlock {
+public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
 	private static final double OFFSET = 1.0 / 16.0;
 	public static final VoxelShape SHAPE_UPRIGHT = VoxelShapes.create(OFFSET, 0.0, OFFSET, 1.0 - OFFSET, 1.0, 1.0 - OFFSET);
 	public static final VoxelShape SHAPE_EAST_WEST = VoxelShapes.create(0.0, OFFSET, OFFSET, 1.0, 1.0 - OFFSET, 1.0 - OFFSET);
@@ -34,21 +42,34 @@ public class BlockBasket extends ContainerBlock {
 
 	public BlockBasket(Properties builder) {
 		super(builder);
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP));
+		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(WATERLOGGED, Boolean.FALSE));
 	}
 
 	/* Supertype Override Methods */
 
 	@Override
+	@SuppressWarnings("deprecation") // Return super.updatePostPlacement after queueing water tick
+	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos position, BlockPos facingPosition) {
+		Utilities.States.applyWaterlogPostPlacement(state, world, position);
+		return super.updatePostPlacement(state, facing, facingState, world, position, facingPosition);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation") // Returning super.getFluidState as default if not waterlogged
+	public FluidState getFluidState(BlockState state) {
+		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+	}
+
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		switch(this.getFacingFrom(state)) {
+		switch (this.getFacingFrom(state)) {
 			case EAST:
 			case WEST:
 				return BlockBasket.SHAPE_EAST_WEST;
 			case NORTH:
 			case SOUTH:
 				return BlockBasket.SHAPE_NORTH_SOUTH;
-			default: 
+			default:
 				return BlockBasket.SHAPE_UPRIGHT;
 		}
 	}
@@ -79,7 +100,7 @@ public class BlockBasket extends ContainerBlock {
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
-		return this.getDefaultState().with(FACING, facing);
+		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BlockBasket.FACING, facing));
 	}
 
 	@Override
@@ -92,11 +113,11 @@ public class BlockBasket extends ContainerBlock {
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(FACING);
+		builder.add(BlockBasket.FACING, BlockBasket.WATERLOGGED);
 	}
-	
+
 	/* Internal Methods */
-	
+
 	protected Direction getFacingFrom(BlockState state) {
 		return state.get(BlockBasket.FACING);
 	}
