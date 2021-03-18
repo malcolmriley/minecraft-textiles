@@ -1,7 +1,6 @@
 package paragon.minecraft.wilytextiles.init;
 
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
@@ -10,6 +9,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.item.BlockItemSimpleFuel;
+import paragon.minecraft.library.item.CheckedBlockNamedItem;
 import paragon.minecraft.wilytextiles.Textiles;
 
 public class ModItems extends ContentProvider<Item> {
@@ -39,7 +39,7 @@ public class ModItems extends ContentProvider<Item> {
 	// Block Items
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
 	public final RegistryObject<Item> BLOCK_BASKET = this.add(ModBlocks.Names.BASKET, () -> new BlockItem(Textiles.BLOCKS.BASKET.get(), DEFAULT));
-	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new BlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT));
+	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
 	
 	/* Internal Methods */
 	
