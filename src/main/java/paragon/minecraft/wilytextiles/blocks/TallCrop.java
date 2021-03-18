@@ -50,15 +50,10 @@ public class TallCrop extends BushBlock implements IGrowable {
 	}
 
 	@Override
-	protected boolean isValidGround(BlockState state, IBlockReader world, BlockPos position) {
-		return super.isValidGround(state, world, position) || state.isIn(this);
-	}
-
-	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
 		if (this.isBottomBlock(state)) {
 			final int age = this.getAgeFrom(state);
-			if (age >= TallCrop.MAX_AGE - 1) {
+			if (age >= (TallCrop.MAX_AGE - 1)) {
 				BlockPos abovePosition = position.up();
 				BlockState aboveState = world.getBlockState(abovePosition);
 				if (aboveState.isIn(this)) {
@@ -81,8 +76,18 @@ public class TallCrop extends BushBlock implements IGrowable {
 	}
 
 	@Override
+	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos position, Direction direction, IPlantable plantable) {
+		return direction.equals(Direction.UP) && plantable.getPlant(world, position).isIn(this) && (this.getAgeFrom(state) > (TallCrop.MAX_AGE - 1));
+	}
+
+	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		builder.add(TallCrop.AGE, TallCrop.BOTTOM);
+	}
+
+	@Override
+	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+		return state.isIn(this) || super.isValidGround(state, worldIn, pos);
 	}
 
 	/* IGrowable Compliance Methods */
@@ -91,7 +96,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
 		final int age = this.getAgeFrom(state);
 		if (this.isBottomBlock(state)) {
-			if (age < TallCrop.MAX_AGE - 1) {
+			if (age < (TallCrop.MAX_AGE - 1)) {
 				return true;
 			}
 			BlockPos abovePosition = position.up();
@@ -117,7 +122,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 		if (this.isBottomBlock(state)) {
 			final int age = this.getAgeFrom(state);
 			max = TallCrop.MAX_AGE - 1;
-			if (age >= TallCrop.MAX_AGE - 1) {
+			if (age >= (TallCrop.MAX_AGE - 1)) {
 				BlockPos abovePosition = position.up();
 				BlockState aboveState = world.getBlockState(abovePosition);
 				if (this.canGrowInto(world, aboveState, abovePosition)) {
@@ -136,20 +141,15 @@ public class TallCrop extends BushBlock implements IGrowable {
 		this.applyGrowth(world, targetState, targetPosition, this.getBonemealGrowth(RNG), max);
 	}
 
-	@Override
-	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos pos, Direction facing, IPlantable plantable) {
-		return facing.equals(Direction.UP) && plantable.getPlant(world, pos.offset(facing)).isIn(this);
-	}
-
 	/* Internal Methods */
-	
+
 	protected void tryApplyGrowth(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
 		if (this.belowMaxAge(state) && this.checkHooks(world, state, position, RNG)) {
 			this.applyGrowth(world, state, position, 1);
 			ForgeHooks.onCropsGrowPost(world, position, state);
 		}
 	}
-	
+
 	protected void applyGrowth(ServerWorld world, BlockState state, BlockPos position, int quantity) {
 		this.applyGrowth(world, state, position, quantity, TallCrop.MAX_AGE);
 	}
