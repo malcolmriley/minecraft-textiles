@@ -6,11 +6,12 @@
 		"1": "paragon_textiles:block/basket_top",
 		"2": "paragon_textiles:block/wicker_block",
 		"3": "paragon_textiles:block/basket_side_handles",
+		"4": "paragon_textiles:block/basket_inner",
 		"particle": "paragon_textiles:block/wicker_block"
 	},
 	"elements": [
 		{
-			"name": "Main",
+			"name": "Outer",
 			"from": [1, 0, 1],
 			"to": [15, 16, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, 0, 0]},
@@ -47,6 +48,19 @@
 				"west": {"uv": [0, 0, 6, 2], "texture": "#0"},
 				"up": {"uv": [0, 0, 6, 1], "rotation": 90, "texture": "#0"},
 				"down": {"uv": [10, 2, 16, 3], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"name": "Inner",
+			"from": [13, 16, 13],
+			"to": [3, 2, 3],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, -5, -2]},
+			"faces": {
+				"north": {"uv": [0, 14, 10, 0], "texture": "#0"},
+				"east": {"uv": [0, 14, 8, 0], "texture": "#0"},
+				"south": {"uv": [0, 14, 10, 0], "texture": "#0"},
+				"west": {"uv": [0, 14, 10, 0], "texture": "#0"},
+				"up": {"uv": [3, 3, 13, 13], "texture": "#4"}
 			}
 		}
 	]
