@@ -131,6 +131,17 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(chainmailCriterion, chainmailTrigger)
 			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_LEGGINGS, Textiles.ITEMS.CHAIN_MESH.get()));
 		
+		// Basket
+		ShapedRecipeBuilder.shapedRecipe(Textiles.BLOCKS.BASKET.get()) 
+			.patternLine("#I#")
+			.patternLine("# #")
+			.patternLine("###")
+			.key('#', Textiles.ITEMS.WICKER.get())
+			.key('I', Tags.Items.RODS_WOODEN)
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.WICKER), RecipeHelper.hasItem(Textiles.ITEMS.WICKER))
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET.get(), Textiles.ITEMS.WICKER.get()));
+		
 		// String tag override recipes
 		final String stringCriterion = RecipeHelper.criterionName(Items.STRING);
 		final ICriterionInstance stringTrigger = RecipeHelper.hasItem(Tags.Items.STRING);
