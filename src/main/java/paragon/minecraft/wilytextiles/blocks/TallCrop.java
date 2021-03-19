@@ -77,11 +77,12 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	@Override
 	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos position, Direction direction, IPlantable plantable) {
-		return direction.equals(Direction.UP) && plantable.getPlant(world, position).isIn(this) && (this.getAgeFrom(state) > (TallCrop.MAX_AGE - 1));
+		return (direction.equals(Direction.UP) && plantable.getPlant(world, position).isIn(this)) || super.canSustainPlant(state, world, position, direction, plantable);
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+		super.fillStateContainer(builder);
 		builder.add(TallCrop.AGE, TallCrop.BOTTOM);
 	}
 
