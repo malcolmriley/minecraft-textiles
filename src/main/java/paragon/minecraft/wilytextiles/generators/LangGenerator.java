@@ -4,6 +4,7 @@ import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.LanguageProvider;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.init.ModBlocks;
 
 final class LangGenerator extends LanguageProvider {
 
@@ -20,6 +21,9 @@ final class LangGenerator extends LanguageProvider {
 	protected void addTranslations() {
 		// ItemGroup
 		this.add("itemGroup." + Textiles.MOD_ID, "Wily Textiles");
+		
+		// Container Titles
+		this.add("container." + ModBlocks.Names.BASKET, "Basket");
 		
 		// Items
 		this.add(Textiles.ITEMS.CHAIN_MESH.get(), "Chain Mesh");
