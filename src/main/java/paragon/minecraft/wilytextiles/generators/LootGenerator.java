@@ -91,7 +91,7 @@ final class LootGenerator extends LootHelper {
 			
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE))
-				.rolls(RandomValueRange.of(1, 3))
+				.rolls(BinomialRange.of(1, 0.35F))
 				.bonusRolls(0, 1)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
@@ -111,7 +111,7 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(4)));
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE))
-				.rolls(BinomialRange.of(1, 0.3F))
+				.rolls(BinomialRange.of(1, 0.1F))
 				.bonusRolls(1, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
