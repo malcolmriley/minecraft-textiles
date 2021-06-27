@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.tileentities;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -8,7 +9,10 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.tileentity.HopperTileEntity;
+import net.minecraft.tileentity.IHopper;
 import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -19,7 +23,7 @@ import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
-public class TEBasket extends LockableLootTileEntity {
+public class TEBasket extends LockableLootTileEntity implements IHopper {
 
 	/* Shared Fields */
 	private static final int INVENTORY_WIDTH = 4;
@@ -32,6 +36,12 @@ public class TEBasket extends LockableLootTileEntity {
 
 	public TEBasket() {
 		super(Textiles.TILE_ENTITIES.BASKET.get());
+	}
+	
+	/* Public Methods */
+	
+	public void onItemEntityCollide(ItemEntity entity, Direction facing) {
+		HopperTileEntity.captureItem(this, entity); // Why reinvent the wheel?
 	}
 
 	/* Supertype Override Methods */
@@ -78,6 +88,23 @@ public class TEBasket extends LockableLootTileEntity {
 	@Override
 	protected Container createMenu(int id, PlayerInventory inventory) {
 		return ContainerImpl.create(id, inventory, this);
+	}
+	
+	/* IHopper Compliance Methods */
+
+	@Override
+	public double getXPos() {
+		return this.pos.getX() + 0.5D;
+	}
+
+	@Override
+	public double getYPos() {
+		return this.pos.getY() + 0.5D;
+	}
+
+	@Override
+	public double getZPos() {
+		return this.pos.getZ() + 0.5D;
 	}
 
 	/* Container Implementation */

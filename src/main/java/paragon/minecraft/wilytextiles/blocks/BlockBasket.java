@@ -22,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -36,10 +35,10 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-	private static final double OFFSET = 1.0 / 16.0;
-	public static final VoxelShape SHAPE_UPRIGHT = VoxelShapes.create(OFFSET, 0.0, OFFSET, 1.0 - OFFSET, 1.0, 1.0 - OFFSET);
-	public static final VoxelShape SHAPE_EAST_WEST = VoxelShapes.create(0.0, OFFSET, OFFSET, 1.0, 1.0 - OFFSET, 1.0 - OFFSET);
-	public static final VoxelShape SHAPE_NORTH_SOUTH = VoxelShapes.create(OFFSET, OFFSET, 0.0, 1.0 - OFFSET, 1.0 - OFFSET, 1.0);
+	private static final double OFFSET = 1.0;
+	public static final VoxelShape SHAPE_UPRIGHT = Block.makeCuboidShape(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
+	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.makeCuboidShape(OFFSET, OFFSET, 0, 16 - OFFSET, 16 - OFFSET, 16);
+	public static final VoxelShape SHAPE_EAST_WEST = Block.makeCuboidShape(0, OFFSET, OFFSET, 16, 16 - OFFSET, 16 - OFFSET);
 
 	public BlockBasket(Properties builder) {
 		super(builder);
@@ -70,7 +69,7 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		switch (this.getFacingFrom(state)) {
+		switch (BlockBasket.getFacingFrom(state)) {
 			case EAST:
 			case WEST:
 				return BlockBasket.SHAPE_EAST_WEST;
@@ -115,7 +114,7 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	@SuppressWarnings("deprecation") // Call super.mirror if facing is not UP.
 	public BlockState mirror(BlockState state, Mirror mirror) {
 		final Direction facing = state.get(BlockBasket.FACING);
-		return facing != Direction.UP ? super.mirror(state, mirror) : state;
+		return facing != Direction.UP ? super.mirror(state, mirror) : state.with(BlockBasket.FACING, facing.getOpposite());
 	}
 
 	@Override
@@ -126,7 +125,7 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	/* Internal Methods */
 
-	protected Direction getFacingFrom(BlockState state) {
+	protected static Direction getFacingFrom(BlockState state) {
 		return state.get(BlockBasket.FACING);
 	}
 
