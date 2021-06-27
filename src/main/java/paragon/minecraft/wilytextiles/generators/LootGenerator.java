@@ -6,10 +6,14 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.advancements.criterion.EnchantmentPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.criterion.MinMaxBounds;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.loot.BinomialRange;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
@@ -20,6 +24,8 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTable.Builder;
 import net.minecraft.loot.RandomValueRange;
 import net.minecraft.loot.conditions.BlockStateProperty;
+import net.minecraft.loot.conditions.ILootCondition;
+import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.util.ResourceLocation;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
@@ -28,6 +34,10 @@ import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
 final class LootGenerator extends LootHelper {
 
+	// Tool Predicates
+	private static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
+	private static final ILootCondition.IBuilder NO_SILK_TOUCH = SILK_TOUCH.inverted();
+
 	LootGenerator(DataGenerator generator) {
 		super(generator);
 	}
@@ -35,6 +45,7 @@ final class LootGenerator extends LootHelper {
 	@Override
 	protected void addLootTables(Consumer<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootParameterSet>> registrar) {
 		registrar.accept(Pair.of(BlockLootGenerator::new, LootParameterSets.BLOCK));
+		registrar.accept(Pair.of(BlockLootExtensions::new, LootParameterSets.BLOCK));
 	}
 
 	/* Block loot tables */
@@ -71,13 +82,13 @@ final class LootGenerator extends LootHelper {
 			flaxBuilder.addLootPool(LootPool.builder()
 				.rolls(BinomialRange.of(1, 0.2F))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
-			
+
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE - 1))
 				.rolls(BinomialRange.of(3, 0.65F))
 				.bonusRolls(0, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
-			
+
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE - 1))
 				.rolls(RandomValueRange.of(1.0F, 3.0F))
@@ -88,7 +99,7 @@ final class LootGenerator extends LootHelper {
 				.rolls(BinomialRange.of(1, 0.6F))
 				.bonusRolls(0, 1)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
-			
+
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE))
 				.rolls(BinomialRange.of(1, 0.35F))
@@ -102,7 +113,7 @@ final class LootGenerator extends LootHelper {
 				.bonusRolls(1, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get()).weight(4))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(1)));
-			
+
 			flaxBuilder.addLootPool(LootPool.builder()
 				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE))
 				.rolls(BinomialRange.of(3, 0.8F))
@@ -142,6 +153,30 @@ final class LootGenerator extends LootHelper {
 			return BlockStateProperty.builder(Textiles.BLOCKS.RAW_FIBERS.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count).withIntProp(SoakableBlock.AGE, age));
 		}
 
+	}
+	
+	/* Loot Extensions */
+	
+	public static class BlockLootExtensions extends BlockLootTables {
+		
+		public void accept(BiConsumer<ResourceLocation, Builder> consumer) {
+			
+			/* Additional Grass Drops */
+			final LootTable.Builder addedGrassDrops = LootTable.builder()
+				.addLootPool(LootPool.builder()
+					.acceptCondition(LootGenerator.NO_SILK_TOUCH)
+					.rolls(BinomialRange.of(1, 0.1F))
+					.bonusRolls(0.5F, 1.5F)
+					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())))
+				.addLootPool(LootPool.builder()
+					.acceptCondition(LootGenerator.NO_SILK_TOUCH)
+					.rolls(BinomialRange.of(2, 0.15F))
+					.bonusRolls(0.5F, 1.5F)
+					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.PLANT_FIBERS.get()))
+			);
+			consumer.accept(Textiles.createResource("blocks/added_grass_drops"), addedGrassDrops);
+		}
+		
 	}
 
 }

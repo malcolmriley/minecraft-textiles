@@ -1,8 +1,12 @@
 package paragon.minecraft.wilytextiles.generators;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.tags.ITag.INamedTag;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
 
 final class BlockTagsGenerator extends BlockTagsProvider {
@@ -15,7 +19,8 @@ final class BlockTagsGenerator extends BlockTagsProvider {
 
 	@Override
 	protected void registerTags() {
-
+		INamedTag<Block> grasses = Utilities.Tags.forgeBlockTag("grasses");
+		this.getOrCreateBuilder(grasses).add(Blocks.GRASS, Blocks.TALL_GRASS);
 	}
 
 }

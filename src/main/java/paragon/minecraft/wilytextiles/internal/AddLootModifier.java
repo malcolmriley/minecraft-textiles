@@ -50,7 +50,7 @@ public class AddLootModifier extends LootModifier {
 		
 		/* Constants */
 		protected static final String FIELD_LOOT_TABLE = "added_loot";
-		protected static final String NAME = "add_loot";
+		protected static final String NAME = "add_block_loot";
 		
 		protected static GlobalLootModifierSerializer<AddLootModifier> create() {
 			return new Serializer().setRegistryName(Textiles.createResource(NAME));

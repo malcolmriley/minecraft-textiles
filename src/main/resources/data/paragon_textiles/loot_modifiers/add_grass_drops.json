@@ -1,0 +1,10 @@
+{
+	"type": "paragon_textiles:add_block_loot",
+	"conditions": [
+		{
+			"condition": "paragon_textiles:block_has_tag",
+			"tag": "forge:grasses"
+		}
+	],
+	"added_loot": "paragon_textiles:blocks/added_grass_drops"
+}
