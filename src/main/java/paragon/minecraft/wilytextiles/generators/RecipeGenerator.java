@@ -79,6 +79,12 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(CRITERION_SUGARCANE, RecipeProvider.hasItem(Items.SUGAR_CANE))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER.get(), Items.SUGAR_CANE));
 		
+		// Silk Wisps from Cobwebs
+		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.SILK_WISPS.get(), 9)
+			.addIngredient(Items.COBWEB)
+			.addCriterion(RecipeHelper.criterionName(Items.COBWEB), RecipeHelper.hasItem(Items.COBWEB))
+			.build(registrar);
+		
 		// Silk from Silk Wisps
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.SILK.get())
 			.patternLine("SSS")
