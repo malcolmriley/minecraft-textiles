@@ -12,6 +12,8 @@ import paragon.minecraft.wilytextiles.Textiles;
 final class BlockTagsGenerator extends BlockTagsProvider {
 
 	/* Supertype Override Methods */
+	
+	static final String TAG_GRASSES = "grasses";
 
 	BlockTagsGenerator(DataGenerator generator, ExistingFileHelper helper) {
 		super(generator, Textiles.MOD_ID, helper);
@@ -19,7 +21,7 @@ final class BlockTagsGenerator extends BlockTagsProvider {
 
 	@Override
 	protected void registerTags() {
-		INamedTag<Block> grasses = Utilities.Tags.forgeBlockTag("grasses");
+		INamedTag<Block> grasses = Utilities.Tags.forgeBlockTag(TAG_GRASSES);
 		this.getOrCreateBuilder(grasses).add(Blocks.GRASS, Blocks.TALL_GRASS);
 	}
 

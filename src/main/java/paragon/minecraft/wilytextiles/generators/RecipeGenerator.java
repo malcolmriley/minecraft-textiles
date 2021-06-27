@@ -10,6 +10,7 @@ import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
@@ -37,15 +38,14 @@ final class RecipeGenerator extends RecipeHelper {
 		this.simpleShaplessMulti(registrar, Items.PURPLE_DYE, Textiles.ITEMS.FLAX_PURPLE.get(), 3);
 		
 		// Raw Plant Fibers
-		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
-			.addIngredient(Items.GRASS, 6)
-			.addCriterion(RecipeHelper.criterionName(Items.GRASS), RecipeHelper.hasItem(Items.GRASS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.GRASS));
-		
-		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
-			.addIngredient(Items.TALL_GRASS, 6)
-			.addCriterion(RecipeHelper.criterionName(Items.TALL_GRASS), RecipeHelper.hasItem(Items.TALL_GRASS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.TALL_GRASS));
+		final INamedTag<Item> grassTag = Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES);
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.PLANT_FIBERS.get())
+			.patternLine("## ")
+			.patternLine(" # ")
+			.patternLine(" ##")
+			.key('#', grassTag)
+			.addCriterion(RecipeHelper.criterionName(grassTag), RecipeHelper.hasItem(grassTag))
+			.build(registrar);
 		
 		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
 			.addIngredient(Items.DEAD_BUSH, 4)

@@ -27,6 +27,9 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		final INamedTag<Item> silk = Utilities.Tags.forgeItemTag(stringTag, "silk");
 		this.getOrCreateBuilder(silk).add(Textiles.ITEMS.SILK.get());
 		this.getOrCreateBuilder(Tags.Items.STRING).addTag(twine).addTag(silk);
+		
+		// Copy grass block tags to items
+		this.copy(Utilities.Tags.forgeBlockTag(BlockTagsGenerator.TAG_GRASSES), Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES));
 	}
 
 }
