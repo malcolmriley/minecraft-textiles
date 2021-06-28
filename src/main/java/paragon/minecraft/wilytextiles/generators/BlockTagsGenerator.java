@@ -13,7 +13,7 @@ final class BlockTagsGenerator extends BlockTagsProvider {
 
 	/* Supertype Override Methods */
 	
-	static final String TAG_GRASSES = "grasses";
+	static final String TAG_GRASSES = "grass";
 
 	BlockTagsGenerator(DataGenerator generator, ExistingFileHelper helper) {
 		super(generator, Textiles.MOD_ID, helper);
