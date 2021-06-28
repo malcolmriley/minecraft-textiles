@@ -14,6 +14,9 @@ apply plugin: 'maven-publish'
 apply from: 'project.config'
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
+version = "${ext.mc_version}-${ext.version}"
+archivesBaseName = "${ext.name}"
+
 /*************************** ONLY EDIT BELOW THIS LINE ***************************/
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 minecraft {
