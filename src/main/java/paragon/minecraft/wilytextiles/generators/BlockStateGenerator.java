@@ -53,14 +53,16 @@ final class BlockStateGenerator extends BlockStateHelper {
 		
 		// Basket
 		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(Textiles.BLOCKS.BASKET.get());
-		final ModelFile basketModel = this.models().getExistingFile(Textiles.createResource("basket"));
+		final ModelFile uprightModel = this.models().getExistingFile(Textiles.createResource("basket_upright"));
+		final ModelFile sideModel = this.models().getExistingFile(Textiles.createResource("basket_side"));
 		for (Direction facing : BlockBasket.FACING.getAllowedValues()) {
-			ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(basketModel);
 			if (facing == Direction.UP) {
+				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(uprightModel).nextModel().modelFile(uprightModel).rotationY(90);
 				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.build());
 			}
 			else {
-				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationX(-90).rotationY((int)facing.getHorizontalAngle()).build());
+				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(sideModel);
+				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
 			}
 		}
 	}
