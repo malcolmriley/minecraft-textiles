@@ -39,10 +39,29 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	public static final VoxelShape SHAPE_UPRIGHT = Block.makeCuboidShape(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
 	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.makeCuboidShape(OFFSET, OFFSET, 0, 16 - OFFSET, 16 - OFFSET, 16);
 	public static final VoxelShape SHAPE_EAST_WEST = Block.makeCuboidShape(0, OFFSET, OFFSET, 16, 16 - OFFSET, 16 - OFFSET);
+	
+	public static final VoxelShape CAPTURE_UP = Block.makeCuboidShape(2, 0, 2, 14, 24, 14);
+	public static final VoxelShape CAPTURE_NORTH = Block.makeCuboidShape(2, 2, -8, 14, 14, 16);
+	public static final VoxelShape CAPTURE_SOUTH = Block.makeCuboidShape(2, 2, 0, 14, 14, 24);
+	public static final VoxelShape CAPTURE_EAST = Block.makeCuboidShape(0, 2, 2, 24, 14, 14);
+	public static final VoxelShape CAPTURE_WEST = Block.makeCuboidShape(-8, 2, 2, 16, 14, 14);
 
 	public BlockBasket(Properties builder) {
 		super(builder);
 		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(WATERLOGGED, Boolean.FALSE));
+	}
+	
+	/* Public Methods */
+	
+	public static VoxelShape getCaptureShapeFrom(BlockState state) {
+		Direction facing = BlockBasket.getFacingFrom(state);
+		switch(facing) {
+			case NORTH: return CAPTURE_NORTH;
+			case SOUTH: return CAPTURE_SOUTH;
+			case EAST: return CAPTURE_EAST;
+			case WEST: return CAPTURE_WEST;
+			default: return CAPTURE_UP;
+		}
 	}
 
 	/* Supertype Override Methods */

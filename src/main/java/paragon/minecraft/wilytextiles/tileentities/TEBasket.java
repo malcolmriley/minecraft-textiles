@@ -1,5 +1,8 @@
 package paragon.minecraft.wilytextiles.tileentities;
 
+import java.util.List;
+
+import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,10 +13,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.HopperTileEntity;
-import net.minecraft.tileentity.IHopper;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -21,9 +26,10 @@ import paragon.minecraft.library.capabilities.InventoryHandler;
 import paragon.minecraft.library.client.ui.AbstractContainer;
 import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
-public class TEBasket extends LockableLootTileEntity implements IHopper {
+public class TEBasket extends LockableLootTileEntity implements ITickableTileEntity {
 
 	/* Shared Fields */
 	private static final int INVENTORY_WIDTH = 4;
@@ -33,6 +39,7 @@ public class TEBasket extends LockableLootTileEntity implements IHopper {
 	/* Internal Fields */
 	protected static final ITextComponent DEFAULT_NAME = new TranslationTextComponent("container." + ModBlocks.Names.BASKET);
 	protected final InventoryHandler ITEMS = new InventoryHandler(TEBasket.INVENTORY_SIZE, this);
+	protected final int RANDOMIZER = ThreadLocalRandom.current().nextInt(20);
 
 	public TEBasket() {
 		super(Textiles.TILE_ENTITIES.BASKET.get());
@@ -90,21 +97,32 @@ public class TEBasket extends LockableLootTileEntity implements IHopper {
 		return ContainerImpl.create(id, inventory, this);
 	}
 	
-	/* IHopper Compliance Methods */
+	/* ITickableTileEntity Compliance Methods */
+
 
 	@Override
-	public double getXPos() {
-		return this.pos.getX() + 0.5D;
+	public void tick() {
+		if (this.shouldCaptureItems()) {
+			this.captureItems();
+		}
 	}
-
-	@Override
-	public double getYPos() {
-		return this.pos.getY() + 0.5D;
+	
+	/* Internal Methods */
+	
+	protected void captureItems() {
+		this.getCapturableItems().forEach(item -> HopperTileEntity.captureItem(this, item));
 	}
-
-	@Override
-	public double getZPos() {
-		return this.pos.getZ() + 0.5D;
+	
+	protected boolean shouldCaptureItems() {
+		return this.hasWorld() && !this.world.isRemote() && (this.world.getGameTime() + this.RANDOMIZER) % 5 == 0;
+	}
+	
+	protected List<ItemEntity> getCapturableItems() {
+		return this.getWorld().getEntitiesWithinAABB(ItemEntity.class, this.getCaptureArea(), EntityPredicates.IS_ALIVE);
+	}
+	
+	protected AxisAlignedBB getCaptureArea() {
+		return BlockBasket.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
 	}
 
 	/* Container Implementation */
