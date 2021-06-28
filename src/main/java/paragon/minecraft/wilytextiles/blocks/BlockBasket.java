@@ -38,7 +38,7 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	private static final double OFFSET = 1;
 	public static final VoxelShape SHAPE_UPRIGHT = Block.makeCuboidShape(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
 	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.makeCuboidShape(OFFSET, 0, 0, 16 - OFFSET, 16 - (OFFSET * 2), 16);
-	public static final VoxelShape SHAPE_EAST_WEST = Block.makeCuboidShape(0, OFFSET, 0, 16, 16 - (OFFSET * 2), 16 - OFFSET);
+	public static final VoxelShape SHAPE_EAST_WEST = Block.makeCuboidShape(0, 0, OFFSET, 16, 16 - (OFFSET * 2), 16 - OFFSET);
 	
 	public static final VoxelShape CAPTURE_UP = Block.makeCuboidShape(0, 0, 0, 16, 24, 16);
 	public static final VoxelShape CAPTURE_NORTH = Block.makeCuboidShape(0, 0, -8, 0, 16, 16);
