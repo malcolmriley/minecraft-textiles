@@ -138,8 +138,8 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 		private ContainerImpl(int id, PlayerInventory inventory, TEBasket instance) {
 			super(Textiles.CONTAINERS.BASKET.get(), id);
 			this.basketInstance = instance;
-			this.playerInventory = this.addPlayerInventory(inventory, 8, 104);
-			this.playerHotbar = this.addPlayerHotbar(inventory, 8, 162);
+			this.playerInventory = this.addPlayerInventory(inventory, 8, 110);
+			this.playerHotbar = this.addPlayerHotbar(inventory, 8, 168);
 			this.basketGrid = this.addSlotGrid(this.basketInstance, 53, 18, TEBasket.INVENTORY_WIDTH, TEBasket.INVENTORY_HEIGHT);
 		}
 

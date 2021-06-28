@@ -18,7 +18,7 @@ public class ScreenBasket extends SimpleContainerScreen<TEBasket.ContainerImpl> 
 	public ScreenBasket(TEBasket.ContainerImpl container, PlayerInventory inventory, ITextComponent title) {
 		super(container, inventory, title);
 		this.xSize = 176;
-		this.ySize = 186;
+		this.ySize = 192;
 		this.playerInventoryTitleY = this.ySize - 94;
 	}
 
