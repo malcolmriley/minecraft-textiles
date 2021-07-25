@@ -1,11 +1,11 @@
 modLoader="javafml"
 loaderVersion="[36,)"
 license="CC-BY-4.0"
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://github.com/malcolmriley/minecraft-textiles/issues"
 
 [[mods]]
 modId="paragon_textiles"
-version="${file.jarVersion}"
+version="${version}"
 displayName="Wily Textiles"
 logoFile="logo.png"
 credits="The_Paragon"
@@ -14,13 +14,9 @@ description='''
 Are you tired of long nights spent mugging Spiders for their String? This mod can help!
 
 This mod centers around the acquisition of textile products from alternative sources.
-
-Currently, it includes:
-- A means of making two String analogues: Twine is sourced from a new crop, Flax, and Silk is sourced from Cobwebs.
-- A means of crafting chainmail armor, via the Chain Mesh item.
 '''
 
-[[dependencies.examplemod]]
+[[dependencies.paragon_textiles]]
     modId="forge"
     mandatory=true
     versionRange="[36,)"
