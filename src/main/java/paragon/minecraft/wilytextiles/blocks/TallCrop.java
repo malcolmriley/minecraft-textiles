@@ -96,6 +96,9 @@ public class TallCrop extends BushBlock implements IGrowable {
 	@Override
 	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
 		final int age = this.getAgeFrom(state);
+		if (!Textiles.CONFIG.isLightAdequateForFlax(world, position)) {
+			return false;
+		}
 		if (this.isBottomBlock(state)) {
 			if (age < (TallCrop.MAX_AGE - 1)) {
 				return true;
