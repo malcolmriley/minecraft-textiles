@@ -96,9 +96,6 @@ public class TallCrop extends BushBlock implements IGrowable {
 	@Override
 	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
 		final int age = this.getAgeFrom(state);
-		if (!Textiles.CONFIG.isLightAdequateForFlax(world, position)) {
-			return false;
-		}
 		if (this.isBottomBlock(state)) {
 			if (age < (TallCrop.MAX_AGE - 1)) {
 				return true;
@@ -165,7 +162,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
 	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {
-		return state.isAir(world, position);
+		return  state.isAir(world, position);
 	}
 
 	protected boolean tryGrowInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, BlockState aboveState, Random rng) {

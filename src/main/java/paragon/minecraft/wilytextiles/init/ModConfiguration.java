@@ -27,11 +27,7 @@ public class ModConfiguration extends AbstractConfiguration {
 	}
 
 	public boolean shouldFlaxGrow(BlockState state, ServerWorld world, BlockPos position, Random random) {
-		return random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
-	}
-	
-	public boolean isLightAdequateForFlax(IBlockReader world, BlockPos position) {
-		return world.getLightValue(position) >= this.FLAX_MIN_LIGHTLEVEL;
+		return this.isLightAdequateForFlax(world, position) && random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
 	}
 	
 	/* Supertype Override Methods */
@@ -51,5 +47,12 @@ public class ModConfiguration extends AbstractConfiguration {
 		builder.pop();
 		return builder.build();
 	}
+	
+	/* Internal Methods */
+	
+	protected boolean isLightAdequateForFlax(IBlockReader world, BlockPos position) {
+		return world.getLightValue(position) >= this.FLAX_MIN_LIGHTLEVEL;
+	}
+	
 
 }
