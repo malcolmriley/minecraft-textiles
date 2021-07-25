@@ -12,8 +12,9 @@ If you're tired of sleepless nights spent mugging Spiders for their string, then
 * ... And more to come! Maybe! We'll see!
 
 ## Attributions and Credits
+* Texture assets used with own permission from my other project, [unused-textures](https://github.com/malcolmriley/unused-textures) via CC-BY-4.0.
 * Certain **JSON Model Files** were made using [BlockBench](https://blockbench.net); these files are denoted as such by their `credit` field.
 * Also, thanks and appreciation to **Minecraft Forge** contributors without whom projects like these would probably not exist.
 
 ## Addenda
-* Like the textures but hate the mod? Get them from my other repository, [unused-textures](https://github.com/malcolmriley/unused-textures), and do as you will!
+* If you like the textures but hate the mod, you can get them separately via my other project, [unused-textures](https://github.com/malcolmriley/unused-textures).
