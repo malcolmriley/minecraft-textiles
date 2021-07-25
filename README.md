@@ -5,7 +5,7 @@ If you're tired of sleepless nights spent mugging Spiders for their string, then
 
 ## Features
 * A **String** analogue, **Twine** and ways to craft it from foraged grasses
-* A new crop, **Flax**, which can be used to create **Twine** or simply raw **Plant Fibers**
+* A new crop, **Flax**, whose stalks can be used to create **Twine** or simply raw **Plant Fibers**, and whose blossoms can be used to craft **Dyes**
 * A handy **Basket** block, for capturing fallen items
 * A way to get more out of **Spider Webs**, by recrafting them into **Silk**
 * A way to create **Chainmail Armor** pieces, via **Chain Mesh**
