@@ -1,4 +1,6 @@
 # The_Paragon's Wily Textiles Mod
+![](wiki-images/basket-small.png) ![](wiki-images/fiber-small.png)
+
 A Minecraft Forge mod centered around the acquisition of textile-like items from alternative sources.
 
 If you're tired of sleepless nights spent mugging Spiders for their string, then this is the mod for you!
