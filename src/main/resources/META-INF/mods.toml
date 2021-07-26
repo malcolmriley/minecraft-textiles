@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/malcolmriley/minecraft-textiles/issues"
 
 [[mods]]
 modId="paragon_textiles"
-version="${version}"
+version="${file.jarVersion}"
 displayName="Wily Textiles"
 logoFile="logo.png"
 credits="The_Paragon"
