@@ -202,6 +202,14 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('#', ItemTags.PLANKS)
 			.addCriterion(stringCriterion, stringTrigger)
 			.build(registrar, Utilities.Strings.minecraftResource("loom"));
+		
+		// Linen from Twine
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.LINEN.get())
+			.patternLine("SS")
+			.patternLine("SS")
+			.key('S', Textiles.ITEMS.TWINE.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
+			.build(registrar);
 	}
 
 	/* Internal Methods */
