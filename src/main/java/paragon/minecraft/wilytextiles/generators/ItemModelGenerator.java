@@ -29,7 +29,8 @@ final class ItemModelGenerator extends ItemModelHelper {
 			ModItems.Names.SILK_WISP,
 			ModItems.Names.WICKER,
 			ModItems.Names.PLANT_FIBERS,
-			ModItems.Names.FLAX_SEEDS
+			ModItems.Names.FLAX_SEEDS,
+			ModItems.Names.LINEN
 		};
 		for (String iterated : simpleItems) {
 			this.simpleItem(iterated);
