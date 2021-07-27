@@ -1,12 +1,6 @@
 {
 	"credit": "Made with Blockbench by Malcolm Riley",
 	"parent": "paragon_textiles:block/bolt_base",
-	"textures": {
-		"2": "paragon_textiles:block/bolt_red_extras",
-		"particle": "paragon_textiles:block/bolt_red_extras",
-		"ends": "paragon_textiles:block/bolt_red_ends",
-		"sides": "paragon_textiles:block/bolt_red_sides"
-	},
 	"elements": [
 		{
 			"name": "Fabric",
@@ -28,12 +22,12 @@
 			"to": [8.5, 3.2, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [6.82488, 2.93075, 8]},
 			"faces": {
-				"north": {"uv": [14, 0, 15, 1], "texture": "#2"},
-				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [15, 0, 16, 1], "texture": "#2"},
-				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"up": {"uv": [14, 2, 15, 16], "texture": "#2"},
-				"down": {"uv": [15, 2, 16, 16], "texture": "#2"}
+				"north": {"uv": [14, 0, 15, 1], "texture": "#extras"},
+				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"south": {"uv": [15, 0, 16, 1], "texture": "#extras"},
+				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"up": {"uv": [14, 2, 15, 16], "texture": "#extras"},
+				"down": {"uv": [15, 2, 16, 16], "texture": "#extras"}
 			}
 		},
 		{
@@ -42,8 +36,8 @@
 			"to": [4.5094, 4.5361, 14],
 			"rotation": {"angle": -22.5, "axis": "z", "origin": [6.82488, 2.93075, 8]},
 			"faces": {
-				"east": {"uv": [10, 14, 14, 2], "rotation": 90, "texture": "#2"},
-				"west": {"uv": [10, 3, 14, 15], "rotation": 90, "texture": "#2"}
+				"east": {"uv": [10, 14, 14, 2], "rotation": 90, "texture": "#extras"},
+				"west": {"uv": [10, 3, 14, 15], "rotation": 90, "texture": "#extras"}
 			}
 		}
 	]

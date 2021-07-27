@@ -1,12 +1,6 @@
 {
 	"credit": "Made with Blockbench by Malcolm Riley",
 	"parent": "paragon_textiles:block/bolt_base",
-	"textures": {
-		"2": "paragon_textiles:block/bolt_red_extras",
-		"particle": "paragon_textiles:block/bolt_red_extras",
-		"ends": "paragon_textiles:block/bolt_red_ends",
-		"sides": "paragon_textiles:block/bolt_red_sides"
-	},
 	"elements": [
 		{
 			"name": "Fabric",
@@ -28,12 +22,12 @@
 			"to": [11.5, 3.2, 14.6],
 			"rotation": {"angle": 0, "axis": "y", "origin": [10.975, 2.675, 7.6]},
 			"faces": {
-				"north": {"uv": [14, 0, 15, 1], "texture": "#2"},
-				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [15, 0, 16, 1], "texture": "#2"},
-				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"up": {"uv": [14, 2, 15, 16], "texture": "#2"},
-				"down": {"uv": [15, 2, 16, 16], "texture": "#2"}
+				"north": {"uv": [14, 0, 15, 1], "texture": "#extras"},
+				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"south": {"uv": [15, 0, 16, 1], "texture": "#extras"},
+				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"up": {"uv": [14, 2, 15, 16], "texture": "#extras"},
+				"down": {"uv": [15, 2, 16, 16], "texture": "#extras"}
 			}
 		},
 		{
@@ -56,12 +50,12 @@
 			"to": [8.5, 8.6, 14.6],
 			"rotation": {"angle": 22.5, "axis": "y", "origin": [7.97, 8.07, 7.6]},
 			"faces": {
-				"north": {"uv": [14, 0, 15, 1], "texture": "#2"},
-				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [15, 0, 16, 1], "texture": "#2"},
-				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"up": {"uv": [14, 2, 15, 16], "texture": "#2"},
-				"down": {"uv": [15, 2, 16, 16], "texture": "#2"}
+				"north": {"uv": [14, 0, 15, 1], "texture": "#extras"},
+				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"south": {"uv": [15, 0, 16, 1], "texture": "#extras"},
+				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"up": {"uv": [14, 2, 15, 16], "texture": "#extras"},
+				"down": {"uv": [15, 2, 16, 16], "texture": "#extras"}
 			}
 		},
 		{
@@ -84,12 +78,12 @@
 			"to": [5.5, 3.2, 15.6],
 			"rotation": {"angle": 0, "axis": "y", "origin": [4.975, 2.675, 8.6]},
 			"faces": {
-				"north": {"uv": [14, 0, 15, 1], "texture": "#2"},
-				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"south": {"uv": [15, 0, 16, 1], "texture": "#2"},
-				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#2"},
-				"up": {"uv": [14, 2, 15, 16], "texture": "#2"},
-				"down": {"uv": [15, 2, 16, 16], "texture": "#2"}
+				"north": {"uv": [14, 0, 15, 1], "texture": "#extras"},
+				"east": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"south": {"uv": [15, 0, 16, 1], "texture": "#extras"},
+				"west": {"uv": [14, 2, 15, 16], "rotation": 90, "texture": "#extras"},
+				"up": {"uv": [14, 2, 15, 16], "texture": "#extras"},
+				"down": {"uv": [15, 2, 16, 16], "texture": "#extras"}
 			}
 		},
 		{
@@ -98,8 +92,8 @@
 			"to": [1.53463, 5.45224, 14.6],
 			"rotation": {"angle": -22.5, "axis": "z", "origin": [1.53463, 3.45224, 8.6]},
 			"faces": {
-				"east": {"uv": [10, 14, 14, 2], "rotation": 90, "texture": "#2"},
-				"west": {"uv": [10, 3, 14, 15], "rotation": 90, "texture": "#2"}
+				"east": {"uv": [10, 14, 14, 2], "rotation": 90, "texture": "#extras"},
+				"west": {"uv": [10, 3, 14, 15], "rotation": 90, "texture": "#extras"}
 			}
 		}
 	]
