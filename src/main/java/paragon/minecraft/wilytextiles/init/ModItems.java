@@ -42,6 +42,8 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> BLOCK_BASKET = this.add(ModBlocks.Names.BASKET, () -> new BlockItem(Textiles.BLOCKS.BASKET.get(), DEFAULT));
 	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
 	
+	public final RegistryObject<Item> BOLT_RED = this.add(ModBlocks.Names.BOLT_RED, () -> new BlockItem(Textiles.BLOCKS.BOLT_RED.get(), DEFAULT));
+	
 	/* Internal Methods */
 	
 	protected RegistryObject<Item> simpleItem(final String name) {
