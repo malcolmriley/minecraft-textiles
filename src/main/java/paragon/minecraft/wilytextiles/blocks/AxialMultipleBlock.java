@@ -45,13 +45,15 @@ public class AxialMultipleBlock extends Block {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		int count = state.get(SoakableBlock.COUNT);
+		int count = state.get(AxialMultipleBlock.COUNT);
 		switch (count) {
+			case 9:
+			case 8:
+			case 7:
+				return AxialMultipleBlock.SHAPE_3;
 			case 6:
 			case 5:
-				return AxialMultipleBlock.SHAPE_3;
 			case 4:
-			case 3:
 				return AxialMultipleBlock.SHAPE_2;
 		}
 		return AxialMultipleBlock.SHAPE_1;
