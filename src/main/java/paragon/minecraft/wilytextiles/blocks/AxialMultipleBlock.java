@@ -68,7 +68,8 @@ public class AxialMultipleBlock extends Block {
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos position) {
 		final BlockPos below = position.down();
-		return world.getBlockState(below).isSolidSide(world, below, Direction.UP);
+		final BlockState belowState = world.getBlockState(below);
+		return belowState.isIn(this) || belowState.isSolidSide(world, below, Direction.UP);
 	}
 
 
