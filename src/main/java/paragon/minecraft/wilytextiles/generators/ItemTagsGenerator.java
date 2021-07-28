@@ -15,8 +15,8 @@ import paragon.minecraft.wilytextiles.Textiles;
 final class ItemTagsGenerator extends ItemTagsProvider {
 	
 	/* Constants */
-	private static final String DOMAIN_MINECRAFT = "minecraft";
-	private static final String TAG_WOOL = "wool";
+	static final String DOMAIN_MINECRAFT = "minecraft";
+	static final String TAG_WOOL = "wool";
 
 	ItemTagsGenerator(DataGenerator generator, ExistingFileHelper helper, BlockTagsProvider provider) {
 		super(generator, provider, Textiles.MOD_ID, helper);
