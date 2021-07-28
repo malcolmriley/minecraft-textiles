@@ -132,7 +132,23 @@ final class LootGenerator extends LootHelper {
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
 			
 			// Fabric Block
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PLAIN);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_ORANGE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_YELLOW);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIME);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GREEN);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_CYAN);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_BLUE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLUE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PURPLE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_MAGENTA);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PINK);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_WHITE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_GRAY);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GRAY);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLACK);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BROWN);
 		}
 
 		@Override

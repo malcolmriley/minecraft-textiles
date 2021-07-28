@@ -41,7 +41,23 @@ public final class ClientOnly {
 	private static void registerRenderTypeLookups() {
 		Stream<RegistryObject<Block>> cutout = Stream.of(
 			Textiles.BLOCKS.FLAX_CROP, 
-			Textiles.BLOCKS.FABRIC_RED
+			Textiles.BLOCKS.FABRIC_PLAIN,
+			Textiles.BLOCKS.FABRIC_RED,
+			Textiles.BLOCKS.FABRIC_ORANGE,
+			Textiles.BLOCKS.FABRIC_YELLOW,
+			Textiles.BLOCKS.FABRIC_LIME,
+			Textiles.BLOCKS.FABRIC_GREEN,
+			Textiles.BLOCKS.FABRIC_CYAN,
+			Textiles.BLOCKS.FABRIC_LIGHT_BLUE,
+			Textiles.BLOCKS.FABRIC_BLUE,
+			Textiles.BLOCKS.FABRIC_PURPLE,
+			Textiles.BLOCKS.FABRIC_MAGENTA,
+			Textiles.BLOCKS.FABRIC_PINK,
+			Textiles.BLOCKS.FABRIC_WHITE,
+			Textiles.BLOCKS.FABRIC_LIGHT_GRAY,
+			Textiles.BLOCKS.FABRIC_GRAY,
+			Textiles.BLOCKS.FABRIC_BLACK,
+			Textiles.BLOCKS.FABRIC_BROWN
 		);
 		cutout.forEach(ClientOnly::setCutoutRender);
 	}

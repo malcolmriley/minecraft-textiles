@@ -1,6 +1,8 @@
 package paragon.minecraft.wilytextiles.init;
 
-import net.minecraft.item.BlockItem;
+import java.util.function.Supplier;
+
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Rarity;
@@ -10,6 +12,7 @@ import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.item.BlockItemSimpleFuel;
 import paragon.minecraft.library.item.CheckedBlockNamedItem;
+import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
 
 public class ModItems extends ContentProvider<Item> {
@@ -39,10 +42,26 @@ public class ModItems extends ContentProvider<Item> {
 	
 	// Block Items
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
-	public final RegistryObject<Item> BLOCK_BASKET = this.add(ModBlocks.Names.BASKET, () -> new BlockItem(Textiles.BLOCKS.BASKET.get(), DEFAULT));
+	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
 	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
 	
-	public final RegistryObject<Item> FABRIC_RED = this.add(ModBlocks.Names.FABRIC_RED, () -> new BlockItem(Textiles.BLOCKS.FABRIC_RED.get(), DEFAULT));
+	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
+	public final RegistryObject<Item> FABRIC_RED = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_RED);
+	public final RegistryObject<Item> FABRIC_ORANGE = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_ORANGE);
+	public final RegistryObject<Item> FABRIC_YELLOW = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_YELLOW);
+	public final RegistryObject<Item> FABRIC_LIME = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_LIME);
+	public final RegistryObject<Item> FABRIC_GREEN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_GREEN);
+	public final RegistryObject<Item> FABRIC_CYAN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_CYAN);
+	public final RegistryObject<Item> FABRIC_LIGHT_BLUE = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_LIGHT_BLUE);
+	public final RegistryObject<Item> FABRIC_BLUE = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLUE);
+	public final RegistryObject<Item> FABRIC_PURPLE = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PURPLE);
+	public final RegistryObject<Item> FABRIC_MAGENTA = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_MAGENTA);
+	public final RegistryObject<Item> FABRIC_PINK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PINK);
+	public final RegistryObject<Item> FABRIC_WHITE = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_WHITE);
+	public final RegistryObject<Item> FABRIC_LIGHT_GRAY = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_LIGHT_GRAY);
+	public final RegistryObject<Item> FABRIC_GRAY = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_GRAY);
+	public final RegistryObject<Item> FABRIC_BLACK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLACK);
+	public final RegistryObject<Item> FABRIC_BROWN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BROWN);
 	
 	/* Internal Methods */
 	
@@ -52,6 +71,14 @@ public class ModItems extends ContentProvider<Item> {
 	
 	protected RegistryObject<Item> simpleItem(final String name, final Item.Properties properties) {
 		return this.add(name, () -> new Item(properties));
+	}
+	
+	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
+		return this.simpleBlockItem(block.getId().getPath(), block);
+	}
+	
+	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier) {
+		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, DEFAULT));
 	}
 	
 	/* Item Names */

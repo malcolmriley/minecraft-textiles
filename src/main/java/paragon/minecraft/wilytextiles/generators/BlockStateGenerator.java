@@ -1,5 +1,6 @@
 package paragon.minecraft.wilytextiles.generators;
 
+import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -8,6 +9,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder.PartialBlockstate;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
@@ -70,15 +72,36 @@ final class BlockStateGenerator extends BlockStateHelper {
 		}
 		
 		// Bolt of Fabric
-		final VariantBlockStateBuilder fabricBuilder = this.getVariantBuilder(Textiles.BLOCKS.FABRIC_RED.get());
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_PLAIN, "plain");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_RED, "red");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_ORANGE, "orange");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_YELLOW, "yellow");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIME, "lime");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_GREEN, "green");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_CYAN, "cyan");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIGHT_BLUE, "light_blue");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_BLUE, "blue");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_PURPLE, "purple");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_MAGENTA, "magenta");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_PINK, "pink");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_WHITE, "white");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIGHT_GRAY, "light_gray");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_GRAY, "gray");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_BLACK, "black");
+		this.createFabricModel(Textiles.BLOCKS.FABRIC_BROWN, "brown");
+		
+	}
+	
+	/* Internal Methods */
+	
+	protected void createFabricModel(RegistryObject<Block> target, String color) {
+		final VariantBlockStateBuilder fabricBuilder = this.getVariantBuilder(target.get());
 		for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
-			ModelFile model = this.fabricBlockModel("fabric", "red", count);
+			ModelFile model = this.fabricBlockModel("fabric", color, count);
 			fabricBuilder.addModels(fabricBuilder.partialState().with(AxialMultipleBlock.COUNT, count).with(AxialMultipleBlock.FACING, Axis.Z), ConfiguredModel.builder().modelFile(model).nextModel().modelFile(model).rotationY(180).build());
 			fabricBuilder.addModels(fabricBuilder.partialState().with(AxialMultipleBlock.COUNT, count).with(AxialMultipleBlock.FACING, Axis.X), ConfiguredModel.builder().modelFile(model).rotationY(-90).nextModel().modelFile(model).rotationY(90).build());
 		}
 	}
-	
-	/* Internal Methods */
 	
 	protected ModelFile fabricBlockModel(String parent, String color, int count) {
 		return this.models().withExistingParent(Utilities.Strings.name(parent, color, String.valueOf(count)), this.modLoc(Utilities.Strings.name(parent, String.valueOf(count))))
