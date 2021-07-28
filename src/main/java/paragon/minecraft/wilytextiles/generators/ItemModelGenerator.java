@@ -37,6 +37,30 @@ final class ItemModelGenerator extends ItemModelHelper {
 		// Block Items
 		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
 		this.blockItem(ModBlocks.Names.BASKET, "basket_upright");
+		
+		// Fabric Blocks
+		String[] fabrics = new String[] {
+			ModBlocks.Names.FABRIC_PLAIN,
+			ModBlocks.Names.FABRIC_RED,
+			ModBlocks.Names.FABRIC_ORANGE,
+			ModBlocks.Names.FABRIC_YELLOW,
+			ModBlocks.Names.FABRIC_LIME,
+			ModBlocks.Names.FABRIC_GREEN,
+			ModBlocks.Names.FABRIC_CYAN,
+			ModBlocks.Names.FABRIC_LIGHT_BLUE,
+			ModBlocks.Names.FABRIC_BLUE,
+			ModBlocks.Names.FABRIC_PURPLE,
+			ModBlocks.Names.FABRIC_MAGENTA,
+			ModBlocks.Names.FABRIC_PINK,
+			ModBlocks.Names.FABRIC_WHITE,
+			ModBlocks.Names.FABRIC_LIGHT_GRAY,
+			ModBlocks.Names.FABRIC_GRAY,
+			ModBlocks.Names.FABRIC_BLACK,
+			ModBlocks.Names.FABRIC_BROWN
+		};
+		for (String iterated : fabrics) {
+			this.blockItem(iterated, iterated + "_1");
+		}
 	}
 
 }

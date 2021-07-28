@@ -1,8 +1,12 @@
 package paragon.minecraft.wilytextiles.client;
 
+import java.util.stream.Stream;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -35,7 +39,37 @@ public final class ClientOnly {
 	}
 	
 	private static void registerRenderTypeLookups() {
-		RenderTypeLookup.setRenderLayer(Textiles.BLOCKS.FLAX_CROP.get(), RenderType.getCutout());
+		Stream<RegistryObject<Block>> cutout = Stream.of(
+			Textiles.BLOCKS.FLAX_CROP, 
+			Textiles.BLOCKS.FABRIC_PLAIN,
+			Textiles.BLOCKS.FABRIC_RED,
+			Textiles.BLOCKS.FABRIC_ORANGE,
+			Textiles.BLOCKS.FABRIC_YELLOW,
+			Textiles.BLOCKS.FABRIC_LIME,
+			Textiles.BLOCKS.FABRIC_GREEN,
+			Textiles.BLOCKS.FABRIC_CYAN,
+			Textiles.BLOCKS.FABRIC_LIGHT_BLUE,
+			Textiles.BLOCKS.FABRIC_BLUE,
+			Textiles.BLOCKS.FABRIC_PURPLE,
+			Textiles.BLOCKS.FABRIC_MAGENTA,
+			Textiles.BLOCKS.FABRIC_PINK,
+			Textiles.BLOCKS.FABRIC_WHITE,
+			Textiles.BLOCKS.FABRIC_LIGHT_GRAY,
+			Textiles.BLOCKS.FABRIC_GRAY,
+			Textiles.BLOCKS.FABRIC_BLACK,
+			Textiles.BLOCKS.FABRIC_BROWN
+		);
+		cutout.forEach(ClientOnly::setCutoutRender);
+	}
+	
+	private static void setCutoutRender(RegistryObject<Block> registryObject) {
+		ClientOnly.setRenderType(registryObject, RenderType.getCutout());
+	}
+	
+	private static void setRenderType(RegistryObject<Block> registryObject, RenderType type) {
+		if (registryObject.isPresent()) {
+			RenderTypeLookup.setRenderLayer(registryObject.get(), type);
+		}
 	}
 
 }

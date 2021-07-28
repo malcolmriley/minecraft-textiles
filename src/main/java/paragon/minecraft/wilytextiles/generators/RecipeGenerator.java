@@ -8,6 +8,7 @@ import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ITag.INamedTag;
@@ -202,9 +203,79 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('#', ItemTags.PLANKS)
 			.addCriterion(stringCriterion, stringTrigger)
 			.build(registrar, Utilities.Strings.minecraftResource("loom"));
+		
+		// Plain Fabric from Twine
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_PLAIN.get(), 2)
+			.patternLine("SSS")
+			.patternLine("SIS")
+			.patternLine("SSS")
+			.key('S', Textiles.ITEMS.TWINE.get())
+			.key('I', Items.STICK)
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
+			.addCriterion(stickCriterion, stickTrigger)
+			.build(registrar);
+		
+		// White Fabric from Silk
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), 2)
+			.patternLine("SSS")
+			.patternLine("SSS")
+			.key('S', Textiles.ITEMS.SILK.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
+			.build(registrar);
+		
+		// Missing Wool Recipes
+		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.ORANGE, Items.ORANGE_BED, Items.ORANGE_BANNER, Items.ORANGE_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.YELLOW, Items.YELLOW_BED, Items.YELLOW_BANNER, Items.YELLOW_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.LIME, Items.LIME_BED, Items.LIME_BANNER, Items.LIME_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.GREEN, Items.GREEN_BED, Items.GREEN_BANNER, Items.GREEN_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.CYAN, Items.CYAN_BED, Items.CYAN_BANNER, Items.CYAN_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.LIGHT_BLUE, Items.LIGHT_BLUE_BED, Items.LIGHT_BLUE_BANNER, Items.LIGHT_BLUE_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.BLUE, Items.BLUE_BED, Items.BLUE_BANNER, Items.BLUE_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.PURPLE, Items.PURPLE_BED, Items.PURPLE_BANNER, Items.PURPLE_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.MAGENTA, Items.MAGENTA_BED, Items.MAGENTA_BANNER, Items.MAGENTA_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.PINK, Items.PINK_BED, Items.PINK_BANNER, Items.PINK_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.WHITE, Items.WHITE_BED, Items.WHITE_BANNER, Items.WHITE_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.LIGHT_GRAY, Items.LIGHT_GRAY_BED, Items.LIGHT_GRAY_BANNER, Items.LIGHT_GRAY_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.GRAY, Items.GRAY_BED, Items.GRAY_BANNER, Items.GRAY_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, registrar);
 	}
 
 	/* Internal Methods */
+	
+	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, Consumer<IFinishedRecipe> registrar) {
+		final INamedTag<Item> woolTag = Utilities.Tags.forgeItemTag(ItemTagsGenerator.TAG_WOOL, color.getString());
+		final ICriterionInstance hasWool =  RecipeHelper.hasItem(woolTag);
+		final String hasWoolName = RecipeHelper.criterionName(woolTag);
+		
+		// Beds
+		ShapedRecipeBuilder.shapedRecipe(bed)
+			.patternLine("WWW")
+			.patternLine("###")
+			.key('W', woolTag)
+			.key('#', ItemTags.PLANKS)
+			.addCriterion(hasWoolName, hasWool)
+			.build(registrar);
+		
+		// Banners
+		ShapedRecipeBuilder.shapedRecipe(banner)
+			.patternLine("###")
+			.patternLine("###")
+			.patternLine(" I ")
+			.key('#', woolTag)
+			.key('I', Tags.Items.RODS_WOODEN)
+			.addCriterion(hasWoolName, hasWool)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
+			.build(registrar);
+		
+		// Carpets
+		ShapedRecipeBuilder.shapedRecipe(carpet, 3)
+			.patternLine("##")
+			.key('#', woolTag)
+			.addCriterion(hasWoolName, hasWool)
+			.build(registrar);
+	}
 
 	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
 		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(output, 1);

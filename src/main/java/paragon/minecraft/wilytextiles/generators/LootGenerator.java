@@ -27,8 +27,10 @@ import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
@@ -128,6 +130,25 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
+			
+			// Fabric Block
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PLAIN);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_ORANGE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_YELLOW);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIME);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GREEN);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_CYAN);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_BLUE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLUE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PURPLE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_MAGENTA);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PINK);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_WHITE);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_GRAY);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GRAY);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLACK);
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BROWN);
 		}
 
 		@Override
@@ -136,6 +157,17 @@ final class LootGenerator extends LootHelper {
 		}
 
 		/* Internal Methods */
+		
+		protected void fabricBlockLoot(RegistryObject<Block> target) {
+			LootTable.Builder builder = LootTable.builder();
+			for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
+				builder.addLootPool(LootPool.builder()
+					.acceptCondition(BlockStateProperty.builder(target.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(AxialMultipleBlock.COUNT, count)))
+					.rolls(ConstantRange.of(count))
+					.addEntry(ItemLootEntry.builder(target.get())));
+			}
+			this.registerLootTable(target.get(), builder);
+		}
 
 		protected BlockStateProperty.Builder tallCropTop(int age) {
 			return this.tallCropProperties(age, false);
