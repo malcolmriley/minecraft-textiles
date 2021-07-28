@@ -9,10 +9,10 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
@@ -23,10 +23,15 @@ public class AxialMultipleBlock extends Block {
 	public static final int MAX_COUNT = 9;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", MIN_COUNT, MAX_COUNT);
 	public static final EnumProperty<Direction.Axis> FACING = EnumProperty.create("facing", Direction.Axis.class, Direction.Axis.X, Direction.Axis.Z);
+
+	private static final int SHAPE_INSET = 2;
+	public static final VoxelShape SHAPE_X_1 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16.0 / 3.0, 16);
+	public static final VoxelShape SHAPE_X_2 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 32.0 / 3.0, 16);
+	public static final VoxelShape SHAPE_X_3 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16, 16);
 	
-	public static final VoxelShape SHAPE_1 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
-	public static final VoxelShape SHAPE_2 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
-	public static final VoxelShape SHAPE_3 = VoxelShapes.fullCube();
+	public static final VoxelShape SHAPE_Z_1 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 16.0 / 3.0, 16 - SHAPE_INSET);
+	public static final VoxelShape SHAPE_Z_2 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 32.0 / 3.0, 16 - SHAPE_INSET);
+	public static final VoxelShape SHAPE_Z_3 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 16, 16 - SHAPE_INSET);
 
 	public AxialMultipleBlock(Properties properties) {
 		super(properties);
@@ -39,24 +44,25 @@ public class AxialMultipleBlock extends Block {
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
-		Direction.Axis axis = context.getPlacementHorizontalFacing().getAxis();
+		Axis axis = context.getPlacementHorizontalFacing().getAxis();
 		return state.isIn(this) ? AxialMultipleBlock.incrementCount(state) : AxialMultipleBlock.withAxis(this.getDefaultState(), axis);
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		int count = state.get(AxialMultipleBlock.COUNT);
+		int count = AxialMultipleBlock.getCountFrom(state);
+		Axis axis = AxialMultipleBlock.getAxisFrom(state);
 		switch (count) {
 			case 9:
 			case 8:
 			case 7:
-				return AxialMultipleBlock.SHAPE_3;
+				return axis.equals(Axis.X) ? SHAPE_X_3 : SHAPE_Z_3;
 			case 6:
 			case 5:
 			case 4:
-				return AxialMultipleBlock.SHAPE_2;
+				return axis.equals(Axis.X) ? SHAPE_X_2 : SHAPE_Z_2;
 		}
-		return AxialMultipleBlock.SHAPE_1;
+		return axis.equals(Axis.X) ? SHAPE_X_1 : SHAPE_Z_1;
 	}
 
 	@Override
@@ -80,7 +86,7 @@ public class AxialMultipleBlock extends Block {
 	
 	/* Internal Methods */
 	
-	protected static BlockState withAxis(BlockState original, Direction.Axis facing) {
+	protected static BlockState withAxis(BlockState original, Axis facing) {
 		return facing.isHorizontal() ? original.with(AxialMultipleBlock.FACING, facing) : original;
 	}
 	
@@ -90,6 +96,10 @@ public class AxialMultipleBlock extends Block {
 	
 	protected static int getCountFrom(BlockState state) {
 		return state.get(AxialMultipleBlock.COUNT).intValue();
+	}
+	
+	protected static Axis getAxisFrom(BlockState state) {
+		return state.get(AxialMultipleBlock.FACING);
 	}
 
 }
