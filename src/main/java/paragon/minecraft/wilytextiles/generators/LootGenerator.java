@@ -27,8 +27,10 @@ import net.minecraft.loot.conditions.BlockStateProperty;
 import net.minecraft.loot.conditions.ILootCondition;
 import net.minecraft.loot.conditions.MatchTool;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
@@ -128,6 +130,9 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
+			
+			// Fabric Block
+			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
 		}
 
 		@Override
@@ -136,6 +141,17 @@ final class LootGenerator extends LootHelper {
 		}
 
 		/* Internal Methods */
+		
+		protected void fabricBlockLoot(RegistryObject<Block> target) {
+			LootTable.Builder builder = LootTable.builder();
+			for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
+				builder.addLootPool(LootPool.builder()
+					.acceptCondition(BlockStateProperty.builder(target.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(AxialMultipleBlock.COUNT, count)))
+					.rolls(ConstantRange.of(count))
+					.addEntry(ItemLootEntry.builder(target.get())));
+			}
+			this.registerLootTable(target.get(), builder);
+		}
 
 		protected BlockStateProperty.Builder tallCropTop(int age) {
 			return this.tallCropProperties(age, false);
