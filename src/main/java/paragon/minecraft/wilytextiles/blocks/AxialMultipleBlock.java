@@ -39,8 +39,8 @@ public class AxialMultipleBlock extends Block {
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
-		// If the target block is this, add one to the "count" state parameter, else return super
-		return state.isIn(this) ? this.incrementCount(state) : super.getStateForPlacement(context);
+		Direction.Axis axis = context.getPlacementHorizontalFacing().getAxis();
+		return state.isIn(this) ? AxialMultipleBlock.incrementCount(state) : AxialMultipleBlock.withAxis(this.getDefaultState(), axis);
 	}
 
 	@Override
@@ -80,11 +80,15 @@ public class AxialMultipleBlock extends Block {
 	
 	/* Internal Methods */
 	
-	protected BlockState incrementCount(BlockState original) {
-		return original.with(AxialMultipleBlock.COUNT, Math.min(AxialMultipleBlock.MAX_COUNT, this.getCountFrom(original) + 1));
+	protected static BlockState withAxis(BlockState original, Direction.Axis facing) {
+		return facing.isHorizontal() ? original.with(AxialMultipleBlock.FACING, facing) : original;
 	}
 	
-	protected int getCountFrom(BlockState state) {
+	protected static BlockState incrementCount(BlockState original) {
+		return original.with(AxialMultipleBlock.COUNT, Math.min(AxialMultipleBlock.MAX_COUNT, AxialMultipleBlock.getCountFrom(original) + 1));
+	}
+	
+	protected static int getCountFrom(BlockState state) {
 		return state.get(AxialMultipleBlock.COUNT).intValue();
 	}
 
