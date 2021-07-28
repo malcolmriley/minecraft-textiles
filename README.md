@@ -20,3 +20,7 @@ If you're tired of sleepless nights spent mugging Spiders for their string, then
 
 ## Addenda
 * If you like the textures but hate the mod, you can get them separately via my other project, [unused-textures](https://github.com/malcolmriley/unused-textures).
+
+## Licensing Information
+* The image files and JSON model files contained in this repository are licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/), as per the [License](LICENSE-CC-BY-4.0) included in the repsository. Many are derived from [unused-textures](https://github.com/malcolmriley/unused-textures) where they are available under the same license.
+* All other source code assets original to and contained within this repository are licensed under the [MIT License](https://mit-license.org), as per the [License](LICENSE) included in the repository.
