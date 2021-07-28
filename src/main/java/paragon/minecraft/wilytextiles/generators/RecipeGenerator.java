@@ -203,11 +203,22 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(stringCriterion, stringTrigger)
 			.build(registrar, Utilities.Strings.minecraftResource("loom"));
 		
-		// Linen from Twine
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.LINEN.get())
-			.patternLine("SS")
-			.patternLine("SS")
+		// Plain Fabric from Twine
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_PLAIN.get(), 2)
+			.patternLine("SSS")
+			.patternLine("SIS")
+			.patternLine("SSS")
 			.key('S', Textiles.ITEMS.TWINE.get())
+			.key('I', Items.STICK)
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
+			.addCriterion(stickCriterion, stickTrigger)
+			.build(registrar);
+		
+		// White Fabric from Silk
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), 2)
+			.patternLine("SSS")
+			.patternLine("SSS")
+			.key('S', Textiles.ITEMS.SILK.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
 			.build(registrar);
 	}

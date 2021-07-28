@@ -5,7 +5,6 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ItemTagsProvider;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag.INamedTag;
-import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.Utilities;
@@ -32,9 +31,6 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		// Flax seeds are seeds, believe it or not
 		final INamedTag<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
 		this.getOrCreateBuilder(seeds).add(Textiles.ITEMS.FLAX_SEEDS.get());
-		
-		// Linen is tagged as Wool
-		this.getOrCreateBuilder(ItemTags.WOOL).add(Textiles.ITEMS.LINEN.get());
 		
 		// Copy grass block tags to items
 		this.copy(Utilities.Tags.forgeBlockTag(BlockTagsGenerator.TAG_GRASSES), Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES));
