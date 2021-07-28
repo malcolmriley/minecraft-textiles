@@ -25,7 +25,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	
 	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque(ALWAYS_FALSE)));
 	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, () -> new TallCrop(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.6F).notSolid().setOpaque(ALWAYS_FALSE)));
-	public final RegistryObject<Block> BOLT_RED = this.textileBlock(Names.BOLT_RED, MaterialColor.RED);
+	public final RegistryObject<Block> FABRIC_RED = this.textileBlock(Names.FABRIC_RED, MaterialColor.RED);
 	
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket(AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO).hardnessAndResistance(0.8F)));
 	
@@ -44,7 +44,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		public static final String RAW_FIBERS = "raw_fibers";
 		public static final String FLAX_CROP = "crop_flax";
 		public static final String BASKET = "basket";
-		public static final String BOLT_RED = "bolt_red";
+		public static final String FABRIC_RED = "fabric_red";
 
 	}
 }

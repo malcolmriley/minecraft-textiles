@@ -1,6 +1,6 @@
 {
 	"credit": "Made with Blockbench by Malcolm Riley",
-	"parent": "paragon_textiles:block/bolt_base",
+	"parent": "paragon_textiles:block/fabric_base",
 	"elements": [
 		{
 			"name": "Fabric",
