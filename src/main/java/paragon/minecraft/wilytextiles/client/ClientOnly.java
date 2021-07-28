@@ -1,8 +1,12 @@
 package paragon.minecraft.wilytextiles.client;
 
+import java.util.stream.Stream;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -35,7 +39,21 @@ public final class ClientOnly {
 	}
 	
 	private static void registerRenderTypeLookups() {
-		RenderTypeLookup.setRenderLayer(Textiles.BLOCKS.FLAX_CROP.get(), RenderType.getCutout());
+		Stream<RegistryObject<Block>> cutout = Stream.of(
+			Textiles.BLOCKS.FLAX_CROP, 
+			Textiles.BLOCKS.FABRIC_RED
+		);
+		cutout.forEach(ClientOnly::setCutoutRender);
+	}
+	
+	private static void setCutoutRender(RegistryObject<Block> registryObject) {
+		ClientOnly.setRenderType(registryObject, RenderType.getCutout());
+	}
+	
+	private static void setRenderType(RegistryObject<Block> registryObject, RenderType type) {
+		if (registryObject.isPresent()) {
+			RenderTypeLookup.setRenderLayer(registryObject.get(), type);
+		}
 	}
 
 }
