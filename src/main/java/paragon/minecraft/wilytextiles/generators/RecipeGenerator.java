@@ -280,6 +280,21 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, registrar);
 		
+		// Flaxseed Oil
+		final int seedsPerBottle = 2;
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle)
+			.addIngredient(Items.GLASS_BOTTLE)
+			.addCriterion(RecipeHelper.criterionName(Items.GLASS_BOTTLE), RecipeHelper.hasItem(Items.GLASS_BOTTLE))
+			.build(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle * 3)
+			.addIngredient(Items.BUCKET)
+			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
+			.build(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3)
+			.addIngredient(Items.BUCKET)
+			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
+			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get(), "bottles"));
+		
 		// Wood Staining Recipes
 		final int stainStrength = 5;
 		this.addSpecialStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
@@ -399,11 +414,14 @@ final class RecipeGenerator extends RecipeHelper {
 
 	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
 		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(output, 1);
+		this.applyToShapeless(builder, input, quantity).build(registrar, this.nameFromRecipe(output, input));
+	}
+	
+	protected ShapelessRecipeBuilder applyToShapeless(ShapelessRecipeBuilder builder, IItemProvider ingredient, int quantity) {
 		for (int count = 0; count < quantity; count += 1) {
-			builder.addIngredient(input);
+			builder.addIngredient(ingredient);
 		}
-		builder.addCriterion(CRITERION_PREFIX + input.getRegistryName().getPath(), RecipeProvider.hasItem(input));
-		builder.build(registrar, this.nameFromRecipe(output, input));
+		return builder.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient));
 	}
 	
 	protected ResourceLocation nameFrom(IItemProvider output, String source) {

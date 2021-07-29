@@ -8,12 +8,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
 import net.minecraft.item.Rarity;
+import net.minecraft.util.IItemProvider;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.item.BlockItemSimpleFuel;
 import paragon.minecraft.library.item.CheckedBlockNamedItem;
+import paragon.minecraft.library.item.ItemSimpleFuel;
 import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
 
@@ -40,7 +42,8 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
 	public final RegistryObject<Item> SILK = this.simpleItem(Names.SILK);
 	public final RegistryObject<Item> SILK_WISPS = this.simpleItem(Names.SILK_WISP);
-	public final RegistryObject<Item> FLAXSEED_OIL = this.bottledItem(Names.FLAXSEED_OIL);
+	public final RegistryObject<Item> FLAXSEED_OIL_BOTTLE = this.bottledItem(Names.FLAXSEED_OIL_BOTTLE);
+	public final RegistryObject<Item> FLAXSEED_OIL_BUCKET = this.add(Names.FLAXSEED_OIL_BUCKET, () -> new ItemSimpleFuel(this.defaultWithContainer(Items.BUCKET).maxStackSize(1), Utilities.Time.burnTimeFor(6)));
 	public final RegistryObject<Item> WOOD_STAIN = this.bottledItem(Names.WOOD_STAIN);
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
@@ -94,7 +97,7 @@ public class ModItems extends ContentProvider<Item> {
 	/* Internal Methods */
 	
 	protected RegistryObject<Item> bottledItem(final String name) {
-		return this.simpleItem(name, this.defaultProperties().containerItem(Items.GLASS_BOTTLE));
+		return this.simpleItem(name, this.defaultWithContainer(Items.GLASS_BOTTLE));
 	}
 	
 	protected RegistryObject<Item> simpleItem(final String name) {
@@ -117,6 +120,10 @@ public class ModItems extends ContentProvider<Item> {
 		return new Item.Properties().group(GROUP);
 	}
 	
+	private Item.Properties defaultWithContainer(IItemProvider container) {
+		return this.defaultProperties().containerItem(container.asItem());
+	}
+	
 	/* Item Names */
 	
 	public static class Names {
@@ -134,7 +141,8 @@ public class ModItems extends ContentProvider<Item> {
 		public static final String FLAX_SEEDS = "flax_seeds";
 		public static final String CHAIN_MESH = "chain_mesh";
 		public static final String PLANT_FIBERS = "plant_fibers";
-		public static final String FLAXSEED_OIL = "flaxseed_oil";
+		public static final String FLAXSEED_OIL_BOTTLE = "flaxseed_oil_bottle";
+		public static final String FLAXSEED_OIL_BUCKET = "flaxseed_oil_bucket";
 		public static final String WOOD_STAIN = "wood_stain";
 		public static final String WOOD_BLEACH = "wood_bleach";
 
