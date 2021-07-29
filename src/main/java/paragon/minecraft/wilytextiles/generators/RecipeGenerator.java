@@ -244,22 +244,22 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addFabricRecipe(Textiles.ITEMS.FABRIC_BROWN, Items.BROWN_WOOL, registrar);
 		
 		// Dyed Fabrics
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_PLAIN, Tags.Items.DYES_WHITE, Textiles.ITEMS.FABRIC_WHITE, registrar);
+		this.addFabricDyeRecipe(Textiles.ITEMS.FABRIC_PLAIN, Tags.Items.DYES_WHITE, Textiles.ITEMS.FABRIC_WHITE, registrar);
 
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_RED, Textiles.ITEMS.FABRIC_RED, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_ORANGE, Textiles.ITEMS.FABRIC_ORANGE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_YELLOW, Textiles.ITEMS.FABRIC_YELLOW, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIME, Textiles.ITEMS.FABRIC_LIME, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GREEN, Textiles.ITEMS.FABRIC_GREEN, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_BLUE, Textiles.ITEMS.FABRIC_LIGHT_BLUE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLUE, Textiles.ITEMS.FABRIC_BLUE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PURPLE, Textiles.ITEMS.FABRIC_PURPLE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_MAGENTA, Textiles.ITEMS.FABRIC_MAGENTA, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PINK, Textiles.ITEMS.FABRIC_PINK, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_GRAY, Textiles.ITEMS.FABRIC_LIGHT_GRAY, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GRAY, Textiles.ITEMS.FABRIC_GRAY, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLACK, Textiles.ITEMS.FABRIC_BLACK, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_RED, Textiles.ITEMS.FABRIC_RED, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_ORANGE, Textiles.ITEMS.FABRIC_ORANGE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_YELLOW, Textiles.ITEMS.FABRIC_YELLOW, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIME, Textiles.ITEMS.FABRIC_LIME, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_GREEN, Textiles.ITEMS.FABRIC_GREEN, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIGHT_BLUE, Textiles.ITEMS.FABRIC_LIGHT_BLUE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BLUE, Textiles.ITEMS.FABRIC_BLUE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_PURPLE, Textiles.ITEMS.FABRIC_PURPLE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_MAGENTA, Textiles.ITEMS.FABRIC_MAGENTA, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_PINK, Textiles.ITEMS.FABRIC_PINK, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIGHT_GRAY, Textiles.ITEMS.FABRIC_LIGHT_GRAY, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_GRAY, Textiles.ITEMS.FABRIC_GRAY, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BLACK, Textiles.ITEMS.FABRIC_BLACK, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
 		
 		// Tag-based Wool Recipes
 		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, registrar);
@@ -282,6 +282,14 @@ final class RecipeGenerator extends RecipeHelper {
 
 	/* Internal Methods */
 	
+	protected void addFabricDyeRecipe(INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+		this.addFabricDyeRecipe(Textiles.ITEMS.FABRIC_WHITE, dye, output, registrar);
+	}
+	
+	protected void addFabricDyeRecipe(RegistryObject<Item> input, INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input.get(), dye, output.get(), 1, registrar);
+	}
+	
 	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
 		final INamedTag<Item> coreItem = Tags.Items.RODS_WOODEN;
 		ShapedRecipeBuilder.shapedRecipe(result.get(), 10)
@@ -295,14 +303,30 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar);
 	}
 	
-	protected void addDyeRecipeFor(RegistryObject<Item> target, INamedTag<Item> dye, RegistryObject<Item> result, Consumer<IFinishedRecipe> registrar) {
-		final String recipeName = Utilities.Strings.name(result.get().getRegistryName().getPath(), "from_dye");
-		ShapelessRecipeBuilder.shapelessRecipe(result.get())
-			.addIngredient(target.get())
-			.addIngredient(dye)
-			.addCriterion(RecipeHelper.criterionName(result), RecipeHelper.hasItem(target))
-			.addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye))
-			.build(registrar, Textiles.createResource(recipeName));
+	protected void addDyeRecipe(IItemProvider input, IItemProvider dye, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyItemDye(builder, dye), result, quantity, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, INamedTag<Item> dye, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyTagDye(builder, dye), result, quantity, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
+		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(result, quantity);
+		dyeApplicationFunction.accept(builder);
+		builder.addCriterion(RecipeHelper.criterionName(input), RecipeHelper.hasItem(input));
+		for (int count = 0; count < quantity; count += 1) {
+			builder.addIngredient(input);
+		}
+		builder.build(registrar, this.nameFrom(result, "dye"));
+	}
+	
+	protected void applyTagDye(ShapelessRecipeBuilder builder, INamedTag<Item> dye) {
+		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
+	}
+	
+	protected void applyItemDye(ShapelessRecipeBuilder builder, IItemProvider dye) {
+		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
 	}
 	
 	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, Consumer<IFinishedRecipe> registrar) {
@@ -345,6 +369,10 @@ final class RecipeGenerator extends RecipeHelper {
 		}
 		builder.addCriterion(CRITERION_PREFIX + input.getRegistryName().getPath(), RecipeProvider.hasItem(input));
 		builder.build(registrar, this.nameFromRecipe(output, input));
+	}
+	
+	protected ResourceLocation nameFrom(IItemProvider output, String source) {
+		return RecipeHelper.nameFrom(Textiles::createResource, output, source);
 	}
 
 	protected ResourceLocation nameFromRecipe(Item output, Item input) {
