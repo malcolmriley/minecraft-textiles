@@ -69,8 +69,11 @@ minecraft {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-sourceSets.main.java { exclude "paragon/minecraft/${mod_id}/generators".toString() }
+sourceSets.main.resources {
+	srcDir 'src/generated/resources'
+	exclude '.cache'
+}
+sourceSets.main.java { exclude "paragon/minecraft/${packagename}/generators".toString() }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}".toString()
