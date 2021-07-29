@@ -40,6 +40,7 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> PLANT_FIBERS = this.simpleItem(Names.PLANT_FIBERS);
 	public final RegistryObject<Item> SILK = this.simpleItem(Names.SILK);
 	public final RegistryObject<Item> SILK_WISPS = this.simpleItem(Names.SILK_WISP);
+	public final RegistryObject<Item> FLAXSEED_OIL = this.bottledItem(Names.FLAXSEED_OIL);
 	public final RegistryObject<Item> WOOD_STAIN = this.bottledItem(Names.WOOD_STAIN);
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
@@ -133,6 +134,7 @@ public class ModItems extends ContentProvider<Item> {
 		public static final String FLAX_SEEDS = "flax_seeds";
 		public static final String CHAIN_MESH = "chain_mesh";
 		public static final String PLANT_FIBERS = "plant_fibers";
+		public static final String FLAXSEED_OIL = "flaxseed_oil";
 		public static final String WOOD_STAIN = "wood_stain";
 		public static final String WOOD_BLEACH = "wood_bleach";
 
