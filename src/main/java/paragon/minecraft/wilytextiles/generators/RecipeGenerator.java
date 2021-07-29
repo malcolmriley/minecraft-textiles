@@ -1,5 +1,6 @@
 package paragon.minecraft.wilytextiles.generators;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import net.minecraft.advancements.ICriterionInstance;
@@ -278,16 +279,42 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addWoolRecipesFor(DyeColor.GRAY, Items.GRAY_BED, Items.GRAY_BANNER, Items.GRAY_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, registrar);
+		
+		// Wood Staining Recipes
+		final int stainStrength = 5;
+		this.addSpecialStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
+		this.addStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.DARK_OAK_PLANKS);
 	}
 
 	/* Internal Methods */
+	
+	protected void addSpecialStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+		this.addSpecialDyeRecipe(spectrum[0], Textiles.ITEMS.WOOD_STAIN.get(), Tags.Items.DYES_PINK, spectrum[1], strength, "special_stain", registrar);
+		this.addDyeRecipe(spectrum[1], Textiles.ITEMS.WOOD_BLEACH.get(), spectrum[0], strength, "special_bleach", registrar);
+		this.addStainRecipes(registrar, strength, Arrays.copyOfRange(spectrum, 1, spectrum.length));
+	}
+	
+	protected void addStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+		this.addDyeSpectrumRecipes(Textiles.ITEMS.WOOD_STAIN.get(), Textiles.ITEMS.WOOD_BLEACH.get(), strength, registrar, spectrum);
+	}
+	
+	protected void addDyeSpectrumRecipes(IItemProvider forwardReagent, IItemProvider reverseReagent, int strength, Consumer<IFinishedRecipe> registrar, Item ... spectrum) {
+		if (spectrum.length > 2) {
+			for (int index = 1; index < spectrum.length; index += 1) {
+				Item previous = spectrum[index - 1];
+				Item current = spectrum[index];
+				this.addDyeRecipe(previous, forwardReagent, current, strength, "stain", registrar);
+				this.addDyeRecipe(current, reverseReagent, previous, strength, "bleach", registrar);
+			}
+		}
+	}
 	
 	protected void addFabricDyeRecipe(INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
 		this.addFabricDyeRecipe(Textiles.ITEMS.FABRIC_WHITE, dye, output, registrar);
 	}
 	
 	protected void addFabricDyeRecipe(RegistryObject<Item> input, INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
-		this.addDyeRecipe(input.get(), dye, output.get(), 1, registrar);
+		this.addDyeRecipe(input.get(), dye, output.get(), 1, "dye", registrar);
 	}
 	
 	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
@@ -303,22 +330,30 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, IItemProvider dye, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
-		this.addDyeRecipe(input, builder -> this.applyItemDye(builder, dye), result, quantity, registrar);
+	protected void addSpecialDyeRecipe(IItemProvider input, IItemProvider dye, INamedTag<Item> augment, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		Consumer<ShapelessRecipeBuilder> doubleDye = builder -> {
+			this.applyItemDye(builder, dye);
+			this.applyTagDye(builder, augment);
+		};
+		this.addDyeRecipe(input, doubleDye, result, quantity, processName, registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, INamedTag<Item> dye, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
-		this.addDyeRecipe(input, builder -> this.applyTagDye(builder, dye), result, quantity, registrar);
+	protected void addDyeRecipe(IItemProvider input, IItemProvider dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyItemDye(builder, dye), result, quantity, processName, registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, IItemProvider result, int quantity, Consumer<IFinishedRecipe> registrar) {
+	protected void addDyeRecipe(IItemProvider input, INamedTag<Item> dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyTagDye(builder, dye), result, quantity, processName, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
 		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(result, quantity);
 		dyeApplicationFunction.accept(builder);
 		builder.addCriterion(RecipeHelper.criterionName(input), RecipeHelper.hasItem(input));
 		for (int count = 0; count < quantity; count += 1) {
 			builder.addIngredient(input);
 		}
-		builder.build(registrar, this.nameFrom(result, "dye"));
+		builder.build(registrar, this.nameFrom(result, processName));
 	}
 	
 	protected void applyTagDye(ShapelessRecipeBuilder builder, INamedTag<Item> dye) {
