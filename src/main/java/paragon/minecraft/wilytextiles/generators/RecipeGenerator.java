@@ -13,8 +13,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.RecipeHelper;
 import paragon.minecraft.wilytextiles.Textiles;
@@ -221,9 +223,45 @@ final class RecipeGenerator extends RecipeHelper {
 			.patternLine("SSS")
 			.key('S', Textiles.ITEMS.SILK.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
-			.build(registrar);
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), Textiles.ITEMS.SILK.get()));
 		
-		// Missing Wool Recipes
+		// Fabrics from Wool
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_RED, Items.RED_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_ORANGE, Items.ORANGE_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_YELLOW, Items.YELLOW_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_LIME, Items.LIME_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_GREEN, Items.GREEN_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_CYAN, Items.CYAN_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_LIGHT_BLUE, Items.LIGHT_BLUE_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_BLUE, Items.BLUE_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_PURPLE, Items.PURPLE_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_MAGENTA, Items.MAGENTA_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_PINK, Items.PINK_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_WHITE, Items.WHITE_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_LIGHT_GRAY, Items.LIGHT_GRAY_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_GRAY, Items.GRAY_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_BLACK, Items.BLACK_WOOL, registrar);
+		this.addFabricRecipe(Textiles.ITEMS.FABRIC_BROWN, Items.BROWN_WOOL, registrar);
+		
+		// Dyed Fabrics
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_PLAIN, Tags.Items.DYES_WHITE, Textiles.ITEMS.FABRIC_WHITE, registrar);
+
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_RED, Textiles.ITEMS.FABRIC_RED, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_ORANGE, Textiles.ITEMS.FABRIC_ORANGE, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_YELLOW, Textiles.ITEMS.FABRIC_YELLOW, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIME, Textiles.ITEMS.FABRIC_LIME, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GREEN, Textiles.ITEMS.FABRIC_GREEN, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_BLUE, Textiles.ITEMS.FABRIC_LIGHT_BLUE, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLUE, Textiles.ITEMS.FABRIC_BLUE, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PURPLE, Textiles.ITEMS.FABRIC_PURPLE, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_MAGENTA, Textiles.ITEMS.FABRIC_MAGENTA, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PINK, Textiles.ITEMS.FABRIC_PINK, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_GRAY, Textiles.ITEMS.FABRIC_LIGHT_GRAY, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GRAY, Textiles.ITEMS.FABRIC_GRAY, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLACK, Textiles.ITEMS.FABRIC_BLACK, registrar);
+		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
+		
+		// Tag-based Wool Recipes
 		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.ORANGE, Items.ORANGE_BED, Items.ORANGE_BANNER, Items.ORANGE_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.YELLOW, Items.YELLOW_BED, Items.YELLOW_BANNER, Items.YELLOW_CARPET, registrar);
@@ -243,6 +281,29 @@ final class RecipeGenerator extends RecipeHelper {
 	}
 
 	/* Internal Methods */
+	
+	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
+		final INamedTag<Item> coreItem = Tags.Items.RODS_WOODEN;
+		ShapedRecipeBuilder.shapedRecipe(result.get(), 10)
+			.patternLine("###")
+			.patternLine("#I#")
+			.patternLine("###")
+			.key('#', ingredient)
+			.key('I', coreItem)
+			.addCriterion(RecipeHelper.criterionName(ingredient), RecipeHelper.hasItem(ingredient))
+			.addCriterion(RecipeHelper.criterionName(coreItem), RecipeHelper.hasItem(coreItem))
+			.build(registrar);
+	}
+	
+	protected void addDyeRecipeFor(RegistryObject<Item> target, INamedTag<Item> dye, RegistryObject<Item> result, Consumer<IFinishedRecipe> registrar) {
+		final String recipeName = Utilities.Strings.name(result.get().getRegistryName().getPath(), "from_dye");
+		ShapelessRecipeBuilder.shapelessRecipe(result.get())
+			.addIngredient(target.get())
+			.addIngredient(dye)
+			.addCriterion(RecipeHelper.criterionName(result), RecipeHelper.hasItem(target))
+			.addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye))
+			.build(registrar, Textiles.createResource(recipeName));
+	}
 	
 	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, Consumer<IFinishedRecipe> registrar) {
 		final INamedTag<Item> woolTag = Utilities.Tags.forgeItemTag(ItemTagsGenerator.TAG_WOOL, color.getString());
