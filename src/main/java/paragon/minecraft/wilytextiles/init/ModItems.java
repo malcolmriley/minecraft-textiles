@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.init;
 
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -61,6 +62,30 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FABRIC_GRAY = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_GRAY);
 	public final RegistryObject<Item> FABRIC_BLACK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLACK);
 	public final RegistryObject<Item> FABRIC_BROWN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BROWN);
+	
+	/* Public Methods */
+	
+	public Stream<Item> streamFabricItems() {
+		return Stream.of(
+			this.FABRIC_PLAIN,
+			this.FABRIC_RED,
+			this.FABRIC_ORANGE,
+			this.FABRIC_YELLOW,
+			this.FABRIC_LIME,
+			this.FABRIC_GREEN,
+			this.FABRIC_CYAN,
+			this.FABRIC_LIGHT_BLUE,
+			this.FABRIC_BLUE,
+			this.FABRIC_PURPLE,
+			this.FABRIC_MAGENTA,
+			this.FABRIC_PINK,
+			this.FABRIC_WHITE,
+			this.FABRIC_LIGHT_GRAY,
+			this.FABRIC_GRAY,
+			this.FABRIC_BLACK,
+			this.FABRIC_BROWN
+		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+	}
 	
 	/* Internal Methods */
 	
