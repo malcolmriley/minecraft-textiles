@@ -299,6 +299,10 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET))
 			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), "bucket"));
 		
+		// Wood Stain and Wood Bleach
+		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_STAIN, Items.BROWN_MUSHROOM);
+		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_BLEACH, Items.RED_MUSHROOM);
+		
 		// Wood Staining Recipes
 		final int stainStrength = 5;
 		this.addSpecialStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
@@ -306,6 +310,14 @@ final class RecipeGenerator extends RecipeHelper {
 	}
 
 	/* Internal Methods */
+	
+	protected void stainItemRecipe(Consumer<IFinishedRecipe> registrar, RegistryObject<Item> result, IItemProvider input) {
+		ShapelessRecipeBuilder stainBuilder = this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(result.get(), 3), Items.GLASS_BOTTLE, 3)
+			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()));
+		this.applyToShapeless(stainBuilder, input, 2)
+			.build(registrar);
+	}
 	
 	protected void addSpecialStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
 		this.addSpecialDyeRecipe(spectrum[0], Textiles.ITEMS.WOOD_STAIN.get(), Tags.Items.DYES_PINK, spectrum[1], strength, "special_stain", registrar);
