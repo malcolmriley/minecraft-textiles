@@ -34,6 +34,11 @@ import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
+/**
+ * Data generator class for mod loot tables.
+ * 
+ * @author Malcolm Riley
+ */
 final class LootGenerator extends LootHelper {
 
 	// Tool Predicates

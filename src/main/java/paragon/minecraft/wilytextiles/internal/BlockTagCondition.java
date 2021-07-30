@@ -64,13 +64,13 @@ public class BlockTagCondition implements ILootCondition {
 		@Override
 		public void serialize(JsonObject serialized, BlockTagCondition instance, JsonSerializationContext context) {
 			if (instance.BLOCK_TAG.isPresent()) {
-				serialized.addProperty(Serializer.FIELD_TAG, instance.BLOCK_TAG.get().getName().toString());
+				serialized.addProperty(FIELD_TAG, instance.BLOCK_TAG.get().getName().toString());
 			}
 		}
 
 		@Override
 		public BlockTagCondition deserialize(JsonObject serialized, JsonDeserializationContext context) {
-			return new BlockTagCondition(BlockTags.createOptional(new ResourceLocation(JSONUtils.getString(serialized, Serializer.FIELD_TAG))));
+			return new BlockTagCondition(BlockTags.createOptional(new ResourceLocation(JSONUtils.getString(serialized, FIELD_TAG))));
 		}
 		
 	}

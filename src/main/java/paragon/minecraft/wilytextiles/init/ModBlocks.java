@@ -1,5 +1,7 @@
 package paragon.minecraft.wilytextiles.init;
 
+import java.util.stream.Stream;
+
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.Block;
@@ -15,8 +17,16 @@ import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
+/**
+ * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
+ * <p>
+ * These fields can be accessed via the static {@link ModBlocks} instance {@link Textiles#BLOCKS}.
+ * 
+ * @author Malcolm Riley
+ */
 public class ModBlocks extends ContentProvider<Block> {
 	
+	/** An {@link IPositionPredicate} that always returns {@code FALSE}. */
 	private final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
 
 	public ModBlocks() {
@@ -48,6 +58,35 @@ public class ModBlocks extends ContentProvider<Block> {
 	
 	/* Internal Methods */
 	
+	public Stream<Block> streamFabricBlocks() {
+		return Stream.of(
+			Textiles.BLOCKS.FABRIC_PLAIN,
+			Textiles.BLOCKS.FABRIC_RED,
+			Textiles.BLOCKS.FABRIC_ORANGE,
+			Textiles.BLOCKS.FABRIC_YELLOW,
+			Textiles.BLOCKS.FABRIC_LIME,
+			Textiles.BLOCKS.FABRIC_GREEN,
+			Textiles.BLOCKS.FABRIC_CYAN,
+			Textiles.BLOCKS.FABRIC_LIGHT_BLUE,
+			Textiles.BLOCKS.FABRIC_BLUE,
+			Textiles.BLOCKS.FABRIC_PURPLE,
+			Textiles.BLOCKS.FABRIC_MAGENTA,
+			Textiles.BLOCKS.FABRIC_PINK,
+			Textiles.BLOCKS.FABRIC_WHITE,
+			Textiles.BLOCKS.FABRIC_LIGHT_GRAY,
+			Textiles.BLOCKS.FABRIC_GRAY,
+			Textiles.BLOCKS.FABRIC_BLACK,
+			Textiles.BLOCKS.FABRIC_BROWN
+		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+	}
+	
+	/**
+	 * Convenience method for creating a "textile" {@link Block} - an {@link AxialMultipleBlock} with the {@link Material#WOOL} material and {@link SoundType#CLOTH}, very low hardness, non-solid and non-opaque.
+	 * 
+	 * @param name - The registry name for the desired {@link Block}
+	 * @param color - The {@link MaterialColor} to use for the {@link Block}
+	 * @return A {@link RegistryObject} holding the desired {@link Block}
+	 */
 	public RegistryObject<Block> textileBlock(String name, MaterialColor color) {
 		return this.add(name, () -> new AxialMultipleBlock(AbstractBlock.Properties.create(Material.WOOL, color).sound(SoundType.CLOTH).hardnessAndResistance(0.08F).notSolid().setOpaque(ALWAYS_FALSE)));
 	}

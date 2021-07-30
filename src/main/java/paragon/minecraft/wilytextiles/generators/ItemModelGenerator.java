@@ -7,6 +7,11 @@ import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModItems;
 
+/**
+ * Data Generator class for JSON Item models.
+ * 
+ * @author Malcolm Riley
+ */
 final class ItemModelGenerator extends ItemModelHelper {
 
 	ItemModelGenerator(DataGenerator generator, ExistingFileHelper helper) {

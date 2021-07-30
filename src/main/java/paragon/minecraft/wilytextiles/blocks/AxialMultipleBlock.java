@@ -16,6 +16,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 
+/**
+ * An axis-aligned block that appears to permit multiple objects within the same block space.
+ * 
+ * @author Malcolm Riley
+ */
 public class AxialMultipleBlock extends Block {
 	
 	/* Blockstate Fields */
@@ -87,18 +92,43 @@ public class AxialMultipleBlock extends Block {
 	
 	/* Internal Methods */
 	
+	/**
+	 * Applies the {@link #FACING} property specified by the provided {@link Axis} parameter to the provided {@link BlockState}.
+	 * 
+	 * @param original - The original {@link BlockState}
+	 * @param facing - The {@link Axis} facing to apply
+	 * @return The {@link BlockState}, with the applied axial facing.
+	 */
 	protected static BlockState withAxis(BlockState original, Axis facing) {
 		return facing.isHorizontal() ? original.with(AxialMultipleBlock.FACING, facing) : original;
 	}
 	
+	/**
+	 * Safely increments the {@link #COUNT} property of the provided {@link BlockState} by one.
+	 * 
+	 * @param original - The original {@link BlockState}
+	 * @return The {@link BlockState} after incrementing the {@link #COUNT} property.
+	 */
 	protected static BlockState incrementCount(BlockState original) {
 		return original.with(AxialMultipleBlock.COUNT, Math.min(AxialMultipleBlock.MAX_COUNT, AxialMultipleBlock.getCountFrom(original) + 1));
 	}
 	
+	/**
+	 * Extracts the value of the {@link #COUNT} property from the provided {@link BlockState}.
+	 * 
+	 * @param state - The {@link BlockState} to extract from
+	 * @return The value of the {@link #COUNT} property.
+	 */
 	protected static int getCountFrom(BlockState state) {
 		return state.get(AxialMultipleBlock.COUNT).intValue();
 	}
 	
+	/**
+	 * Extracts the value of the {@link #FACING} property from the provided {@link BlockState}.
+	 * 
+	 * @param state - The {@link BlockState} to extract from
+	 * @return The value of the {@link #FACING} property.
+	 */
 	protected static Axis getAxisFrom(BlockState state) {
 		return state.get(AxialMultipleBlock.FACING);
 	}

@@ -9,6 +9,11 @@ import paragon.minecraft.library.client.ui.SimpleContainerScreen;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
+/**
+ * Implementation of the GUI for the Basket.
+ * 
+ * @author Malcolm Riley
+ */
 @OnlyIn(Dist.CLIENT)
 public class ScreenBasket extends SimpleContainerScreen<TEBasket.ContainerImpl> {
 

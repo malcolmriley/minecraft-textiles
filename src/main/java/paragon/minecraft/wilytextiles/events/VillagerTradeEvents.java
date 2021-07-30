@@ -13,6 +13,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Event manager used to register testificate trades.
+ * <p>
+ * Responds to both {@link VillagerTradesEvent} and {@link WandererTradesEvent} to add trades to each type of villager.
+ * 
+ * @author Malcolm Riley
+ */
 @EventBusSubscriber
 public final class VillagerTradeEvents {
 	
@@ -27,6 +34,11 @@ public final class VillagerTradeEvents {
 	
 	/* Event Handler Methods */
 	
+	/**
+	 * Receiver method for responding to the {@link VillagerTradesEvent} in order to register trades for the Shepherd villager.
+	 * 
+	 * @param event - The {@link VillagerTradesEvent} received
+	 */
 	@SubscribeEvent
 	public static void onVillagerTrade(final VillagerTradesEvent event) {
 		if (Textiles.CONFIG.allowShepherdTrade()) {
@@ -36,6 +48,11 @@ public final class VillagerTradeEvents {
 		}
 	}
 	
+	/**
+	 * Receiver method for responding to the {@link WandererTradesEvent} in order to register trades for the Wandering Trader.
+	 * 
+	 * @param event - The {@link WandererTradesEvent} received
+	 */
 	@SubscribeEvent
 	public static void onWanderingTrade(final WandererTradesEvent event) {
 		if (Textiles.CONFIG.allowWandererTrade()) {
@@ -48,11 +65,31 @@ public final class VillagerTradeEvents {
 	
 	/* Internal Methods */
 	
-	protected static ITrade villagerBuysItem(Item instance) {
-		return new BasicTrade(new ItemStack(instance, FABRIC_BOUGHT_PER_EMERALD), new ItemStack(Items.EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
+	/**
+	 * Generates an {@link ITrade} instance from the provided fabric {@link Item}, using the constants:
+	 * <li> {@link #FABRIC_BOUGHT_PER_EMERALD}: The quantity that must be sold to the villager to receive an emerald
+	 * <li> {@link #FABRIC_MAX_TRADES}: The maximum daily trade cap
+	 * <li> {@link #FABRIC_XP}: The XP the villager gains for executing this trade
+	 * <li> {@link #FABRIC_MULTIPLIER}: The "economic" scalar applied per trade (affects internal simulated supply/demand mechanism)
+	 * 
+	 * @param fabricItem - The object being traded for emeralds.
+	 * @return A suitable {@link ITrade} instance, instantiated based on the specified values.
+	 */
+	protected static ITrade villagerBuysItem(Item fabricItem) {
+		return new BasicTrade(new ItemStack(fabricItem, FABRIC_BOUGHT_PER_EMERALD), new ItemStack(Items.EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
 	}
 	
-	protected static ITrade villagerSellsItem(Item instance) {
-		return new BasicTrade(1, new ItemStack(instance, FABRIC_SOLD_PER_EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
+	/**
+	 * Generates an {@link ITrade} instance from the provided fabric {@link Item}, using the constants:
+	 * <li> {@link #FABRIC_SOLD_PER_EMERALD}: The quantity of fabric being sold by the villager per emerald
+	 * <li> {@link #FABRIC_MAX_TRADES}: The maximum daily trade cap
+	 * <li> {@link #FABRIC_XP}: The XP the villager gains for executing this trade
+	 * <li> {@link #FABRIC_MULTIPLIER}: The "economic" scalar applied per trade (affects internal simulated supply/demand mechanism)
+	 * 
+	 * @param fabricItem - The object being traded for emeralds.
+	 * @return A suitable {@link ITrade} instance, instantiated based on the specified values.
+	 */
+	protected static ITrade villagerSellsItem(Item fabricItem) {
+		return new BasicTrade(1, new ItemStack(fabricItem, FABRIC_SOLD_PER_EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
 	}
 }

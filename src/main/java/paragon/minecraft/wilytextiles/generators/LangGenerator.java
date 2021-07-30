@@ -6,6 +6,11 @@ import net.minecraftforge.common.data.LanguageProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
+/**
+ * Data generator class for default localization files.
+ * 
+ * @author Malcolm Riley
+ */
 final class LangGenerator extends LanguageProvider {
 
 	/* Constants */

@@ -12,6 +12,11 @@ import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Data generator class for Item Tags.
+ * 
+ * @author Malcolm Riley
+ */
 final class ItemTagsGenerator extends ItemTagsProvider {
 	
 	/* Constants */
@@ -37,6 +42,12 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		// Flax seeds are seeds, believe it or not
 		final INamedTag<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
 		this.getOrCreateBuilder(seeds).add(Textiles.ITEMS.FLAX_SEEDS.get());
+		
+		// Flax blossoms are flowers
+		this.getOrCreateBuilder(ItemTags.SMALL_FLOWERS)
+			.add(Textiles.ITEMS.FLAX_PALE.get())
+			.add(Textiles.ITEMS.FLAX_VIBRANT.get())
+			.add(Textiles.ITEMS.FLAX_PURPLE.get());
 		
 		// Colored Wool Tags
 		this.tagAsWool(Textiles.ITEMS.FABRIC_PLAIN);

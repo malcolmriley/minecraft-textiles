@@ -7,6 +7,12 @@ import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
+/**
+ * Holder and initializer class for {@link TileEntityType} bearing {@link RegistryObject} instances.
+ * 
+ * @author Malcolm Riley
+ *
+ */
 public class ModTileEntities extends ContentProvider<TileEntityType<?>> {
 
 	public ModTileEntities() {
@@ -19,6 +25,11 @@ public class ModTileEntities extends ContentProvider<TileEntityType<?>> {
 	
 	/* Tile Entity Type Names */
 	
+	/**
+	 * Holder class for {@link TileEntityType} names.
+	 * 
+	 * @author Malcolm Riley
+	 */
 	public static class Names {
 
 		private Names() {}
