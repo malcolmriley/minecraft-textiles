@@ -29,11 +29,21 @@ final class ItemModelGenerator extends ItemModelHelper {
 			ModItems.Names.SILK_WISP,
 			ModItems.Names.WICKER,
 			ModItems.Names.PLANT_FIBERS,
-			ModItems.Names.FLAX_SEEDS
+			ModItems.Names.FLAX_SEEDS,
+			ModItems.Names.FLAXSEED_OIL_BOTTLE,
+			ModItems.Names.WOOD_BLEACH,
+			ModItems.Names.WOOD_STAIN
 		};
 		for (String iterated : simpleItems) {
 			this.simpleItem(iterated);
 		}
+		
+		// Flaxseed Oil Bucket
+		this.getBuilder(ModItems.Names.FLAXSEED_OIL_BUCKET)
+			.parent(GENERATED)
+			.texture(TEXTURE_DEFAULT, this.mcLoc(ITEM_PREFIX + "bucket"))
+			.texture("layer1", this.modLoc(ITEM_PREFIX + ModItems.Names.FLAXSEED_OIL_BUCKET));
+		
 		// Block Items
 		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
 		this.blockItem(ModBlocks.Names.BASKET, "basket_upright");

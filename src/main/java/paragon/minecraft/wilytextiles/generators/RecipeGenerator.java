@@ -1,5 +1,6 @@
 package paragon.minecraft.wilytextiles.generators;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import net.minecraft.advancements.ICriterionInstance;
@@ -244,22 +245,22 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addFabricRecipe(Textiles.ITEMS.FABRIC_BROWN, Items.BROWN_WOOL, registrar);
 		
 		// Dyed Fabrics
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_PLAIN, Tags.Items.DYES_WHITE, Textiles.ITEMS.FABRIC_WHITE, registrar);
+		this.addFabricDyeRecipe(Textiles.ITEMS.FABRIC_PLAIN, Tags.Items.DYES_WHITE, Textiles.ITEMS.FABRIC_WHITE, registrar);
 
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_RED, Textiles.ITEMS.FABRIC_RED, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_ORANGE, Textiles.ITEMS.FABRIC_ORANGE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_YELLOW, Textiles.ITEMS.FABRIC_YELLOW, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIME, Textiles.ITEMS.FABRIC_LIME, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GREEN, Textiles.ITEMS.FABRIC_GREEN, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_BLUE, Textiles.ITEMS.FABRIC_LIGHT_BLUE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLUE, Textiles.ITEMS.FABRIC_BLUE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PURPLE, Textiles.ITEMS.FABRIC_PURPLE, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_MAGENTA, Textiles.ITEMS.FABRIC_MAGENTA, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_PINK, Textiles.ITEMS.FABRIC_PINK, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_LIGHT_GRAY, Textiles.ITEMS.FABRIC_LIGHT_GRAY, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_GRAY, Textiles.ITEMS.FABRIC_GRAY, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BLACK, Textiles.ITEMS.FABRIC_BLACK, registrar);
-		this.addDyeRecipeFor(Textiles.ITEMS.FABRIC_WHITE, Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_RED, Textiles.ITEMS.FABRIC_RED, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_ORANGE, Textiles.ITEMS.FABRIC_ORANGE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_YELLOW, Textiles.ITEMS.FABRIC_YELLOW, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIME, Textiles.ITEMS.FABRIC_LIME, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_GREEN, Textiles.ITEMS.FABRIC_GREEN, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIGHT_BLUE, Textiles.ITEMS.FABRIC_LIGHT_BLUE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BLUE, Textiles.ITEMS.FABRIC_BLUE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_PURPLE, Textiles.ITEMS.FABRIC_PURPLE, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_MAGENTA, Textiles.ITEMS.FABRIC_MAGENTA, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_PINK, Textiles.ITEMS.FABRIC_PINK, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_LIGHT_GRAY, Textiles.ITEMS.FABRIC_LIGHT_GRAY, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_GRAY, Textiles.ITEMS.FABRIC_GRAY, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BLACK, Textiles.ITEMS.FABRIC_BLACK, registrar);
+		this.addFabricDyeRecipe(Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
 		
 		// Tag-based Wool Recipes
 		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, registrar);
@@ -278,9 +279,95 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addWoolRecipesFor(DyeColor.GRAY, Items.GRAY_BED, Items.GRAY_BANNER, Items.GRAY_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, registrar);
 		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, registrar);
+		
+		// Flaxseed Oil
+		final int seedsPerBottle = 2;
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle)
+			.addIngredient(Items.GLASS_BOTTLE)
+			.addCriterion(RecipeHelper.criterionName(Items.GLASS_BOTTLE), RecipeHelper.hasItem(Items.GLASS_BOTTLE))
+			.build(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle * 3)
+			.addIngredient(Items.BUCKET)
+			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
+			.build(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3)
+			.addIngredient(Items.BUCKET)
+			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
+			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get(), "bottles"));
+		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3), Items.GLASS_BOTTLE, 3)
+			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET))
+			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), "bucket"));
+		
+		// Wood Stain and Wood Bleach
+		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_STAIN, Items.BROWN_MUSHROOM);
+		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_BLEACH, Items.RED_MUSHROOM);
+		
+		// Wood Staining Recipes
+		final int smallObjectStainQuantity = 5; // Objects with a planks:result crafting ratio of 3:1 or better
+		final int largeObjectStainQuantity = 1; // Objects with a planks:result crafting ratio of 4:1 or worse
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_BUTTON, Items.JUNGLE_BUTTON, Items.ACACIA_BUTTON);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE, Items.JUNGLE_FENCE, Items.ACACIA_FENCE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE_GATE, Items.JUNGLE_FENCE_GATE, Items.ACACIA_FENCE_GATE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.ACACIA_PRESSURE_PLATE, Items.JUNGLE_PRESSURE_PLATE, Items.ACACIA_PRESSURE_PLATE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SIGN, Items.JUNGLE_SIGN, Items.ACACIA_SIGN);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SLAB, Items.JUNGLE_SLAB, Items.ACACIA_SLAB);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_STAIRS, Items.JUNGLE_STAIRS, Items.ACACIA_STAIRS);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.JUNGLE_BOAT, Items.ACACIA_BOAT);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.JUNGLE_DOOR, Items.ACACIA_DOOR);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.JUNGLE_TRAPDOOR, Items.ACACIA_TRAPDOOR);
+		
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PLANKS, Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.DARK_OAK_PLANKS);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_BUTTON, Items.OAK_BUTTON, Items.SPRUCE_BUTTON, Items.DARK_OAK_BUTTON);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE, Items.OAK_FENCE, Items.SPRUCE_FENCE, Items.DARK_OAK_FENCE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE_GATE, Items.OAK_FENCE_GATE, Items.SPRUCE_FENCE_GATE, Items.DARK_OAK_FENCE_GATE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PRESSURE_PLATE, Items.OAK_PRESSURE_PLATE, Items.SPRUCE_PRESSURE_PLATE, Items.DARK_OAK_PRESSURE_PLATE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SIGN, Items.OAK_SIGN, Items.SPRUCE_SIGN, Items.DARK_OAK_SIGN);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SLAB, Items.OAK_SLAB, Items.SPRUCE_SLAB, Items.DARK_OAK_SLAB);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_STAIRS, Items.OAK_STAIRS, Items.SPRUCE_STAIRS, Items.DARK_OAK_STAIRS);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.DARK_OAK_BOAT);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.OAK_DOOR, Items.SPRUCE_DOOR, Items.DARK_OAK_DOOR);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.OAK_TRAPDOOR, Items.SPRUCE_TRAPDOOR, Items.DARK_OAK_TRAPDOOR);
 	}
 
 	/* Internal Methods */
+	
+	protected void stainItemRecipe(Consumer<IFinishedRecipe> registrar, RegistryObject<Item> result, IItemProvider input) {
+		ShapelessRecipeBuilder stainBuilder = this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(result.get(), 3), Items.GLASS_BOTTLE, 3)
+			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()));
+		this.applyToShapeless(stainBuilder, input, 2).build(registrar);
+	}
+	
+	protected void addSpecialStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+		this.addSpecialDyeRecipe(spectrum[0], Textiles.ITEMS.WOOD_STAIN.get(), Tags.Items.DYES_PINK, spectrum[1], strength, "special_stain", registrar);
+		this.addDyeRecipe(spectrum[1], Textiles.ITEMS.WOOD_BLEACH.get(), spectrum[0], strength, "special_bleach", registrar);
+		this.addStainRecipes(registrar, strength, Arrays.copyOfRange(spectrum, 1, spectrum.length));
+	}
+	
+	protected void addStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+		this.addDyeSpectrumRecipes(Textiles.ITEMS.WOOD_STAIN.get(), Textiles.ITEMS.WOOD_BLEACH.get(), strength, registrar, spectrum);
+	}
+	
+	protected void addDyeSpectrumRecipes(IItemProvider forwardReagent, IItemProvider reverseReagent, int strength, Consumer<IFinishedRecipe> registrar, Item ... spectrum) {
+		if (spectrum.length >= 2) {
+			for (int index = 1; index < spectrum.length; index += 1) {
+				Item previous = spectrum[index - 1];
+				Item current = spectrum[index];
+				this.addDyeRecipe(previous, forwardReagent, current, strength, "stain", registrar);
+				this.addDyeRecipe(current, reverseReagent, previous, strength, "bleach", registrar);
+			}
+		}
+	}
+	
+	protected void addFabricDyeRecipe(INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+		this.addFabricDyeRecipe(Textiles.ITEMS.FABRIC_WHITE, dye, output, registrar);
+	}
+	
+	protected void addFabricDyeRecipe(RegistryObject<Item> input, INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input.get(), dye, output.get(), 1, "dye", registrar);
+	}
 	
 	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
 		final INamedTag<Item> coreItem = Tags.Items.RODS_WOODEN;
@@ -295,14 +382,38 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar);
 	}
 	
-	protected void addDyeRecipeFor(RegistryObject<Item> target, INamedTag<Item> dye, RegistryObject<Item> result, Consumer<IFinishedRecipe> registrar) {
-		final String recipeName = Utilities.Strings.name(result.get().getRegistryName().getPath(), "from_dye");
-		ShapelessRecipeBuilder.shapelessRecipe(result.get())
-			.addIngredient(target.get())
-			.addIngredient(dye)
-			.addCriterion(RecipeHelper.criterionName(result), RecipeHelper.hasItem(target))
-			.addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye))
-			.build(registrar, Textiles.createResource(recipeName));
+	protected void addSpecialDyeRecipe(IItemProvider input, IItemProvider dye, INamedTag<Item> augment, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		Consumer<ShapelessRecipeBuilder> doubleDye = builder -> {
+			this.applyItemDye(builder, dye);
+			this.applyTagDye(builder, augment);
+		};
+		this.addDyeRecipe(input, doubleDye, result, quantity, processName, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, IItemProvider dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyItemDye(builder, dye), result, quantity, processName, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, INamedTag<Item> dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		this.addDyeRecipe(input, builder -> this.applyTagDye(builder, dye), result, quantity, processName, registrar);
+	}
+	
+	protected void addDyeRecipe(IItemProvider input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(result, quantity);
+		dyeApplicationFunction.accept(builder);
+		builder.addCriterion(RecipeHelper.criterionName(input), RecipeHelper.hasItem(input));
+		for (int count = 0; count < quantity; count += 1) {
+			builder.addIngredient(input);
+		}
+		builder.build(registrar, this.nameFrom(result, processName));
+	}
+	
+	protected void applyTagDye(ShapelessRecipeBuilder builder, INamedTag<Item> dye) {
+		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
+	}
+	
+	protected void applyItemDye(ShapelessRecipeBuilder builder, IItemProvider dye) {
+		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
 	}
 	
 	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, Consumer<IFinishedRecipe> registrar) {
@@ -340,11 +451,18 @@ final class RecipeGenerator extends RecipeHelper {
 
 	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
 		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(output, 1);
+		this.applyToShapeless(builder, input, quantity).build(registrar, this.nameFromRecipe(output, input));
+	}
+	
+	protected ShapelessRecipeBuilder applyToShapeless(ShapelessRecipeBuilder builder, IItemProvider ingredient, int quantity) {
 		for (int count = 0; count < quantity; count += 1) {
-			builder.addIngredient(input);
+			builder.addIngredient(ingredient);
 		}
-		builder.addCriterion(CRITERION_PREFIX + input.getRegistryName().getPath(), RecipeProvider.hasItem(input));
-		builder.build(registrar, this.nameFromRecipe(output, input));
+		return builder.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient));
+	}
+	
+	protected ResourceLocation nameFrom(IItemProvider output, String source) {
+		return RecipeHelper.nameFrom(Textiles::createResource, output, source);
 	}
 
 	protected ResourceLocation nameFromRecipe(Item output, Item input) {
