@@ -7,6 +7,11 @@ import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModItems;
 
+/**
+ * Data Generator class for JSON Item models.
+ * 
+ * @author Malcolm Riley
+ */
 final class ItemModelGenerator extends ItemModelHelper {
 
 	ItemModelGenerator(DataGenerator generator, ExistingFileHelper helper) {
@@ -29,14 +34,48 @@ final class ItemModelGenerator extends ItemModelHelper {
 			ModItems.Names.SILK_WISP,
 			ModItems.Names.WICKER,
 			ModItems.Names.PLANT_FIBERS,
-			ModItems.Names.FLAX_SEEDS
+			ModItems.Names.FLAX_SEEDS,
+			ModItems.Names.FLAXSEED_OIL_BOTTLE,
+			ModItems.Names.WOOD_BLEACH,
+			ModItems.Names.WOOD_STAIN
 		};
 		for (String iterated : simpleItems) {
 			this.simpleItem(iterated);
 		}
+		
+		// Flaxseed Oil Bucket
+		this.getBuilder(ModItems.Names.FLAXSEED_OIL_BUCKET)
+			.parent(GENERATED)
+			.texture(TEXTURE_DEFAULT, this.mcLoc(ITEM_PREFIX + "bucket"))
+			.texture("layer1", this.modLoc(ITEM_PREFIX + ModItems.Names.FLAXSEED_OIL_BUCKET));
+		
 		// Block Items
 		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
 		this.blockItem(ModBlocks.Names.BASKET, "basket_upright");
+		
+		// Fabric Blocks
+		String[] fabrics = new String[] {
+			ModBlocks.Names.FABRIC_PLAIN,
+			ModBlocks.Names.FABRIC_RED,
+			ModBlocks.Names.FABRIC_ORANGE,
+			ModBlocks.Names.FABRIC_YELLOW,
+			ModBlocks.Names.FABRIC_LIME,
+			ModBlocks.Names.FABRIC_GREEN,
+			ModBlocks.Names.FABRIC_CYAN,
+			ModBlocks.Names.FABRIC_LIGHT_BLUE,
+			ModBlocks.Names.FABRIC_BLUE,
+			ModBlocks.Names.FABRIC_PURPLE,
+			ModBlocks.Names.FABRIC_MAGENTA,
+			ModBlocks.Names.FABRIC_PINK,
+			ModBlocks.Names.FABRIC_WHITE,
+			ModBlocks.Names.FABRIC_LIGHT_GRAY,
+			ModBlocks.Names.FABRIC_GRAY,
+			ModBlocks.Names.FABRIC_BLACK,
+			ModBlocks.Names.FABRIC_BROWN
+		};
+		for (String iterated : fabrics) {
+			this.blockItem(iterated, iterated + "_1");
+		}
 	}
 
 }

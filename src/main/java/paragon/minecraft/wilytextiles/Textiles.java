@@ -19,9 +19,9 @@ public class Textiles {
 	/* Public Fields */
 	public static final String MOD_ID = "paragon_textiles";
 	public static final Logger LOG = LogManager.getLogger();
-	
-	public static final ModItems ITEMS = new ModItems();
+
 	public static final ModBlocks BLOCKS = new ModBlocks();
+	public static final ModItems ITEMS = new ModItems();
 	public static final ModTileEntities TILE_ENTITIES = new ModTileEntities();
 	public static final ModContainers CONTAINERS = new ModContainers();
 	

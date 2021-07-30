@@ -9,6 +9,11 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Data Generator class for Block tags.
+ * 
+ * @author Malcolm Riley
+ */
 final class BlockTagsGenerator extends BlockTagsProvider {
 
 	/* Supertype Override Methods */

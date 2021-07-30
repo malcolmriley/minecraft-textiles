@@ -29,6 +29,14 @@ import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.capabilities.InventoryHandler;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
+/**
+ * Implementation of the Basket {@link Block} class.
+ * <p>
+ * Baskets are 4x4 inventories that capture {@link EntityItem} within about a half-block's distance from their open face.
+ * They can be oriented every direction except downwards.
+ * 
+ * @author Malcolm Riley
+ */
 public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	/* BlockProperty Fields */
@@ -144,6 +152,12 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	/* Internal Methods */
 
+	/**
+	 * Extracts the {@link #FACING} property from the provided {@link BlockState}.
+	 * 
+	 * @param state The {@link BlockState} to extract from
+	 * @return The {@link #FACING} property of that {@link BlockState}.
+	 */
 	protected static Direction getFacingFrom(BlockState state) {
 		return state.get(BlockBasket.FACING);
 	}
