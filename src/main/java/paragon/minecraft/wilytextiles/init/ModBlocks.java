@@ -15,8 +15,16 @@ import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
+/**
+ * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
+ * <p>
+ * These fields can be accessed via the static {@link ModBlocks} instance {@link Textiles#BLOCKS}.
+ * 
+ * @author Malcolm Riley
+ */
 public class ModBlocks extends ContentProvider<Block> {
 	
+	/** An {@link IPositionPredicate} that always returns {@code FALSE}. */
 	private final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
 
 	public ModBlocks() {
@@ -48,6 +56,13 @@ public class ModBlocks extends ContentProvider<Block> {
 	
 	/* Internal Methods */
 	
+	/**
+	 * Convenience method for creating a "textile" {@link Block} - an {@link AxialMultipleBlock} with the {@link Material#WOOL} material and {@link SoundType#CLOTH}, very low hardness, non-solid and non-opaque.
+	 * 
+	 * @param name - The registry name for the desired {@link Block}
+	 * @param color - The {@link MaterialColor} to use for the {@link Block}
+	 * @return A {@link RegistryObject} holding the desired {@link Block}
+	 */
 	public RegistryObject<Block> textileBlock(String name, MaterialColor color) {
 		return this.add(name, () -> new AxialMultipleBlock(AbstractBlock.Properties.create(Material.WOOL, color).sound(SoundType.CLOTH).hardnessAndResistance(0.08F).notSolid().setOpaque(ALWAYS_FALSE)));
 	}

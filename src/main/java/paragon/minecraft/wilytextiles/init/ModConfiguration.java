@@ -11,6 +11,13 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.fml.config.ModConfig;
 import paragon.minecraft.library.AbstractConfiguration;
 
+/**
+ * Forge configuration object implementation.
+ * <p>
+ * This class manages configuration values as well some minor checks based purely on said values.
+ * 
+ * @author Malcolm Riley
+ */
 public class ModConfiguration extends AbstractConfiguration {
 	
 	/* Internal Fields */
@@ -25,22 +32,49 @@ public class ModConfiguration extends AbstractConfiguration {
 		super(ModConfig.Type.COMMON, "WilyTextiles.toml");
 	}
 	
+	/**
+	 * Method for determining whether a retting fiber bale should grow based purely on configuration-sensitive values (random chance).
+	 * 
+	 * @param state - The {@link BlockState} of the provided raw fiber bale (currently unused)
+	 * @param world - The {@link ServerWorld} that the raw fiber bale exists within (currently unused)
+	 * @param position - The {@link BlockPos} of the fiber bale
+	 * @param random - A reference to a {@link Random} instance
+	 * @return Whether the fiber bale should cure based purely on configuration-sensitive values.
+	 */
 	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
 		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
 	}
 
+	/**
+	 * Method for determining whether the flax crop should grow based purely on configuration-sensitive values (light and random chance).
+	 * 
+	 * @param state - The {@link BlockState} of the provided flax crop (currently unused)
+	 * @param world - The {@link ServerWorld} that the flax crop exists within
+	 * @param position - The {@link BlockPos} of the flax crop
+	 * @param random - A reference to a {@link Random} instance
+	 * @return Whether the flax crop should grow based purely on configuration-sensitive values.
+	 */
 	public boolean shouldFlaxGrow(BlockState state, ServerWorld world, BlockPos position, Random random) {
 		return this.isLightAdequateForFlax(world, position) && random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
 	}
 	
+	/**
+	 * @return Whether configuration permits Shepherd villager trades.
+	 */
 	public boolean allowShepherdTrade() {
 		return this.SHEPHERD_TRADES_FABRIC;
 	}
 	
+	/**
+	 * @return The minimum level a Shepherd villager must be 
+	 */
 	public int getShepherdTradeThreshold() {
 		return this.SHEPHERD_SKILL_REQUIRED.getLevel();
 	}
 	
+	/**
+	 * @return Whether configuration permits wandering villager trades.
+	 */
 	public boolean allowWandererTrade() {
 		return this.WANDERER_TRADES_FABRIC;
 	}
@@ -77,6 +111,11 @@ public class ModConfiguration extends AbstractConfiguration {
 	
 	/* Villager Skill enum */
 	
+	/**
+	 * Enumerated type representing villager leveling for greater clarity, as it reflects the ingame and wiki nomenclature.
+	 * 
+	 * @author Malcolm Riley
+	 */
 	public static enum VillagerLevel {
 		NOVICE(1),
 		APPRENTICE(2),
@@ -90,6 +129,9 @@ public class ModConfiguration extends AbstractConfiguration {
 			this.LEVEL = level;
 		}
 		
+		/**
+		 * @return The actual integer level value for this {@link VillagerLevel} instance.
+		 */
 		public int getLevel() {
 			return this.LEVEL;
 		}
@@ -97,6 +139,13 @@ public class ModConfiguration extends AbstractConfiguration {
 	
 	/* Internal Methods */
 	
+	/**
+	 * Method to check whether the light value at the provided {@link BlockPos} is adequate for flax growth.
+	 * 
+	 * @param world - The {@link IBlockReader} that should be used to query light values
+	 * @param position - The {@link BlockPos} to examine the light value of
+	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
+	 */
 	protected boolean isLightAdequateForFlax(IBlockReader world, BlockPos position) {
 		return world.getLightValue(position) >= this.FLAX_MIN_LIGHTLEVEL;
 	}

@@ -23,6 +23,14 @@ import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Implementation of a two-block tall crop {@link Block}.
+ * <p>
+ * This {@link Block} is essentially a tall {@link BushBlock} that can be fertilized.
+ * Once the bottom block is fully grown, the top block will grow.
+ * 
+ * @author Malcolm Riley
+ */
 public class TallCrop extends BushBlock implements IGrowable {
 
 	/* Blockstate Properties */
@@ -144,6 +152,11 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	/* Internal Methods */
 
+	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
+	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {
+		return  state.isAir(world, position);
+	}
+
 	protected void tryApplyGrowth(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
 		if (this.belowMaxAge(state) && this.checkHooks(world, state, position, RNG)) {
 			this.applyGrowth(world, state, position, 1);
@@ -160,11 +173,6 @@ public class TallCrop extends BushBlock implements IGrowable {
 		world.setBlockState(position, state.with(TallCrop.AGE, newAge));
 	}
 
-	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
-	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {
-		return  state.isAir(world, position);
-	}
-
 	protected boolean tryGrowInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, BlockState aboveState, Random rng) {
 		if (this.canGrowInto(world, aboveState, abovePosition) && this.checkHooks(world, aboveState, abovePosition, rng)) {
 			this.growInto(world, state, position, abovePosition, TallCrop.MIN_AGE);
@@ -174,33 +182,82 @@ public class TallCrop extends BushBlock implements IGrowable {
 		return false;
 	}
 
+	/**
+	 * Validates the pending growth tick with "external" validators - mod configuration and {@link ForgeHooks#onCropsGrowPre(World, BlockPos, BlockState, boolean)}.
+	 * 
+	 * @param world - The {@link ServerWorld} containing the crop
+	 * @param state - The {@link BlockState} of the crop
+	 * @param position The position of the crop
+	 * @param RNG - A reference to a {@link Random} instance
+	 * @return Whether all "external" validators permit the growth.
+	 */
 	protected boolean checkHooks(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
 		return ForgeHooks.onCropsGrowPre(world, position, state, Textiles.CONFIG.shouldFlaxGrow(state, world, position, RNG));
 	}
 
+	/**
+	 * Performs the procedure of growing into a block, from the position specified to the position above. No checks are performed within this method.
+	 * <p>
+	 * Sets the {@link BlockState} at the provided "above" position to this, with the provided age, and sets the {@link #BOTTOM} property for both affected blocks.
+	 * @param world - The {@link ServerWorld} containing the crop
+	 * @param state - The {@link BlockState} of the crop
+	 * @param position - The position of the crop
+	 * @param abovePosition - The position of the block above the crop
+	 * @param age - The age that the newly-added top {@link BlockState} should have. 
+	 */
 	protected void growInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, int age) {
 		world.setBlockState(abovePosition, this.getDefaultState().with(TallCrop.AGE, Integer.valueOf(age)).with(TallCrop.BOTTOM, Boolean.FALSE));
 		world.setBlockState(position, state.with(TallCrop.BOTTOM, Boolean.TRUE));
 	}
 
+	/**
+	 * Returns a random value between 1 and 3 inclusive, to mimick the bonemeal behavior of stadard crops.
+	 * 
+	 * @param RNG - A reference to a {@link Random} instance
+	 * @return A value between 1 and 3, inclusive.
+	 */
 	protected int getBonemealGrowth(Random RNG) {
 		return MathHelper.nextInt(RNG, 1, 3);
 	}
 
+	/**
+	 * Simple check to determine whether the provided parameter is below the maximum permitted age value for this crop.
+	 * 
+	 * @param age - The value to check
+	 * @return Whether the passed value is below {@value #MAX_AGE}.
+	 */
+	protected boolean belowMaxAge(int age) {
+		return age < TallCrop.MAX_AGE;
+	}
+	
+	/**
+	 * Simple check to determine whether the value of the{@link #AGE} property on the provided {@link BlockState} is below the maximum permitted age value for this crop.
+	 * 
+	 * @param age - The {@link BlockState}
+	 * @return Whether the value of the {@link #AGE} property on the provided {@link BlockState} is below {@value #MAX_AGE}.
+	 */
+	protected boolean belowMaxAge(BlockState state) {
+		return this.belowMaxAge(this.getAgeFrom(state));
+	}
+
+	/**
+	 * Extracts the value of the {@link #AGE} property from the provided {@link BlockState}.
+	 * 
+	 * @param state - The {@link BlockState} to extract from
+	 * @return The value of the provided {@link BlockState}'s {@link #AGE} property.
+	 */
 	protected int getAgeFrom(BlockState state) {
 		return state.get(TallCrop.AGE).intValue();
 	}
 
-	protected boolean belowMaxAge(int age) {
-		return age < TallCrop.MAX_AGE;
-	}
-
+	/**
+	 * Returns whether the provided {@link BlockState} should be considered a "bottom block" of a crop based on the contained {@link #BOTTOM} property.
+	 * 
+	 * @param state - The {@link BlockState} to examine
+	 * @return Whether the provided {@link BlockState} has a {@link #BOTTOM} value of {@code TRUE}.
+	 */
 	protected boolean isBottomBlock(BlockState state) {
 		return state.get(TallCrop.BOTTOM).booleanValue();
-	}
-
-	protected boolean belowMaxAge(BlockState state) {
-		return this.belowMaxAge(this.getAgeFrom(state));
 	}
 
 }

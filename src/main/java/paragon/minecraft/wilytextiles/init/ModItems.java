@@ -19,6 +19,11 @@ import paragon.minecraft.library.item.ItemSimpleFuel;
 import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Holder and initializer class for {@link Item} bearing {@link RegistryObject} instances.
+ * 
+ * @author Malcolm Riley
+ */
 public class ModItems extends ContentProvider<Item> {
 
 	/* Internal Fields */
@@ -96,36 +101,84 @@ public class ModItems extends ContentProvider<Item> {
 	
 	/* Internal Methods */
 	
+	/**
+	 * Generates a new basic {@link Item} using the default properties, with {@link Items#GLASS_BOTTLE} set as a container item.
+	 * 
+	 * @param name - The registry name for the {@link Item}
+	 * @return A {@link RegistryObject} holding the {@link Item}.
+	 */
 	protected RegistryObject<Item> bottledItem(final String name) {
 		return this.simpleItem(name, this.defaultWithContainer(Items.GLASS_BOTTLE));
 	}
 	
+	/**
+	 * Generates a new basic {@link Item} using the default properties.
+	 * 
+	 * @param name - The registry name for the {@link Item}
+	 * @return A {@link RegistryObject} holding the {@link Item}.
+	 */
 	protected RegistryObject<Item> simpleItem(final String name) {
 		return this.simpleItem(name, DEFAULT);
 	}
 	
+	/**
+	 * Generates a new basic {@link Item} using the provided {@link Item.Properties}.
+	 * 
+	 * @param name - The registry name for the {@link Item}
+	 * @param properties - The {@link Item.Properties} to use for the {@link Item}
+	 * @return A {@link RegistryObject} holding the {@link Item}.
+	 */
 	protected RegistryObject<Item> simpleItem(final String name, final Item.Properties properties) {
 		return this.add(name, () -> new Item(properties));
 	}
 	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject}.
+	 * <p>
+	 * The registry name of the resulting {@link BlockItem} will use the id of the {@link Block} held by the provided {@link RegistryObject}.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
 	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
 		return this.simpleBlockItem(block.getId().getPath(), block);
 	}
 	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link Supplier}
+	 * 
+	 * @param name - The registry name for the {@link BlockItem}
+	 * @param blockSupplier - A supplier of the target {@link Block}, to be called lazily
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
 	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier) {
 		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, DEFAULT));
 	}
 	
-	private Item.Properties defaultProperties() {
-		return new Item.Properties().group(GROUP);
-	}
-	
+	/**
+	 * Returns a new, default {@link Item.Properties} instance via {@link #defaultProperties()} and sets the container item to the provided {@link IItemProvider}.
+	 * 
+	 * @param container - The {@link IItemProvider} to use as a container.
+	 * @return A new, default {@link Item.Properties} instance with the provided container item.
+	 */
 	private Item.Properties defaultWithContainer(IItemProvider container) {
 		return this.defaultProperties().containerItem(container.asItem());
 	}
 	
+	/**
+	 * @return A new, default {@link Item.Properties} instance using the appropriate {@link ItemGroup} for the mod.
+	 */
+	private Item.Properties defaultProperties() {
+		return new Item.Properties().group(GROUP);
+	}
+	
 	/* Item Names */
 	
+	/**
+	 * Holder class for {@link Item} registry names.
+	 * 
+	 * @author Malcolm Riley
+	 */
 	public static class Names {
 
 		private Names() {}
