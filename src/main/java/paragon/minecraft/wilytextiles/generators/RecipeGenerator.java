@@ -304,9 +304,31 @@ final class RecipeGenerator extends RecipeHelper {
 		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_BLEACH, Items.RED_MUSHROOM);
 		
 		// Wood Staining Recipes
-		final int stainStrength = 5;
-		this.addSpecialStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
-		this.addStainRecipes(registrar, stainStrength, Items.BIRCH_PLANKS, Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.DARK_OAK_PLANKS);
+		final int smallObjectStainQuantity = 5; // Objects with a planks:result crafting ratio of 3:1 or better
+		final int largeObjectStainQuantity = 1; // Objects with a planks:result crafting ratio of 4:1 or worse
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PLANKS, Items.JUNGLE_PLANKS, Items.ACACIA_PLANKS);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_BUTTON, Items.JUNGLE_BUTTON, Items.ACACIA_BUTTON);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE, Items.JUNGLE_FENCE, Items.ACACIA_FENCE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE_GATE, Items.JUNGLE_FENCE_GATE, Items.ACACIA_FENCE_GATE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.ACACIA_PRESSURE_PLATE, Items.JUNGLE_PRESSURE_PLATE, Items.ACACIA_PRESSURE_PLATE);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SIGN, Items.JUNGLE_SIGN, Items.ACACIA_SIGN);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SLAB, Items.JUNGLE_SLAB, Items.ACACIA_SLAB);
+		this.addSpecialStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_STAIRS, Items.JUNGLE_STAIRS, Items.ACACIA_STAIRS);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.JUNGLE_BOAT, Items.ACACIA_BOAT);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.JUNGLE_DOOR, Items.ACACIA_DOOR);
+		this.addSpecialStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.JUNGLE_TRAPDOOR, Items.ACACIA_TRAPDOOR);
+		
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PLANKS, Items.OAK_PLANKS, Items.SPRUCE_PLANKS, Items.DARK_OAK_PLANKS);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_BUTTON, Items.OAK_BUTTON, Items.SPRUCE_BUTTON, Items.DARK_OAK_BUTTON);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE, Items.OAK_FENCE, Items.SPRUCE_FENCE, Items.DARK_OAK_FENCE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_FENCE_GATE, Items.OAK_FENCE_GATE, Items.SPRUCE_FENCE_GATE, Items.DARK_OAK_FENCE_GATE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_PRESSURE_PLATE, Items.OAK_PRESSURE_PLATE, Items.SPRUCE_PRESSURE_PLATE, Items.DARK_OAK_PRESSURE_PLATE);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SIGN, Items.OAK_SIGN, Items.SPRUCE_SIGN, Items.DARK_OAK_SIGN);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_SLAB, Items.OAK_SLAB, Items.SPRUCE_SLAB, Items.DARK_OAK_SLAB);
+		this.addStainRecipes(registrar, smallObjectStainQuantity, Items.BIRCH_STAIRS, Items.OAK_STAIRS, Items.SPRUCE_STAIRS, Items.DARK_OAK_STAIRS);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.DARK_OAK_BOAT);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.OAK_DOOR, Items.SPRUCE_DOOR, Items.DARK_OAK_DOOR);
+		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.OAK_TRAPDOOR, Items.SPRUCE_TRAPDOOR, Items.DARK_OAK_TRAPDOOR);
 	}
 
 	/* Internal Methods */
@@ -315,8 +337,7 @@ final class RecipeGenerator extends RecipeHelper {
 		ShapelessRecipeBuilder stainBuilder = this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(result.get(), 3), Items.GLASS_BOTTLE, 3)
 			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()));
-		this.applyToShapeless(stainBuilder, input, 2)
-			.build(registrar);
+		this.applyToShapeless(stainBuilder, input, 2).build(registrar);
 	}
 	
 	protected void addSpecialStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
@@ -330,7 +351,7 @@ final class RecipeGenerator extends RecipeHelper {
 	}
 	
 	protected void addDyeSpectrumRecipes(IItemProvider forwardReagent, IItemProvider reverseReagent, int strength, Consumer<IFinishedRecipe> registrar, Item ... spectrum) {
-		if (spectrum.length > 2) {
+		if (spectrum.length >= 2) {
 			for (int index = 1; index < spectrum.length; index += 1) {
 				Item previous = spectrum[index - 1];
 				Item current = spectrum[index];
