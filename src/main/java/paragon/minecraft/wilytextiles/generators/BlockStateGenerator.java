@@ -19,6 +19,11 @@ import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
+/**
+ * Data Generation class for JSON Block model files and JSON BlockState files.
+ * 
+ * @author Malcolm Riley
+ */
 final class BlockStateGenerator extends BlockStateHelper {
 	
 	/* Package-Available Fields */

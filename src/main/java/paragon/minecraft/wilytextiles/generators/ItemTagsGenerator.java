@@ -12,6 +12,11 @@ import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Data generator class for Item Tags.
+ * 
+ * @author Malcolm Riley
+ */
 final class ItemTagsGenerator extends ItemTagsProvider {
 	
 	/* Constants */

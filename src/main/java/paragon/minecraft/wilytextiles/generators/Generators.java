@@ -12,6 +12,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Entrypoint class for datageneration.
+ * 
+ * @author Malcolm Riley
+ */
 @EventBusSubscriber(bus = Bus.MOD)
 public class Generators {
 	
