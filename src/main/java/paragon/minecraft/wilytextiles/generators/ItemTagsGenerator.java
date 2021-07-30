@@ -43,6 +43,12 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		final INamedTag<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
 		this.getOrCreateBuilder(seeds).add(Textiles.ITEMS.FLAX_SEEDS.get());
 		
+		// Flax blossoms are flowers
+		this.getOrCreateBuilder(ItemTags.SMALL_FLOWERS)
+			.add(Textiles.ITEMS.FLAX_PALE.get())
+			.add(Textiles.ITEMS.FLAX_VIBRANT.get())
+			.add(Textiles.ITEMS.FLAX_PURPLE.get());
+		
 		// Colored Wool Tags
 		this.tagAsWool(Textiles.ITEMS.FABRIC_PLAIN);
 		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_RED, "red");
