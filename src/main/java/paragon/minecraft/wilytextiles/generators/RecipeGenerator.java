@@ -22,6 +22,11 @@ import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.RecipeHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 
+/**
+ * Data generation class for crafting recipes.
+ * 
+ * @author Malcolm Riley
+ */
 final class RecipeGenerator extends RecipeHelper {
 
 	// Existing criterion fields from vanilla
@@ -62,15 +67,15 @@ final class RecipeGenerator extends RecipeHelper {
 			.patternLine("###")
 			.patternLine(" ##")
 			.key('#', Textiles.ITEMS.PLANT_FIBERS.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS.get()))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get(), Textiles.ITEMS.PLANT_FIBERS.get()));
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS, Textiles.ITEMS.PLANT_FIBERS));
 		
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
 			.patternLine("##")
 			.patternLine("##")
 			.key('#', Textiles.ITEMS.FLAX_STALKS.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS.get()))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get(), Textiles.ITEMS.FLAX_STALKS.get()));
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS, Textiles.ITEMS.FLAX_STALKS));
 
 		// Wicker
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.WICKER.get(), 3)
@@ -82,6 +87,16 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(CRITERION_STICKS, RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
 			.addCriterion(CRITERION_SUGARCANE, RecipeProvider.hasItem(Items.SUGAR_CANE))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER.get(), Items.SUGAR_CANE));
+		
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.WICKER.get(), 3)
+			.patternLine("RIR")
+			.patternLine("IRI")
+			.patternLine("RIR")
+			.key('R', Textiles.ITEMS.FLAX_STALKS.get())
+			.key('I', Tags.Items.RODS_WOODEN)
+			.addCriterion(CRITERION_STICKS, RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER, Textiles.ITEMS.FLAX_STALKS));
 		
 		// Silk Wisps from Cobwebs
 		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.SILK_WISPS.get(), 9)
@@ -98,7 +113,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('I', Tags.Items.RODS_WOODEN)
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.SILK_WISPS.get()), RecipeProvider.hasItem(Textiles.ITEMS.SILK_WISPS.get()))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.SILK.get(), Textiles.ITEMS.SILK_WISPS.get()));
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.SILK, Textiles.ITEMS.SILK_WISPS));
 
 		// Chain Mesh
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CHAIN_MESH.get(), 5)
@@ -150,7 +165,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('I', Tags.Items.RODS_WOODEN)
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.WICKER), RecipeHelper.hasItem(Textiles.ITEMS.WICKER))
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET.get(), Textiles.ITEMS.WICKER.get()));
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET, Textiles.ITEMS.WICKER));
 		
 		// String tag override recipes
 		final String stringCriterion = RecipeHelper.criterionName(Items.STRING);
@@ -224,7 +239,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.patternLine("SSS")
 			.key('S', Textiles.ITEMS.SILK.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), Textiles.ITEMS.SILK.get()));
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.FABRIC_WHITE, Textiles.ITEMS.SILK));
 		
 		// Fabrics from Wool
 		this.addFabricRecipe(Textiles.ITEMS.FABRIC_RED, Items.RED_WOOL, registrar);
@@ -461,11 +476,19 @@ final class RecipeGenerator extends RecipeHelper {
 		return builder.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient));
 	}
 	
+	protected ResourceLocation nameFrom(RegistryObject<Item> output, String source) {
+		return this.nameFrom(output.get(), source);
+	}
+	
 	protected ResourceLocation nameFrom(IItemProvider output, String source) {
 		return RecipeHelper.nameFrom(Textiles::createResource, output, source);
 	}
+	
+	protected ResourceLocation nameFromRecipe(RegistryObject<Item> output, RegistryObject<Item> input) {
+		return this.nameFromRecipe(output.get(), input.get());
+	}
 
-	protected ResourceLocation nameFromRecipe(Item output, Item input) {
+	protected ResourceLocation nameFromRecipe(IItemProvider output, IItemProvider input) {
 		return RecipeHelper.nameFromIngredients(Textiles::createResource, output, input);
 	}
 
