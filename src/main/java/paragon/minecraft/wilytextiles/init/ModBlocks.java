@@ -1,5 +1,7 @@
 package paragon.minecraft.wilytextiles.init;
 
+import java.util.stream.Stream;
+
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.Block;
@@ -55,6 +57,28 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket(AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO).hardnessAndResistance(0.8F)));
 	
 	/* Internal Methods */
+	
+	public Stream<Block> streamFabricBlocks() {
+		return Stream.of(
+			Textiles.BLOCKS.FABRIC_PLAIN,
+			Textiles.BLOCKS.FABRIC_RED,
+			Textiles.BLOCKS.FABRIC_ORANGE,
+			Textiles.BLOCKS.FABRIC_YELLOW,
+			Textiles.BLOCKS.FABRIC_LIME,
+			Textiles.BLOCKS.FABRIC_GREEN,
+			Textiles.BLOCKS.FABRIC_CYAN,
+			Textiles.BLOCKS.FABRIC_LIGHT_BLUE,
+			Textiles.BLOCKS.FABRIC_BLUE,
+			Textiles.BLOCKS.FABRIC_PURPLE,
+			Textiles.BLOCKS.FABRIC_MAGENTA,
+			Textiles.BLOCKS.FABRIC_PINK,
+			Textiles.BLOCKS.FABRIC_WHITE,
+			Textiles.BLOCKS.FABRIC_LIGHT_GRAY,
+			Textiles.BLOCKS.FABRIC_GRAY,
+			Textiles.BLOCKS.FABRIC_BLACK,
+			Textiles.BLOCKS.FABRIC_BROWN
+		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+	}
 	
 	/**
 	 * Convenience method for creating a "textile" {@link Block} - an {@link AxialMultipleBlock} with the {@link Material#WOOL} material and {@link SoundType#CLOTH}, very low hardness, non-solid and non-opaque.
