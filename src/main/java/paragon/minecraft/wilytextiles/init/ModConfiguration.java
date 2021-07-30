@@ -27,6 +27,9 @@ public class ModConfiguration extends AbstractConfiguration {
 	protected boolean SHEPHERD_TRADES_FABRIC = true;
 	protected boolean WANDERER_TRADES_FABRIC = true;
 	protected VillagerLevel SHEPHERD_SKILL_REQUIRED = VillagerLevel.JOURNEYMAN;
+	
+	/* Constants */
+	private static final String CHANGE_REQUIRES_RESTART = "Changes to this value will require that the current World be reloaded.";
 
 	public ModConfiguration() {
 		super(ModConfig.Type.COMMON, "WilyTextiles.toml");
@@ -94,15 +97,15 @@ public class ModConfiguration extends AbstractConfiguration {
 			.comment("The minimum light level that Flax needs in order to grow.", "The light level at the crop's position must equal or exceed this value, else no growth will occur.")
 			.defineInRange("flax_min_lightlevel", 8, 0, 15));
 		this.defineValue(value -> this.SHEPHERD_TRADES_FABRIC = value, builder
-			.comment("Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.", "Changes to this value will require a restart.")
+			.comment("Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.", CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("shepherd_trade_fabrics", true));
 		this.defineValue(value -> this.SHEPHERD_SKILL_REQUIRED = value, builder
-			.comment("The minimum skill level that Shepherd villagers must reach before Fabric trades become available.", "This value will have no effect if the shepherd trading feature is disabled.", "Changes to this value will require a restart.")
+			.comment("The minimum skill level that Shepherd villagers must reach before Fabric trades become available.", "This value will have no effect if the shepherd trading feature is disabled.", CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.defineEnum("shepherd_trade_skill_threshold", VillagerLevel.JOURNEYMAN));
 		this.defineValue(value -> this.WANDERER_TRADES_FABRIC = value, builder
-			.comment("Whether the Wandering Trader will occasionally deal in Fabrics.", "Changes to this value will require a restart.")
+			.comment("Whether the Wandering Trader will occasionally deal in Fabrics.", CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("wandering_trader_trade_fabrics", true));
 		builder.pop();
