@@ -3,6 +3,7 @@ package paragon.minecraft.wilytextiles.generators;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ItemTagsProvider;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
@@ -53,22 +54,22 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		
 		// Colored Wool Tags
 		this.tagAsWool(Textiles.ITEMS.FABRIC_PLAIN);
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_RED, "red");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_ORANGE, "orange");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_YELLOW, "yellow");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIME, "lime");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_GREEN, "green");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_CYAN, "cyan");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIGHT_BLUE, "light_blue");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BLUE, "blue");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_PURPLE, "purple");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_MAGENTA, "magenta");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_PINK, "pink");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_WHITE, "white");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIGHT_GRAY, "light_gray");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_GRAY, "gray");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BLACK, "black");
-		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BROWN, "brown");
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_RED, DyeColor.RED);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_ORANGE, DyeColor.ORANGE);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_YELLOW, DyeColor.YELLOW);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIME, DyeColor.LIME);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_GREEN, DyeColor.GREEN);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_CYAN, DyeColor.CYAN);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIGHT_BLUE, DyeColor.LIGHT_BLUE);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BLUE, DyeColor.BLUE);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_PURPLE, DyeColor.PURPLE);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_MAGENTA, DyeColor.MAGENTA);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_PINK, DyeColor.PINK);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_WHITE, DyeColor.WHITE);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_LIGHT_GRAY, DyeColor.LIGHT_GRAY);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_GRAY, DyeColor.GRAY);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BLACK, DyeColor.BLACK);
+		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BROWN, DyeColor.BROWN);
 		
 		// Flax Stalks are Flax Crops
 		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag("crops")).add(Textiles.ITEMS.FLAX_STALKS.get());
@@ -86,9 +87,10 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag(TAG_WOOL)).add(target.get());
 	}
 	
-	protected void tagAsColoredWool(RegistryObject<Item> target, String coloredWool) {
+	protected void tagAsColoredWool(RegistryObject<Item> target, DyeColor woolColor) {
 		this.tagAsWool(target);
-		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag(TAG_WOOL, coloredWool)).add(target.get());
-		this.getOrCreateBuilder(Utilities.Tags.itemTag(DOMAIN_MINECRAFT, TAG_WOOL, coloredWool)).add(target.get());
+		final String colorName = woolColor.getString();
+		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag(TAG_WOOL, colorName)).add(target.get());
+		this.getOrCreateBuilder(Utilities.Tags.itemTag(DOMAIN_MINECRAFT, TAG_WOOL, colorName)).add(target.get());
 	}
 }
