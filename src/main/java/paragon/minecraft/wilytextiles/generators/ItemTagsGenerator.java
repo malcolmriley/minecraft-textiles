@@ -37,7 +37,9 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		this.getOrCreateBuilder(twine).add(Textiles.ITEMS.TWINE.get());
 		final INamedTag<Item> silk = Utilities.Tags.forgeItemTag(stringTag, "silk");
 		this.getOrCreateBuilder(silk).add(Textiles.ITEMS.SILK.get());
-		this.getOrCreateBuilder(Tags.Items.STRING).addTag(twine).addTag(silk);
+		this.getOrCreateBuilder(Tags.Items.STRING)
+			.addTag(twine)
+			.addTag(silk);
 		
 		// Flax seeds are seeds, believe it or not
 		final INamedTag<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
@@ -67,6 +69,10 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_GRAY, "gray");
 		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BLACK, "black");
 		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BROWN, "brown");
+		
+		// Flax Stalks are Flax Crops
+		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag("crops")).add(Textiles.ITEMS.FLAX_STALKS.get());
+		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag("crops/flax")).add(Textiles.ITEMS.FLAX_STALKS.get());
 		
 		// Copy grass block tags to items
 		this.copy(Utilities.Tags.forgeBlockTag(BlockTagsGenerator.TAG_GRASSES), Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES));
