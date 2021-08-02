@@ -14,6 +14,7 @@ import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
@@ -88,7 +89,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	 * @return A {@link RegistryObject} holding the desired {@link Block}
 	 */
 	public RegistryObject<Block> textileBlock(String name, MaterialColor color) {
-		return this.add(name, () -> new AxialMultipleBlock(AbstractBlock.Properties.create(Material.WOOL, color).sound(SoundType.CLOTH).hardnessAndResistance(0.08F).notSolid().setOpaque(ALWAYS_FALSE)));
+		return this.add(name, () -> new FabricBlock(AbstractBlock.Properties.create(Material.WOOL, color).sound(SoundType.CLOTH).hardnessAndResistance(0.08F).notSolid().setOpaque(ALWAYS_FALSE)));
 	}
 	
 	/* Block Names */
