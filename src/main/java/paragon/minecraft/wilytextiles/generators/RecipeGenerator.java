@@ -29,10 +29,6 @@ import paragon.minecraft.wilytextiles.Textiles;
  */
 final class RecipeGenerator extends RecipeHelper {
 
-	// Existing criterion fields from vanilla
-	private static final String CRITERION_STICKS = "has_stick";
-	private static final String CRITERION_SUGARCANE = "has_reeds";
-
 	public RecipeGenerator(DataGenerator generator) {
 		super(generator);
 	}
@@ -78,25 +74,8 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS, Textiles.ITEMS.FLAX_STALKS));
 
 		// Wicker
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.WICKER.get(), 3)
-			.patternLine("RIR")
-			.patternLine("IRI")
-			.patternLine("RIR")
-			.key('R', Items.SUGAR_CANE)
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(CRITERION_STICKS, RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
-			.addCriterion(CRITERION_SUGARCANE, RecipeProvider.hasItem(Items.SUGAR_CANE))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER.get(), Items.SUGAR_CANE));
-		
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.WICKER.get(), 3)
-			.patternLine("RIR")
-			.patternLine("IRI")
-			.patternLine("RIR")
-			.key('R', Textiles.ITEMS.FLAX_STALKS.get())
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(CRITERION_STICKS, RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.WICKER, Textiles.ITEMS.FLAX_STALKS));
+		this.addStickMeshRecipe(Textiles.ITEMS.WICKER, 3, Items.SUGAR_CANE, registrar);
+		this.addStickMeshRecipe(Textiles.ITEMS.WICKER, 3, Textiles.ITEMS.FLAX_STALKS.get(), registrar);
 		
 		// Silk Wisps from Cobwebs
 		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.SILK_WISPS.get(), 9)
@@ -105,15 +84,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar);
 		
 		// Silk from Silk Wisps
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.SILK.get())
-			.patternLine("SSS")
-			.patternLine("SIS")
-			.patternLine("SSS")
-			.key('S', Textiles.ITEMS.SILK_WISPS.get())
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeProvider.hasItem(Tags.Items.RODS_WOODEN))
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.SILK_WISPS.get()), RecipeProvider.hasItem(Textiles.ITEMS.SILK_WISPS.get()))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.SILK, Textiles.ITEMS.SILK_WISPS));
+		this.addLoopRecipe(Textiles.ITEMS.SILK, 1, Textiles.ITEMS.SILK_WISPS.get(), registrar);
 
 		// Chain Mesh
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CHAIN_MESH.get(), 5)
@@ -223,15 +194,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar, Utilities.Strings.minecraftResource("loom"));
 		
 		// Plain Fabric from Twine
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_PLAIN.get(), 2)
-			.patternLine("SSS")
-			.patternLine("SIS")
-			.patternLine("SSS")
-			.key('S', Textiles.ITEMS.TWINE.get())
-			.key('I', Items.STICK)
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
-			.addCriterion(stickCriterion, stickTrigger)
-			.build(registrar);
+		this.addLoopRecipe(Textiles.ITEMS.FABRIC_PLAIN, 2, Textiles.ITEMS.TWINE.get(), registrar);
 		
 		// White Fabric from Silk
 		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), 2)
@@ -385,8 +348,24 @@ final class RecipeGenerator extends RecipeHelper {
 	}
 	
 	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
+		this.addLoopRecipe(result, 10, ingredient, registrar);
+	}
+	
+	protected void addStickMeshRecipe(RegistryObject<Item> result, int quantity, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
+		ShapedRecipeBuilder.shapedRecipe(result.get(), quantity)
+			.patternLine("RIR")
+			.patternLine("IRI")
+			.patternLine("RIR")
+			.key('R', Items.SUGAR_CANE)
+			.key('I', Tags.Items.RODS_WOODEN)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
+			.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient))
+			.build(registrar, this.nameFromRecipe(result.get(), ingredient));
+	}
+	
+	protected void addLoopRecipe(RegistryObject<Item> result, int quantity, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
 		final INamedTag<Item> coreItem = Tags.Items.RODS_WOODEN;
-		ShapedRecipeBuilder.shapedRecipe(result.get(), 10)
+		ShapedRecipeBuilder.shapedRecipe(result.get(), quantity)
 			.patternLine("###")
 			.patternLine("#I#")
 			.patternLine("###")
