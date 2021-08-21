@@ -28,7 +28,7 @@ public class AxialMultipleBlock extends Block {
 
 	public AxialMultipleBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.stateContainer.getBaseState().with(AxialMultipleBlock.FACING, Direction.Axis.X).with(AxialMultipleBlock.COUNT, AxialMultipleBlock.MIN_COUNT));
+		this.setDefaultState(this.createDefaultState());
 	}
 	
 	/* Supertype Override Methods */
@@ -62,6 +62,17 @@ public class AxialMultipleBlock extends Block {
 	}
 	
 	/* Internal Methods */
+	
+	/**
+	 * Creates the default {@link BlockState} for this {@link Block}.
+	 * 
+	 * @return The default {@link BlockState} for this {@link Block}.
+	 */
+	protected BlockState createDefaultState() {
+		return this.stateContainer.getBaseState()
+			.with(AxialMultipleBlock.FACING, Direction.Axis.X)
+			.with(AxialMultipleBlock.COUNT, AxialMultipleBlock.MIN_COUNT);
+	}
 	
 	/**
 	 * Applies the {@link #FACING} property specified by the provided {@link Axis} parameter to the provided {@link BlockState}.

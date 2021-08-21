@@ -77,6 +77,13 @@ public class ModItems extends ContentProvider<Item> {
 	
 	/* Public Methods */
 	
+	/**
+	 * Returns a {@link Stream} over all fabric-type {@link Item} known to the mod.
+	 * <p>
+	 * The returned {@link Stream} is first filtered by checking the underlying {@link RegistryObject} for the presence of the {@link Item} (that is, whether the item is actually registered).
+	 * 
+	 * @return A {@link Stream} of all fabric-type {@link Items}.
+	 */
 	public Stream<Item> streamFabricItems() {
 		return Stream.of(
 			this.FABRIC_PLAIN,
