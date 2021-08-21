@@ -46,7 +46,7 @@ public class TallCrop extends BushBlock implements IGrowable {
 
 	public TallCrop(Properties builder) {
 		super(builder.tickRandomly().doesNotBlockMovement());
-		this.setDefaultState(this.stateContainer.getBaseState().with(TallCrop.AGE, Integer.valueOf(0)).with(TallCrop.BOTTOM, Boolean.TRUE));
+		this.setDefaultState(this.createDefaultState());
 	}
 
 	/* Supertype Override Methods */
@@ -151,6 +151,17 @@ public class TallCrop extends BushBlock implements IGrowable {
 	}
 
 	/* Internal Methods */
+	
+	/**
+	 * Creates the default {@link BlockState} for this {@link Block}.
+	 * 
+	 * @return The default {@link BlockState} for this {@link Block}.
+	 */
+	protected BlockState createDefaultState() {
+		return this.stateContainer.getBaseState()
+			.with(TallCrop.AGE, Integer.valueOf(0))
+			.with(TallCrop.BOTTOM, Boolean.TRUE);
+	}
 
 	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
 	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {

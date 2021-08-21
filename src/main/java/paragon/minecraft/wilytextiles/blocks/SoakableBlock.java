@@ -45,7 +45,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 
 	public SoakableBlock(Properties properties) {
 		super(properties.tickRandomly());
-		this.setDefaultState(this.stateContainer.getBaseState().with(BlockStateProperties.WATERLOGGED, false).with(SoakableBlock.AGE, Integer.valueOf(0)).with(SoakableBlock.COUNT, Integer.valueOf(1)));
+		this.setDefaultState(this.createDefaultState());
 	}
 
 	@Override
@@ -121,6 +121,20 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@SuppressWarnings("deprecation") // Returning super.getFluidState() as default if not waterlogged.
 	public FluidState getFluidState(BlockState state) {
 		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+	}
+	
+	/* Internal Methods */
+
+	/**
+	 * Creates the default {@link BlockState} for this {@link Block}.
+	 * 
+	 * @return The default {@link BlockState} for this {@link Block}.
+	 */
+	protected BlockState createDefaultState() {
+		return this.stateContainer.getBaseState()
+			.with(BlockStateProperties.WATERLOGGED, false)
+			.with(SoakableBlock.AGE, Integer.valueOf(0))
+			.with(SoakableBlock.COUNT, Integer.valueOf(1));
 	}
 
 }
