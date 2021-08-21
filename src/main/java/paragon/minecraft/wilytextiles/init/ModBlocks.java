@@ -58,6 +58,13 @@ public class ModBlocks extends ContentProvider<Block> {
 	
 	/* Internal Methods */
 	
+	/**
+	 * Returns a {@link Stream} over all fabric-type {@link Block} known to the mod.
+	 * <p>
+	 * The returned {@link Stream} is first filtered by checking the underlying {@link RegistryObject} for the presence of the {@link Block} (that is, whether the item is actually registered).
+	 * 
+	 * @return A {@link Stream} of all fabric-type {@link Block}.
+	 */
 	public Stream<Block> streamFabricBlocks() {
 		return Stream.of(
 			Textiles.BLOCKS.FABRIC_PLAIN,
