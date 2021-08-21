@@ -56,7 +56,7 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	public BlockBasket(Properties builder) {
 		super(builder);
-		this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.UP).with(WATERLOGGED, Boolean.FALSE));
+		this.setDefaultState(this.createDefaultState());
 	}
 	
 	/* Public Methods */
@@ -160,6 +160,17 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	 */
 	protected static Direction getFacingFrom(BlockState state) {
 		return state.get(BlockBasket.FACING);
+	}
+	
+	/**
+	 * Creates the default {@link BlockState} for this {@link Block}.
+	 * 
+	 * @return The default {@link BlockState} for this {@link Block}.
+	 */
+	protected BlockState createDefaultState() {
+		return this.stateContainer.getBaseState()
+			.with(FACING, Direction.UP)
+			.with(WATERLOGGED, Boolean.FALSE);
 	}
 
 }

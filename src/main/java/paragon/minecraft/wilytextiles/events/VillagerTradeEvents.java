@@ -2,6 +2,7 @@ package paragon.minecraft.wilytextiles.events;
 
 import java.util.List;
 
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.merchant.villager.VillagerTrades.ITrade;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,7 @@ public final class VillagerTradeEvents {
 	 */
 	@SubscribeEvent
 	public static void onVillagerTrade(final VillagerTradesEvent event) {
-		if (Textiles.CONFIG.allowShepherdTrade()) {
+		if (Textiles.CONFIG.allowShepherdTrade() && event.getType().equals(VillagerProfession.SHEPHERD)) {
 			// Documentation claims that the this should never be null. Indeed, it is populated with empty NonNullList directly before event fires.
 			List<ITrade> skillLevelTrades = event.getTrades().get(Textiles.CONFIG.getShepherdTradeThreshold());
 			Textiles.ITEMS.streamFabricItems().map(VillagerTradeEvents::villagerSellsItem).forEach(skillLevelTrades::add);
