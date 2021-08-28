@@ -85,7 +85,7 @@ public class FabricBlock extends AxialMultipleBlock {
 	 * @return A suitable {@link AbstractBlock.Properties} instance to use.
 	 */
 	protected static AbstractBlock.Properties createPropertiesFrom(final MaterialColor color, final IPositionPredicate opacityPredicate) {
-		return AbstractBlock.Properties.create(Material.CARPET, color).sound(SoundType.CLOTH).hardnessAndResistance(DEFAULT_HARDNESS).setOpaque(opacityPredicate);
+		return AbstractBlock.Properties.create(Material.CARPET, color).sound(SoundType.CLOTH).hardnessAndResistance(DEFAULT_HARDNESS).setOpaque(opacityPredicate).notSolid();
 	}
 
 }

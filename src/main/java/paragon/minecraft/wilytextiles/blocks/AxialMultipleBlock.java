@@ -43,9 +43,9 @@ public class AxialMultipleBlock extends Block {
 
 	@Override
 	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos position) {
-		final BlockPos below = position.down();
-		final BlockState belowState = world.getBlockState(below);
-		return belowState.isIn(this) || belowState.isSolidSide(world, below, Direction.UP);
+		final BlockPos belowPosition = position.down();
+		final BlockState belowState = world.getBlockState(belowPosition);
+		return this.isBlockBelowValid(world, position, state, belowPosition, belowState);
 	}
 
 
@@ -62,6 +62,23 @@ public class AxialMultipleBlock extends Block {
 	}
 	
 	/* Internal Methods */
+	
+	/**
+	 * Returns whether the {@link BlockState} beneath this one is suitable for keeping this {@link AxialMultipleBlock}.
+	 * <p>
+	 * This method is used by {@link #isValidPosition(BlockState, IWorldReader, BlockPos)} to determine whether this {@link AxialMultipleBlock} can be placed
+	 * and whether it can stay after a neighbor has changed.
+	 * 
+	 * @param world - An {@link IWorldReader} to use for state examination
+	 * @param position - The {@link BlockPos} of this {@link AxialMultipleBlock}
+	 * @param state - The {@link BlockState} of this {@link AxialMultipleBlock}
+	 * @param belowPosition - The {@link BlockPos} beneath this {@link AxialMultipleBlock}
+	 * @param belowState - The {@link BlockState} beneath this {@link AxialMultipleBlock}
+	 * @return Whether the {@link BlockState} beneath this one can support this {@link AxialMultipleBlock}.
+	 */
+	protected boolean isBlockBelowValid(IWorldReader world, BlockPos position, BlockState state, BlockPos belowPosition, BlockState belowState) {
+		return Block.hasEnoughSolidSide(world, belowPosition, Direction.UP);
+	}
 	
 	/**
 	 * Creates the default {@link BlockState} for this {@link Block}.
