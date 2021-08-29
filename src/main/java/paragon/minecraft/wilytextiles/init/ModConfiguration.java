@@ -4,7 +4,6 @@ import java.util.Random;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -145,12 +144,12 @@ public class ModConfiguration extends AbstractConfiguration {
 	/**
 	 * Method to check whether the light value at the provided {@link BlockPos} is adequate for flax growth.
 	 * 
-	 * @param world - The {@link IBlockReader} that should be used to query light values
+	 * @param world - The {@link ServerWorld} that should be used to query light values
 	 * @param position - The {@link BlockPos} to examine the light value of
 	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
 	 */
-	protected boolean isLightAdequateForFlax(IBlockReader world, BlockPos position) {
-		return world.getLightValue(position) >= this.FLAX_MIN_LIGHTLEVEL;
+	protected boolean isLightAdequateForFlax(ServerWorld world, BlockPos position) {
+		return world.getLight(position) >= this.FLAX_MIN_LIGHTLEVEL;
 	}
 	
 
