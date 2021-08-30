@@ -51,6 +51,7 @@ final class LangGenerator extends LanguageProvider {
 		this.add(Textiles.BLOCKS.RAW_FIBERS.get(), "Raw Fiber Bale");
 		this.add(Textiles.BLOCKS.FLAX_CROP.get(), "Flax Flowers");
 		this.add(Textiles.BLOCKS.BASKET.get(), "Basket");
+		this.add(Textiles.BLOCKS.BASKET_STURDY.get(), "Sturdy Basket");
 
 		this.add(Textiles.BLOCKS.FABRIC_PLAIN.get(), "Plain Fabric");
 		this.add(Textiles.BLOCKS.FABRIC_RED.get(), "Red Fabric");
