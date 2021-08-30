@@ -356,7 +356,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.patternLine("RIR")
 			.patternLine("IRI")
 			.patternLine("RIR")
-			.key('R', Items.SUGAR_CANE)
+			.key('R', ingredient)
 			.key('I', Tags.Items.RODS_WOODEN)
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
 			.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient))
