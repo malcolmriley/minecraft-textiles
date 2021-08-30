@@ -15,6 +15,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -99,6 +101,25 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	}
 
 	/* Supertype Override Methods */
+	
+	@Override
+	@SuppressWarnings("deprecation") // Call super.onReplaced at end of method
+	public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
+		if (world.getTileEntity(position) instanceof IInventory) {
+	        world.updateComparatorOutputLevel(position, this);
+		}
+        super.onReplaced(state, world, position, newState, isMoving);
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos position) {
+		return Container.calcRedstone(world.getTileEntity(position));
+	}
 	
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos position, BlockState state, LivingEntity placer, ItemStack stack) {
@@ -214,7 +235,6 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 		/* Supertype Override Methods */
 
 		@Override
-		@SuppressWarnings("deprecation") // Invoke super.onReplaced after dropping contents
 		public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
 			InventoryHandler.dropContents(state, world, position, newState);
 			super.onReplaced(state, world, position, newState, isMoving);
