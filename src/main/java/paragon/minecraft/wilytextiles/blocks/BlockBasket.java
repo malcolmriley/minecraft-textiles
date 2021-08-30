@@ -31,6 +31,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -181,6 +182,12 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
 		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BlockBasket.FACING, facing));
+	}
+	
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		Direction facing = BlockBasket.getFacingFrom(state);
+		return facing.equals(Direction.UP) ? state : state.with(BlockBasket.FACING, rotation.rotate(facing));
 	}
 
 	@Override
