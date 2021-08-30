@@ -151,7 +151,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('I', Tags.Items.RODS_WOODEN)
 			.key('S', Tags.Items.STRING)
 			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Utilities.Strings.minecraftResource("bow"));
+			.build(registrar, Textiles.createResource("bow"));
 		
 		ShapedRecipeBuilder.shapedRecipe(Items.CROSSBOW)
 			.patternLine("I#I")
@@ -165,7 +165,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(stickCriterion, stickTrigger)
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.INGOTS_IRON), RecipeHelper.hasItem(Tags.Items.INGOTS_IRON))
 			.addCriterion(RecipeHelper.criterionName(Items.TRIPWIRE_HOOK), RecipeHelper.hasItem(Items.TRIPWIRE_HOOK))
-			.build(registrar, Utilities.Strings.minecraftResource("crossbow"));
+			.build(registrar, Textiles.createResource("crossbow"));
 		
 		ShapedRecipeBuilder.shapedRecipe(Items.FISHING_ROD)
 			.patternLine("  I")
@@ -174,7 +174,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('I', Tags.Items.RODS_WOODEN)
 			.key('S', Tags.Items.STRING)
 			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Utilities.Strings.minecraftResource("fishing_rod"));
+			.build(registrar, Textiles.createResource("fishing_rod"));
 		
 		ShapedRecipeBuilder.shapedRecipe(Items.LEAD)
 			.patternLine("SS ")
@@ -183,7 +183,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('S', Tags.Items.STRING)
 			.key('O', Tags.Items.SLIMEBALLS)
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.SLIMEBALLS), RecipeHelper.hasItem(Tags.Items.SLIMEBALLS))
-			.build(registrar, Utilities.Strings.minecraftResource("lead"));
+			.build(registrar, Textiles.createResource("lead"));
 		
 		ShapedRecipeBuilder.shapedRecipe(Items.LOOM)
 			.patternLine("SS")
@@ -191,7 +191,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('S', Tags.Items.STRING)
 			.key('#', ItemTags.PLANKS)
 			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Utilities.Strings.minecraftResource("loom"));
+			.build(registrar, Textiles.createResource("loom"));
 		
 		// Plain Fabric from Twine
 		this.addLoopRecipe(Textiles.ITEMS.FABRIC_PLAIN, 2, Textiles.ITEMS.TWINE.get(), registrar);
@@ -422,7 +422,7 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('W', woolTag)
 			.key('#', ItemTags.PLANKS)
 			.addCriterion(hasWoolName, hasWool)
-			.build(registrar);
+			.build(registrar, nameFromPath(bed));
 		
 		// Banners
 		ShapedRecipeBuilder.shapedRecipe(banner)
@@ -433,14 +433,14 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('I', Tags.Items.RODS_WOODEN)
 			.addCriterion(hasWoolName, hasWool)
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
-			.build(registrar);
+			.build(registrar, nameFromPath(banner));
 		
 		// Carpets
 		ShapedRecipeBuilder.shapedRecipe(carpet, 3)
 			.patternLine("##")
 			.key('#', woolTag)
 			.addCriterion(hasWoolName, hasWool)
-			.build(registrar);
+			.build(registrar, nameFromPath(carpet));
 	}
 
 	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
@@ -453,6 +453,10 @@ final class RecipeGenerator extends RecipeHelper {
 			builder.addIngredient(ingredient);
 		}
 		return builder.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient));
+	}
+	
+	protected ResourceLocation nameFromPath(IItemProvider output) {
+		return Textiles.createResource(RecipeHelper.registryPathOf(output));
 	}
 	
 	protected ResourceLocation nameFrom(RegistryObject<Item> output, String source) {
