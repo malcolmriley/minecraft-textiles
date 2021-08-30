@@ -5,10 +5,12 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -73,6 +75,12 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	}
 
 	/* Supertype Override Methods */
+	
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos position, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.onBlockPlacedBy(world, position, state, placer, stack);
+		Utilities.Game.tryRenameFrom(world.getTileEntity(position), stack);
+	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Invoke super.onReplaced after dropping contents
