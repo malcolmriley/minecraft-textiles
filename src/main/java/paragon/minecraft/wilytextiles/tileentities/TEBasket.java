@@ -51,6 +51,10 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 		HopperTileEntity.captureItem(this, entity); // Why reinvent the wheel?
 	}
 
+	public InventoryHandler getInventory() {
+		return this.ITEMS;
+	}
+
 	/* Supertype Override Methods */
 
 	@Override
