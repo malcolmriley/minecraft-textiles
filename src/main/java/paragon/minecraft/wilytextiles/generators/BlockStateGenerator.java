@@ -28,7 +28,10 @@ final class BlockStateGenerator extends BlockStateHelper {
 	
 	/* Package-Available Fields */
 	static final String TEXTURE_SIDES = "sides";
+	static final String TEXTURE_SIDES_ALT = "sides_alt";
 	static final String TEXTURE_ENDS = "ends";
+	static final String TEXTURE_BOTTOM = "bottom";
+	static final String TEXTURE_INNER = "inner";
 	static final String TEXTURE_EXTRAS = "extras";
 	static final String FIBER_TEXTURE_BASE = "retting_fiber";
 	static final String BASE_FIBERS_NAME = "fiber_";
@@ -61,20 +64,9 @@ final class BlockStateGenerator extends BlockStateHelper {
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
 		}
 		
-		// Basket
-		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(Textiles.BLOCKS.BASKET.get());
-		final ModelFile uprightModel = this.models().getExistingFile(Textiles.createResource("basket_upright"));
-		final ModelFile sideModel = this.models().getExistingFile(Textiles.createResource("basket_side"));
-		for (Direction facing : BlockBasket.FACING.getAllowedValues()) {
-			if (facing == Direction.UP) {
-				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(uprightModel).nextModel().modelFile(uprightModel).rotationY(90);
-				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.build());
-			}
-			else {
-				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(sideModel);
-				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
-			}
-		}
+		// Baskets
+		this.createBasketModel(Textiles.BLOCKS.BASKET);
+		this.createBasketModel(Textiles.BLOCKS.BASKET_STURDY);
 		
 		// Bolt of Fabric
 		this.createFabricModel(Textiles.BLOCKS.FABRIC_PLAIN, "plain");
@@ -98,6 +90,31 @@ final class BlockStateGenerator extends BlockStateHelper {
 	}
 	
 	/* Internal Methods */
+	
+	protected void createBasketModel(RegistryObject<Block> target) {
+		String baseName = target.getId().getPath();
+		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(target.get());
+		final ModelFile uprightModel = this.basketBlockModel(baseName, "upright");
+		final ModelFile sideModel = this.basketBlockModel(baseName, "side");
+		for (Direction facing : BlockBasket.FACING.getAllowedValues()) {
+			if (facing == Direction.UP) {
+				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(uprightModel).nextModel().modelFile(uprightModel).rotationY(90);
+				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.build());
+			}
+			else {
+				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(sideModel);
+				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
+			}
+		}
+	}
+	
+	protected ModelFile basketBlockModel(String name, String variant) {
+		return this.models().withExistingParent(Utilities.Strings.name(name, variant), Textiles.createResource(Utilities.Strings.name("basket_base", variant)))
+			.texture(TEXTURE_SIDES, this.blockFolderTexture(Utilities.Strings.name(name, TEXTURE_SIDES)))
+			.texture(TEXTURE_SIDES_ALT, this.blockFolderTexture(Utilities.Strings.name(name, TEXTURE_SIDES_ALT)))
+			.texture(TEXTURE_BOTTOM, this.blockFolderTexture(Utilities.Strings.name(name, TEXTURE_BOTTOM)))
+			.texture(TEXTURE_INNER, this.blockFolderTexture(Utilities.Strings.name(name, TEXTURE_INNER)));
+	}
 	
 	protected void createFabricModel(RegistryObject<Block> target, String color) {
 		final VariantBlockStateBuilder fabricBuilder = this.getVariantBuilder(target.get());

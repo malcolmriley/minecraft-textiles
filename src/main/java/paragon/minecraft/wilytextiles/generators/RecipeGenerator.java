@@ -9,9 +9,11 @@ import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
 import net.minecraft.data.ShapedRecipeBuilder;
 import net.minecraft.data.ShapelessRecipeBuilder;
+import net.minecraft.data.SmithingRecipeBuilder;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.tags.ITag.INamedTag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
@@ -137,6 +139,15 @@ final class RecipeGenerator extends RecipeHelper {
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.WICKER), RecipeHelper.hasItem(Textiles.ITEMS.WICKER))
 			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET, Textiles.ITEMS.WICKER));
+		
+		// Sturdy Basket
+		SmithingRecipeBuilder.smithingRecipe(
+				Ingredient.fromItems(Textiles.ITEMS.BLOCK_BASKET.get()),
+				Ingredient.fromItems(Items.TURTLE_HELMET), 
+				Textiles.ITEMS.BLOCK_BASKET_STURDY.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_BASKET), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_BASKET))
+			.addCriterion(RecipeHelper.criterionName(Items.TURTLE_HELMET), RecipeHelper.hasItem(Items.TURTLE_HELMET))
+		.build(registrar, this.nameFromPath(Textiles.ITEMS.BLOCK_BASKET_STURDY.get()));
 		
 		// String tag override recipes
 		final String stringCriterion = RecipeHelper.criterionName(Items.STRING);

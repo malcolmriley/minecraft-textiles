@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -22,8 +23,11 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import paragon.minecraft.library.Utilities;
+import paragon.minecraft.library.capabilities.FilteredInventoryHandler;
 import paragon.minecraft.library.capabilities.InventoryHandler;
 import paragon.minecraft.library.client.ui.AbstractContainer;
+import paragon.minecraft.library.client.ui.FilteredSlot;
 import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
@@ -38,7 +42,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 
 	/* Internal Fields */
 	protected static final ITextComponent DEFAULT_NAME = new TranslationTextComponent("container." + ModBlocks.Names.BASKET);
-	protected final InventoryHandler ITEMS = new InventoryHandler(TEBasket.INVENTORY_SIZE, this);
+	protected final InventoryHandler ITEMS = new FilteredInventoryHandler(TEBasket.INVENTORY_SIZE, this, (index, stack) -> this.canHold(stack));
 	protected final int RANDOMIZER = ThreadLocalRandom.current().nextInt(20);
 
 	public TEBasket() {
@@ -51,7 +55,24 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 		HopperTileEntity.captureItem(this, entity); // Why reinvent the wheel?
 	}
 
+	public InventoryHandler getInventory() {
+		return this.ITEMS;
+	}
+	
+	public boolean canHold(ItemStack instance) {
+		// TODO: Separate into another TE type?
+		if (this.getBlockState().isIn(Textiles.BLOCKS.BASKET_STURDY.get())) {
+			return !Utilities.Game.itemHasInventory(instance);
+		}
+		return true;
+	}
+
 	/* Supertype Override Methods */
+	
+	@Override
+	public boolean isItemValidForSlot(int index, ItemStack stack) {
+		return this.canHold(stack);
+	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
@@ -110,7 +131,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	/* Internal Methods */
 	
 	protected void captureItems() {
-		this.getCapturableItems().forEach(item -> HopperTileEntity.captureItem(this, item));
+		this.getCapturableItems().forEach(this::tryCaptureItem);
 	}
 	
 	protected boolean shouldCaptureItems() {
@@ -123,6 +144,12 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	
 	protected AxisAlignedBB getCaptureArea() {
 		return BlockBasket.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
+	}
+	
+	protected void tryCaptureItem(ItemEntity entity) {
+		if (this.canHold(entity.getItem())) {
+			HopperTileEntity.captureItem(this, entity); // Why re-invent the wheel?
+		}
 	}
 
 	/* Container Implementation */
@@ -140,7 +167,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 			this.basketInstance = instance;
 			this.playerInventory = this.addPlayerInventory(inventory, 8, 110);
 			this.playerHotbar = this.addPlayerHotbar(inventory, 8, 168);
-			this.basketGrid = this.addSlotGrid(this.basketInstance, 53, 18, TEBasket.INVENTORY_WIDTH, TEBasket.INVENTORY_HEIGHT);
+			this.basketGrid = this.addSlotGrid(this.basketInstance, 53, 18, TEBasket.INVENTORY_WIDTH, TEBasket.INVENTORY_HEIGHT, ContainerImpl.createSlotFactory(instance));
 		}
 
 		/* Public Methods */
@@ -168,6 +195,12 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 		@Override
 		public boolean canInteractWith(PlayerEntity player) {
 			return this.basketInstance.isUsableByPlayer(player);
+		}
+		
+		/* Internal Methods */
+		
+		protected static ISlotFactory<Slot> createSlotFactory(TEBasket instance) {
+			return (inventory, index, xPos, yPos) -> new FilteredSlot(inventory, index, xPos, yPos, instance::canHold);
 		}
 
 	}

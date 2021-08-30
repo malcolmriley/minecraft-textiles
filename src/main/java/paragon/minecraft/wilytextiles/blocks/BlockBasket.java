@@ -1,14 +1,26 @@
 package paragon.minecraft.wilytextiles.blocks;
 
+import java.util.List;
+
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.ShulkerBoxBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
@@ -18,6 +30,8 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -37,7 +51,7 @@ import paragon.minecraft.wilytextiles.tileentities.TEBasket;
  * 
  * @author Malcolm Riley
  */
-public class BlockBasket extends ContainerBlock implements IWaterLoggable {
+public abstract class BlockBasket extends ContainerBlock implements IWaterLoggable {
 
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
@@ -61,6 +75,21 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	
 	/* Public Methods */
 	
+	/**
+	 * Returns the suggested default properties for a {@link BlockBasket}.
+	 * 
+	 * @return Some suggested default properties for a {@link BlockBasket}.
+	 */
+	public static AbstractBlock.Properties createDefaultProperties() {
+		return AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO);
+	}
+	
+	/**
+	 * Returns the item capture area {@link VoxelShape} for the {@link BlockBasket} based on the provided {@link BlockState}
+	 * 
+	 * @param state - The {@link BlockState} to examine
+	 * @return The {@link VoxelShape} item capture area
+	 */
 	public static VoxelShape getCaptureShapeFrom(BlockState state) {
 		Direction facing = BlockBasket.getFacingFrom(state);
 		switch(facing) {
@@ -73,12 +102,30 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 	}
 
 	/* Supertype Override Methods */
+	
+	@Override
+	@SuppressWarnings("deprecation") // Call super.onReplaced at end of method
+	public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
+		if (world.getTileEntity(position) instanceof IInventory) {
+	        world.updateComparatorOutputLevel(position, this);
+		}
+        super.onReplaced(state, world, position, newState, isMoving);
+	}
 
 	@Override
-	@SuppressWarnings("deprecation") // Invoke super.onReplaced after dropping contents
-	public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
-		InventoryHandler.dropContents(state, world, position, newState);
-		super.onReplaced(state, world, position, newState, isMoving);
+	public boolean hasComparatorInputOverride(BlockState state) {
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos position) {
+		return Container.calcRedstone(world.getTileEntity(position));
+	}
+	
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos position, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.onBlockPlacedBy(world, position, state, placer, stack);
+		Utilities.Game.tryRenameFrom(world.getTileEntity(position), stack);
 	}
 
 	@Override
@@ -136,6 +183,12 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
 		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BlockBasket.FACING, facing));
 	}
+	
+	@Override
+	public BlockState rotate(BlockState state, Rotation rotation) {
+		Direction facing = BlockBasket.getFacingFrom(state);
+		return facing.equals(Direction.UP) ? state : state.with(BlockBasket.FACING, rotation.rotate(facing));
+	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Call super.mirror if facing is not UP.
@@ -171,6 +224,60 @@ public class BlockBasket extends ContainerBlock implements IWaterLoggable {
 		return this.stateContainer.getBaseState()
 			.with(FACING, Direction.UP)
 			.with(WATERLOGGED, Boolean.FALSE);
+	}
+	
+	/* Specific Implementations */
+	
+	/**
+	 * Normal {@link BlockBasket} implementation, functions the same as other inventory blocks.
+	 * 
+	 * @author Malcolm Riley
+	 */
+	public static class Normal extends BlockBasket {
+
+		public Normal(Properties builder) {
+			super(builder);
+		}
+		
+		/* Supertype Override Methods */
+
+		@Override
+		public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
+			InventoryHandler.dropContents(state, world, position, newState);
+			super.onReplaced(state, world, position, newState, isMoving);
+		}
+		
+	}
+	
+	/**
+	 * Specialized {@link BlockBasket} implementation, keeps inventory when block is dropped.
+	 * 
+	 * @author Malcolm Riley
+	 */
+	public static class KeepInventory extends BlockBasket {
+		
+		/* Internal Fields */
+		protected static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
+
+		public KeepInventory(Properties builder) {
+			super(builder);
+		}
+		
+		@SuppressWarnings("deprecation") // Return super.getDrops()
+		public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
+			TileEntity discovered = builder.get(LootParameters.BLOCK_ENTITY);
+			if (discovered instanceof TEBasket) {
+				TEBasket basket = (TEBasket) discovered;
+				if (!basket.isEmpty()) {
+					builder.withDynamicDrop(BLOCK_ENTITY_CONTENTS, (context, consumer) -> {
+						basket.getInventory().getItems().forEach(consumer);
+					});
+				}
+			}
+
+			return super.getDrops(state, builder);
+		}
+
 	}
 
 }

@@ -83,6 +83,7 @@ final class LootGenerator extends LootHelper {
 
 			// Basket Block
 			this.registerLootTable(Textiles.BLOCKS.BASKET.get(), BlockLootTables.droppingWithName(Textiles.BLOCKS.BASKET.get()));
+			this.registerLootTable(Textiles.BLOCKS.BASKET_STURDY.get(), BlockLootTables.droppingWithContents(Textiles.BLOCKS.BASKET_STURDY.get()));
 
 			// Flax Crop
 			final LootTable.Builder flaxBuilder = LootTable.builder();

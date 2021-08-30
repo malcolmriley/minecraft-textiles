@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
@@ -55,6 +56,7 @@ public class ModItems extends ContentProvider<Item> {
 	// Block Items
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
+	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
 	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
 	
 	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
@@ -140,7 +142,7 @@ public class ModItems extends ContentProvider<Item> {
 	}
 	
 	/**
-	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject}.
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject} and default properties.
 	 * <p>
 	 * The registry name of the resulting {@link BlockItem} will use the id of the {@link Block} held by the provided {@link RegistryObject}.
 	 * 
@@ -148,7 +150,20 @@ public class ModItems extends ContentProvider<Item> {
 	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
 	 */
 	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
-		return this.simpleBlockItem(block.getId().getPath(), block);
+		return this.simpleBlockItem(block, this.DEFAULT);
+	}
+	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject}.
+	 * <p>
+	 * The registry name of the resulting {@link BlockItem} will use the id of the {@link Block} held by the provided {@link RegistryObject}.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @param properties - The {@link Item.Properties} to use for the resulting {@link BlockItem}
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
+	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block, Item.Properties properties) {
+		return this.simpleBlockItem(block.getId().getPath(), block, properties);
 	}
 	
 	/**
@@ -156,10 +171,11 @@ public class ModItems extends ContentProvider<Item> {
 	 * 
 	 * @param name - The registry name for the {@link BlockItem}
 	 * @param blockSupplier - A supplier of the target {@link Block}, to be called lazily
+	 * @param properties - The {@link Item.Properties} to use for the resulting {@link BlockItem}
 	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
 	 */
-	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier) {
-		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, DEFAULT));
+	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier, Item.Properties properties) {
+		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, properties));
 	}
 	
 	/**
