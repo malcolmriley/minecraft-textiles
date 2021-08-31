@@ -78,8 +78,8 @@ public class BlockPadding extends RotatedPillarBlock {
 	/* Internal Methods */
 	
 	protected static Vector3d calculateLandingVelocity(Vector3d original, Entity entity, boolean suppressBounce, float normalReduction, float noBounceReduction) {
-		float horizontalReduction = suppressBounce ? NOBOUNCE_VELOCITY_REDUCTION : VELOCITY_REDUCTION;
-		float verticalReduction = suppressBounce ? 0.0F : NOBOUNCE_VELOCITY_REDUCTION;
+		float horizontalReduction = suppressBounce ? noBounceReduction : normalReduction;
+		float verticalReduction = suppressBounce ? 0.0F : noBounceReduction;
 		return original.mul(original.x * horizontalReduction, -verticalReduction, original.z * horizontalReduction);
 	}
 	
