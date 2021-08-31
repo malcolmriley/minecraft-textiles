@@ -25,10 +25,10 @@ public class CushionBlock extends BlockPadding {
 	/* Internal Fields */
 	protected static final VoxelShape HALF_TOP = Block.makeCuboidShape(0, 8, 0, 16, 16, 16);
 	protected static final VoxelShape HALF_BOTTOM = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
-	protected static final VoxelShape HALF_NORTH = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
-	protected static final VoxelShape HALF_SOUTH = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
-	protected static final VoxelShape HALF_EAST = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
-	protected static final VoxelShape HALF_WEST = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
+	protected static final VoxelShape HALF_NORTH = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
+	protected static final VoxelShape HALF_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
+	protected static final VoxelShape HALF_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
+	protected static final VoxelShape HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
 
 	public CushionBlock(MaterialColor color) {
 		this(BlockPadding.createPropertiesFrom(color));
@@ -53,8 +53,8 @@ public class CushionBlock extends BlockPadding {
 			return VoxelShapes.fullCube();
 		}
 		switch(CushionBlock.getAxisFrom(state)) {
-			case X: return CushionBlock.shapeFrom(type, HALF_NORTH, HALF_SOUTH);
-			case Z: return CushionBlock.shapeFrom(type, HALF_EAST, HALF_WEST);
+			case X: return CushionBlock.shapeFrom(type, HALF_EAST, HALF_WEST);
+			case Z: return CushionBlock.shapeFrom(type, HALF_SOUTH, HALF_NORTH);
 			default: return CushionBlock.shapeFrom(type, HALF_TOP, HALF_BOTTOM);	
 		}
 	}
@@ -63,7 +63,11 @@ public class CushionBlock extends BlockPadding {
 	@Nullable
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
-		Direction facing = context.getPlacementHorizontalFacing();
+		Direction facing = context.getFace();
+		if (!context.getPlayer().isCrouching()) {
+			// Swap facing if player isn't crouching, to allow placing cushions on near side of target block space
+			facing = facing.getOpposite();
+		}
 		return state.isIn(this) ? state.with(CushionBlock.TYPE, SlabType.DOUBLE) : CushionBlock.applyDirectionTo(this.getDefaultState(), facing);
 	}
 
@@ -90,7 +94,7 @@ public class CushionBlock extends BlockPadding {
 	}
 	
 	protected static VoxelShape shapeFrom(SlabType type, VoxelShape positive, VoxelShape negative) {
-		return SlabType.TOP.equals(type) ? positive : negative;
+		return SlabType.BOTTOM.equals(type) ? negative : positive;
 	}
 
 	protected static SlabType getTypeFrom(BlockState state) {
