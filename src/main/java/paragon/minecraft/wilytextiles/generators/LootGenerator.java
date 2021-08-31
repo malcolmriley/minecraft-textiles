@@ -138,7 +138,7 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
 			
-			// Fabric Block
+			// Fabric Blocks
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PLAIN);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_ORANGE);
@@ -162,14 +162,17 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Items.FEATHER))
 				.rolls(ConstantRange.of(9)));
 			this.registerLootTable(Textiles.BLOCKS.PACKED_FEATHERS.get(), featherBuilder);
+			
+			// Cushion Blocks
+			Textiles.BLOCKS.streamCushionBlocks().forEach(cushion -> {
+				this.registerLootTable(cushion, BlockLoot.droppingSlab(cushion));
+			});
 		}
 
 		@Override
 		protected Iterable<Block> getKnownBlocks() {
 			return Textiles.BLOCKS.iterateContent();
 		}
-
-		/* Internal Methods */
 		
 		protected void fabricBlockLoot(RegistryObject<Block> target) {
 			LootTable.Builder builder = LootTable.builder();
