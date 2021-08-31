@@ -4,6 +4,7 @@ import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import paragon.minecraft.wilytextiles.Textiles;
 
 /**
  * Specialized BlockPadding that breaks when fallen upon from above a threshold height.
@@ -14,7 +15,6 @@ public class FeatherBlock extends BlockPadding {
 	
 	/* Internal Fields */
 	protected static final float FALL_DISTANCE_BREAK_THRESHOLD = 0.5F;
-	protected static final float FALL_REDUCTION = 0.8F;
 	
 	public FeatherBlock() {
 		this(BlockPadding.createPropertiesFrom(MaterialColor.SNOW));
@@ -23,6 +23,8 @@ public class FeatherBlock extends BlockPadding {
 	public FeatherBlock(Properties properties) {
 		super(properties);
 	}
+	
+	/* Supertype Override Methods */
 
 	@Override
 	public void onFallenUpon(World world, BlockPos position, Entity entity, float distance) {
@@ -34,7 +36,12 @@ public class FeatherBlock extends BlockPadding {
 
 	@Override
 	protected float getFallDistanceModifier(World world, BlockPos position, Entity fallen, float distance) {
-		return FALL_REDUCTION;
+		return (float) (1.0 - Textiles.CONFIG.getFeatherFallReduction());
+	}
+
+	@Override
+	protected boolean shouldReduceFall() {
+		return Textiles.CONFIG.cushionsReduceFall();
 	}
 
 }

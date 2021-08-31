@@ -19,6 +19,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import paragon.minecraft.wilytextiles.Textiles;
 
 public class CushionBlock extends BlockPadding {
 
@@ -98,6 +99,11 @@ public class CushionBlock extends BlockPadding {
 		super.fillStateContainer(builder);
 		builder.add(CushionBlock.TYPE);
 	}
+
+	@Override
+	protected boolean shouldReduceFall() {
+		return Textiles.CONFIG.cushionsReduceFall();
+	}
 	
 	@Override
 	protected float getFallDistanceModifier(World world, BlockPos position, Entity fallen, float distance) {
@@ -122,49 +128,53 @@ public class CushionBlock extends BlockPadding {
 	
 	protected int countCushions(World world, BlockPos originalPosition) {
 		
-		final int maxSeekDepth = 4;
+		final int maxSeekDepth = Textiles.CONFIG.getCushionFallMaxSeek();
 		int count = 0;
-		BlockPos.Mutable examinedPosition = new BlockPos.Mutable(originalPosition.getX(), originalPosition.getY(), originalPosition.getZ());
-		
-		examine: for (int depth = 1; depth < maxSeekDepth; depth += 1) {
-			BlockState examinedState = world.getBlockState(examinedPosition);
-			// If the discovered Block isn't a cushion, stop counting.
-			if (!examinedState.isIn(this)) {
-				break;
-			}
-			// If the cushion block is Y, evaluate whether there is a half-block gap
-			if (Axis.Y.equals(CushionBlock.getAxisFrom(examinedState))) {
-				switch (CushionBlock.getTypeFrom(examinedState)) {
-					case BOTTOM:
-						// If there is a bottom-only cushion slab, there is a gap above it. Don't count the slab and stop counting.
-						break examine;
-					case TOP:
-						// If there is a top-only cushion slab, there is a gap below it. Count the slab, but stop counting.
-						count += 1;
-						break examine;
-					default:
-						// The slab type is double. Count both and continue counting.
-						count += 2;
-				}
-			}
-			// If the cushion block is not Y-aligned, there may be a horizontal gap.
-			else {
-				// Only continue if the slab type is double (there is no horizontal gap)
-				if (!SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(examinedState))) {
-					count += 1;
+		if (maxSeekDepth > 0) {
+			// Create mutable block Pos
+			BlockPos.Mutable examinedPosition = new BlockPos.Mutable(originalPosition.getX(), originalPosition.getY(), originalPosition.getZ());
+			
+			// Yes it's a label. Feast your eyes on my legitimate use case and despair
+			examine: for (int depth = 0; depth < maxSeekDepth; depth += 1) {
+				BlockState examinedState = world.getBlockState(examinedPosition);
+				// If the discovered Block isn't a cushion, stop counting.
+				if (!examinedState.isIn(this)) {
 					break;
 				}
-				count += 2;
+				// If the cushion block is Y, evaluate whether there is a half-block gap
+				if (Axis.Y.equals(CushionBlock.getAxisFrom(examinedState))) {
+					switch (CushionBlock.getTypeFrom(examinedState)) {
+						case BOTTOM:
+							// If there is a bottom-only cushion slab, there is a gap above it. Don't count the slab and stop counting.
+							break examine;
+						case TOP:
+							// If there is a top-only cushion slab, there is a gap below it. Count the slab, but stop counting.
+							count += 1;
+							break examine;
+						default:
+							// The slab type is double. Count both and continue counting.
+							count += 2;
+					}
+				}
+				// If the cushion block is not Y-aligned, there may be a horizontal gap.
+				else {
+					// Only continue if the slab type is double (there is no horizontal gap)
+					if (!SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(examinedState))) {
+						count += 1;
+						break;
+					}
+					count += 2;
+				}
+				
+				// Move the examined position down before continuing
+				examinedPosition.move(Direction.DOWN);
 			}
-			
-			examinedPosition.move(Direction.DOWN);
 		}
 		return count;
 	}
 	
 	protected static float calculateFallReduction(int cushionCount) {
-		final double REDUCTION_PER_CUSHION = 0.2F;
-		return (float)Math.pow(1.0 - REDUCTION_PER_CUSHION, cushionCount);
+		return (float)Math.pow(1.0 - Textiles.CONFIG.getCushionFallReduction(), cushionCount);
 	}
 	
 	protected static VoxelShape getFullShapeFrom(BlockState state) {
