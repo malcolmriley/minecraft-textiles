@@ -72,13 +72,16 @@ public class BlockPadding extends RotatedPillarBlock {
 
 	@Override
 	public void onLanded(IBlockReader world, Entity entity) {
-		Vector3d motion = entity.getMotion();
-		float horizontalReduction = entity.isSuppressingBounce() ? NOBOUNCE_VELOCITY_REDUCTION : VELOCITY_REDUCTION;
-		float verticalReduction = entity.isSuppressingBounce() ? 0.0F : NOBOUNCE_VELOCITY_REDUCTION;
-		entity.setMotion(motion.mul(motion.x * horizontalReduction, -verticalReduction, motion.z * horizontalReduction));
+		entity.setMotion(BlockPadding.calculateLandingVelocity(entity.getMotion(), entity, entity.isSuppressingBounce(), VELOCITY_REDUCTION, NOBOUNCE_VELOCITY_REDUCTION));
 	}
 
 	/* Internal Methods */
+	
+	protected static Vector3d calculateLandingVelocity(Vector3d original, Entity entity, boolean suppressBounce, float normalReduction, float noBounceReduction) {
+		float horizontalReduction = suppressBounce ? NOBOUNCE_VELOCITY_REDUCTION : VELOCITY_REDUCTION;
+		float verticalReduction = suppressBounce ? 0.0F : NOBOUNCE_VELOCITY_REDUCTION;
+		return original.mul(original.x * horizontalReduction, -verticalReduction, original.z * horizontalReduction);
+	}
 	
 	protected static Direction.Axis getAxisFrom(BlockState state) {
 		return state.get(BlockPadding.AXIS);
