@@ -6,7 +6,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Specialized BlockPadding that breaks when fallen upon.
+ * Specialized BlockPadding that breaks when fallen upon from above a threshold height.
  * 
  * @author Malcolm Riley
  */
