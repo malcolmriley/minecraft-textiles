@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 public class BlockPadding extends RotatedPillarBlock {
 
 	/* BlockState Properties */
-	protected static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
 	/* Internal Fields */
 	protected static final int SHAPE_OFFSET = 2;
