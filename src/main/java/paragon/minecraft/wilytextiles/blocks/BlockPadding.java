@@ -66,8 +66,8 @@ public class BlockPadding extends RotatedPillarBlock {
 	}
 
 	@Override
-	public void onFallenUpon(World world, BlockPos pos, Entity entity, float distance) {
-		super.onFallenUpon(world, pos, entity, distance * FALL_REDUCTION);
+	public void onFallenUpon(World world, BlockPos position, Entity entity, float distance) {
+		super.onFallenUpon(world, position, entity, distance * this.getFallReduction(world, position, entity, distance));
 	}
 
 	@Override
@@ -76,6 +76,10 @@ public class BlockPadding extends RotatedPillarBlock {
 	}
 
 	/* Internal Methods */
+	
+	protected float getFallReduction(World world, BlockPos position, Entity fallen, float distance) {
+		return FALL_REDUCTION;
+	}
 	
 	protected static Vector3d calculateLandingVelocity(Vector3d original, Entity entity, boolean suppressBounce, float normalReduction, float noBounceReduction) {
 		float horizontalReduction = suppressBounce ? noBounceReduction : normalReduction;
