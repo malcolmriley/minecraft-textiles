@@ -79,6 +79,24 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FABRIC_BLACK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLACK);
 	public final RegistryObject<Item> FABRIC_BROWN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BROWN);
 	
+	public final RegistryObject<Item> CUSHION_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PLAIN);
+	public final RegistryObject<Item> CUSHION_RED = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_RED);
+	public final RegistryObject<Item> CUSHION_ORANGE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_ORANGE);
+	public final RegistryObject<Item> CUSHION_YELLOW = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_YELLOW);
+	public final RegistryObject<Item> CUSHION_LIME = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIME);
+	public final RegistryObject<Item> CUSHION_GREEN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GREEN);
+	public final RegistryObject<Item> CUSHION_CYAN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_CYAN);
+	public final RegistryObject<Item> CUSHION_LIGHT_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_BLUE);
+	public final RegistryObject<Item> CUSHION_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLUE);
+	public final RegistryObject<Item> CUSHION_PURPLE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PURPLE);
+	public final RegistryObject<Item> CUSHION_MAGENTA = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_MAGENTA);
+	public final RegistryObject<Item> CUSHION_PINK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PINK);
+	public final RegistryObject<Item> CUSHION_WHITE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_WHITE);
+	public final RegistryObject<Item> CUSHION_LIGHT_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_GRAY);
+	public final RegistryObject<Item> CUSHION_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GRAY);
+	public final RegistryObject<Item> CUSHION_BLACK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLACK);
+	public final RegistryObject<Item> CUSHION_BROWN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BROWN);
+	
 	/* Public Methods */
 	
 	/**
