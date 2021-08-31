@@ -318,6 +318,19 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.DARK_OAK_BOAT);
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.OAK_DOOR, Items.SPRUCE_DOOR, Items.DARK_OAK_DOOR);
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.OAK_TRAPDOOR, Items.SPRUCE_TRAPDOOR, Items.DARK_OAK_TRAPDOOR);
+		
+		// Packed Feathers
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.patternLine("###")
+			.patternLine("###")
+			.patternLine("###")
+			.key('#', Items.FEATHER)
+			.addCriterion(RecipeHelper.createCriterionName(Items.FEATHER), RecipeHelper.hasItem(Items.FEATHER))
+			.build(registrar);
+		ShapelessRecipeBuilder.shapelessRecipe(Items.FEATHER)
+			.addIngredient(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_PACKED_FEATHERS), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_PACKED_FEATHERS))
+			.build(registrar, this.nameFrom(Items.FEATHER, "unpacking"));
 	}
 
 	/* Internal Methods */
