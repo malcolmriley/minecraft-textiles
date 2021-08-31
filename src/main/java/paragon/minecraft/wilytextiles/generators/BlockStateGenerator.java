@@ -1,10 +1,14 @@
 package paragon.minecraft.wilytextiles.generators;
 
+import java.util.stream.IntStream;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.state.properties.SlabType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
@@ -16,6 +20,7 @@ import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
@@ -91,9 +96,37 @@ final class BlockStateGenerator extends BlockStateHelper {
 		// Packed Feathers
 		this.axisBlock((RotatedPillarBlock) Textiles.BLOCKS.PACKED_FEATHERS.get());
 		
+		// Cushion Block
+		this.createCushionModel(Textiles.BLOCKS.CUSHION_PLAIN);
 	}
 	
 	/* Internal Methods */
+	
+	protected void createCushionModel(RegistryObject<Block> target) {
+		final String baseName = target.getId().getPath();
+		final ResourceLocation sidesName = this.textureForBlock(baseName, TEXTURE_SIDES);
+		final VariantBlockStateBuilder builder = this.getVariantBuilder(target.get());
+		for (Direction.Axis axis : CushionBlock.AXIS.getAllowedValues()) {
+			final int xRotation = this.getXRotationFrom(axis);
+			final int yRotation = this.getYRotationFrom(axis);
+			IntStream.rangeClosed(1, 3).forEach(suffix -> {
+				String variant = String.valueOf(suffix);
+				final ResourceLocation endsName = this.textureForBlock(baseName, TEXTURE_ENDS, variant);
+				ConfiguredModel.Builder<?> cubeModelBuilder = ConfiguredModel.builder()
+					.modelFile(this.models().cubeColumn(Utilities.Strings.name(baseName, "full", variant), sidesName, endsName))
+					.rotationX(xRotation).rotationY(yRotation);
+				ConfiguredModel.Builder<?> topModelBuilder = ConfiguredModel.builder()
+					.modelFile(this.models().slabTop(Utilities.Strings.name(baseName, "top", variant), sidesName, endsName, endsName))
+					.rotationX(xRotation).rotationY(yRotation);
+				ConfiguredModel.Builder<?> bottomModelBuilder = ConfiguredModel.builder()
+					.modelFile(this.models().slab(Utilities.Strings.name(baseName, "bottom", variant), sidesName, endsName, endsName))
+					.rotationX(xRotation).rotationY(yRotation);
+				builder.addModels(builder.partialState().with(CushionBlock.AXIS, axis).with(CushionBlock.TYPE, SlabType.DOUBLE), cubeModelBuilder.build());
+				builder.addModels(builder.partialState().with(CushionBlock.AXIS, axis).with(CushionBlock.TYPE, SlabType.BOTTOM), bottomModelBuilder.build());
+				builder.addModels(builder.partialState().with(CushionBlock.AXIS, axis).with(CushionBlock.TYPE, SlabType.TOP), topModelBuilder.build());
+			});
+		}
+	}
 	
 	protected void createBasketModel(RegistryObject<Block> target) {
 		String baseName = target.getId().getPath();
@@ -139,6 +172,20 @@ final class BlockStateGenerator extends BlockStateHelper {
 	protected ModelFile crossCropModel(String parent, String variant, int age) {
 		final String name = Utilities.Strings.name(parent, variant, String.valueOf(age));
 		return this.models().withExistingParent(name, this.mcLoc("cross")).texture("cross", this.blockFolderTexture(name));
+	}
+	
+	/* Internal Methods */
+	
+	protected int getXRotationFrom(Direction.Axis axis) {
+		return axis.isVertical() ? 0: 90;
+	}
+	
+	protected int getYRotationFrom(Direction.Axis axis) {
+		return Axis.Z.equals(axis) ? 180 : 90;
+	}
+	
+	protected ResourceLocation textureForBlock(String ... elements) {
+		return Textiles.createResource(this.blockFolderTexture(Utilities.Strings.name(elements)));
 	}
 
 }
