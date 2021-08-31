@@ -55,6 +55,9 @@ final class ItemModelGenerator extends ItemModelHelper {
 		this.variantBlockItem(ModBlocks.Names.BASKET_STURDY, "upright");
 		this.blockItem(ModBlocks.Names.PACKED_FEATHERS);
 		
+		// Cushions
+		Textiles.ITEMS.streamCushionItems().forEach(item -> this.variantSlab(item.getRegistryName().getPath()));
+		
 		// Fabric Blocks
 		String[] fabrics = new String[] {
 			ModBlocks.Names.FABRIC_PLAIN,
