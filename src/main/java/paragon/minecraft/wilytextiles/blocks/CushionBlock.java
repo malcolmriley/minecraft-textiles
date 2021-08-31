@@ -64,7 +64,7 @@ public class CushionBlock extends BlockPadding {
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		BlockState state = context.getWorld().getBlockState(context.getPos());
 		Direction facing = context.getPlacementHorizontalFacing();
-		return state.isIn(this) ? state.with(CushionBlock.TYPE, SlabType.DOUBLE) : CushionBlock.applyDirectionTo(state, facing);
+		return state.isIn(this) ? state.with(CushionBlock.TYPE, SlabType.DOUBLE) : CushionBlock.applyDirectionTo(this.getDefaultState(), facing);
 	}
 
 	@Override
