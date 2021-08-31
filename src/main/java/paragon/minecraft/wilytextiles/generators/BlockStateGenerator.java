@@ -1,6 +1,7 @@
 package paragon.minecraft.wilytextiles.generators;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.RotatedPillarBlock;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
@@ -86,6 +87,9 @@ final class BlockStateGenerator extends BlockStateHelper {
 		this.createFabricModel(Textiles.BLOCKS.FABRIC_GRAY, "gray");
 		this.createFabricModel(Textiles.BLOCKS.FABRIC_BLACK, "black");
 		this.createFabricModel(Textiles.BLOCKS.FABRIC_BROWN, "brown");
+		
+		// Packed Feathers
+		this.axisBlock((RotatedPillarBlock) Textiles.BLOCKS.PACKED_FEATHERS.get());
 		
 	}
 	

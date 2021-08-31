@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.item.Items;
 import net.minecraft.loot.BinomialRange;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
@@ -155,6 +156,12 @@ final class LootGenerator extends LootHelper {
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GRAY);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLACK);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BROWN);
+			
+			// Packed Feathers
+			final LootTable.Builder featherBuilder = LootTable.builder().addLootPool(LootPool.builder()
+				.addEntry(ItemLootEntry.builder(Items.FEATHER))
+				.rolls(ConstantRange.of(9)));
+			this.registerLootTable(Textiles.BLOCKS.PACKED_FEATHERS.get(), featherBuilder);
 		}
 
 		@Override
