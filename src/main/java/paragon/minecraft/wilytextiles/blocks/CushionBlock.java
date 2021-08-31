@@ -68,9 +68,8 @@ public class CushionBlock extends BlockPadding {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation") // Return super.isTransparent() if type is not double
 	public boolean isTransparent(BlockState state) {
-		return CushionBlock.getTypeFrom(state).equals(SlabType.DOUBLE) ? false : super.isTransparent(state);
+		return !SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(state));
 	}
 
 	@Override
