@@ -98,6 +98,36 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> CUSHION_BROWN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BROWN);
 	
 	/* Public Methods */
+
+	
+	/**
+	 * Returns a {@link Stream} over all cushion-type {@link Block} known to the mod.
+	 * <p>
+	 * The returned {@link Stream} is first filtered by checking the underlying {@link RegistryObject} for the presence of the {@link Block} (that is, whether the item is actually registered).
+	 * 
+	 * @return A {@link Stream} of all cushion-type {@link Block}.
+	 */
+	public Stream<Item> streamCushionItems() {
+		return this.filterUnregistered(Stream.of(
+			this.CUSHION_PLAIN,
+			this.CUSHION_RED,
+			this.CUSHION_ORANGE,
+			this.CUSHION_YELLOW,
+			this.CUSHION_LIME,
+			this.CUSHION_GREEN,
+			this.CUSHION_CYAN,
+			this.CUSHION_LIGHT_BLUE,
+			this.CUSHION_BLUE,
+			this.CUSHION_PURPLE,
+			this.CUSHION_MAGENTA,
+			this.CUSHION_PINK,
+			this.CUSHION_WHITE,
+			this.CUSHION_LIGHT_GRAY,
+			this.CUSHION_GRAY,
+			this.CUSHION_BLACK,
+			this.CUSHION_BROWN
+		));
+	}
 	
 	/**
 	 * Returns a {@link Stream} over all fabric-type {@link Item} known to the mod.
