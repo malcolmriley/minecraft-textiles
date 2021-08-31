@@ -108,7 +108,7 @@ public class CushionBlock extends BlockPadding {
 		final Axis originalAxis = CushionBlock.getAxisFrom(originalState);
 		
 		// Get the initial count of cushion slabs that make up the original block
-		int count = CushionBlock.countSlabsIn(originalSlabType);
+		int count = SlabType.DOUBLE.equals(originalSlabType) ? 2 : 1;
 		
 		// If there are no gaps below this, count blocks below (If the original cushion slab is a double slab, or if it is a bottom slab aligned to the Y axis)
 		if (SlabType.DOUBLE.equals(originalSlabType) || (SlabType.BOTTOM.equals(originalSlabType) && Axis.Y.equals(originalAxis))) {
@@ -160,10 +160,6 @@ public class CushionBlock extends BlockPadding {
 			examinedPosition.move(Direction.DOWN);
 		}
 		return count;
-	}
-	
-	protected static int countSlabsIn(SlabType type) {
-		return SlabType.DOUBLE.equals(type) ? 2 : 1;
 	}
 	
 	protected static float calculateFallReduction(int cushionCount) {
