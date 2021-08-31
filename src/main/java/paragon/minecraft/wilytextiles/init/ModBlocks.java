@@ -14,6 +14,7 @@ import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.BlockPadding;
+import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
@@ -59,7 +60,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
 	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
 	
-	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, () -> new BlockPadding(BlockPadding.createDefaultProperties()));
+	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, () -> new BlockPadding(BlockPadding.createPropertiesFrom(MaterialColor.SAND)));
 	
 	/* Internal Methods */
 	
@@ -71,7 +72,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	 * @return A {@link Stream} of all fabric-type {@link Block}.
 	 */
 	public Stream<Block> streamFabricBlocks() {
-		return Stream.of(
+		return this.filterUnregistered(Stream.of(
 			Textiles.BLOCKS.FABRIC_PLAIN,
 			Textiles.BLOCKS.FABRIC_RED,
 			Textiles.BLOCKS.FABRIC_ORANGE,
@@ -89,7 +90,7 @@ public class ModBlocks extends ContentProvider<Block> {
 			Textiles.BLOCKS.FABRIC_GRAY,
 			Textiles.BLOCKS.FABRIC_BLACK,
 			Textiles.BLOCKS.FABRIC_BROWN
-		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+		));
 	}
 	
 	/**
@@ -102,6 +103,12 @@ public class ModBlocks extends ContentProvider<Block> {
 	public RegistryObject<Block> textileBlock(String name, MaterialColor color) {
 		return this.add(name, () -> new FabricBlock(color, ALWAYS_FALSE));
 	}
+	
+	public RegistryObject<Block> cushionBlock(String name, MaterialColor color) {
+		return this.add(name, () -> new CushionBlock(color));
+	}
+	
+	/* Internal Methods */
 	
 	/* Block Names */
 	
