@@ -151,6 +151,13 @@ public class ModBlocks extends ContentProvider<Block> {
 		return this.add(name, () -> new FabricBlock(color, ALWAYS_FALSE));
 	}
 	
+	/**
+	 * Convenience method for creating a "cushion" {@link Block}.
+	 * 
+	 * @param name - The registry name for the desired {@link Block}
+	 * @param color - The {@link MaterialColor} to use for the {@link Block}
+	 * @return A {@link RegistryObject} holding the desired {@link Block}
+	 */
 	public RegistryObject<Block> cushionBlock(String name, MaterialColor color) {
 		return this.add(name, () -> new CushionBlock(color));
 	}
