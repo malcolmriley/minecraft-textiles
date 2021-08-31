@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.item.Items;
 import net.minecraft.loot.BinomialRange;
 import net.minecraft.loot.ConstantRange;
 import net.minecraft.loot.ItemLootEntry;
@@ -137,7 +138,7 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
 			
-			// Fabric Block
+			// Fabric Blocks
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PLAIN);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_ORANGE);
@@ -155,14 +156,23 @@ final class LootGenerator extends LootHelper {
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GRAY);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLACK);
 			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BROWN);
+			
+			// Packed Feathers
+			final LootTable.Builder featherBuilder = LootTable.builder().addLootPool(LootPool.builder()
+				.addEntry(ItemLootEntry.builder(Items.FEATHER))
+				.rolls(ConstantRange.of(9)));
+			this.registerLootTable(Textiles.BLOCKS.PACKED_FEATHERS.get(), featherBuilder);
+			
+			// Cushion Blocks
+			Textiles.BLOCKS.streamCushionBlocks().forEach(cushion -> {
+				this.registerLootTable(cushion, BlockLoot.droppingSlab(cushion));
+			});
 		}
 
 		@Override
 		protected Iterable<Block> getKnownBlocks() {
 			return Textiles.BLOCKS.iterateContent();
 		}
-
-		/* Internal Methods */
 		
 		protected void fabricBlockLoot(RegistryObject<Block> target) {
 			LootTable.Builder builder = LootTable.builder();

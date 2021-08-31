@@ -57,6 +57,8 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
 	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
+	public final RegistryObject<Item> BLOCK_PACKED_FEATHERS = this.simpleBlockItem(Textiles.BLOCKS.PACKED_FEATHERS);
+	
 	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
 	
 	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
@@ -77,7 +79,55 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FABRIC_BLACK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLACK);
 	public final RegistryObject<Item> FABRIC_BROWN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BROWN);
 	
+	public final RegistryObject<Item> CUSHION_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PLAIN);
+	public final RegistryObject<Item> CUSHION_RED = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_RED);
+	public final RegistryObject<Item> CUSHION_ORANGE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_ORANGE);
+	public final RegistryObject<Item> CUSHION_YELLOW = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_YELLOW);
+	public final RegistryObject<Item> CUSHION_LIME = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIME);
+	public final RegistryObject<Item> CUSHION_GREEN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GREEN);
+	public final RegistryObject<Item> CUSHION_CYAN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_CYAN);
+	public final RegistryObject<Item> CUSHION_LIGHT_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_BLUE);
+	public final RegistryObject<Item> CUSHION_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLUE);
+	public final RegistryObject<Item> CUSHION_PURPLE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PURPLE);
+	public final RegistryObject<Item> CUSHION_MAGENTA = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_MAGENTA);
+	public final RegistryObject<Item> CUSHION_PINK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PINK);
+	public final RegistryObject<Item> CUSHION_WHITE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_WHITE);
+	public final RegistryObject<Item> CUSHION_LIGHT_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_GRAY);
+	public final RegistryObject<Item> CUSHION_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GRAY);
+	public final RegistryObject<Item> CUSHION_BLACK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLACK);
+	public final RegistryObject<Item> CUSHION_BROWN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BROWN);
+	
 	/* Public Methods */
+
+	
+	/**
+	 * Returns a {@link Stream} over all cushion-type {@link Block} known to the mod.
+	 * <p>
+	 * The returned {@link Stream} is first filtered by checking the underlying {@link RegistryObject} for the presence of the {@link Block} (that is, whether the item is actually registered).
+	 * 
+	 * @return A {@link Stream} of all cushion-type {@link Block}.
+	 */
+	public Stream<Item> streamCushionItems() {
+		return this.filterUnregistered(Stream.of(
+			this.CUSHION_PLAIN,
+			this.CUSHION_RED,
+			this.CUSHION_ORANGE,
+			this.CUSHION_YELLOW,
+			this.CUSHION_LIME,
+			this.CUSHION_GREEN,
+			this.CUSHION_CYAN,
+			this.CUSHION_LIGHT_BLUE,
+			this.CUSHION_BLUE,
+			this.CUSHION_PURPLE,
+			this.CUSHION_MAGENTA,
+			this.CUSHION_PINK,
+			this.CUSHION_WHITE,
+			this.CUSHION_LIGHT_GRAY,
+			this.CUSHION_GRAY,
+			this.CUSHION_BLACK,
+			this.CUSHION_BROWN
+		));
+	}
 	
 	/**
 	 * Returns a {@link Stream} over all fabric-type {@link Item} known to the mod.

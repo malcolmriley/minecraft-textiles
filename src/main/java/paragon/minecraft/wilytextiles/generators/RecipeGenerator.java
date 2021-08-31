@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import net.minecraft.advancements.ICriterionInstance;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
 import net.minecraft.data.RecipeProvider;
@@ -252,22 +253,22 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addFabricDyeRecipe(Tags.Items.DYES_BROWN, Textiles.ITEMS.FABRIC_BROWN, registrar);
 		
 		// Tag-based Wool Recipes
-		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.ORANGE, Items.ORANGE_BED, Items.ORANGE_BANNER, Items.ORANGE_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.YELLOW, Items.YELLOW_BED, Items.YELLOW_BANNER, Items.YELLOW_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.LIME, Items.LIME_BED, Items.LIME_BANNER, Items.LIME_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.GREEN, Items.GREEN_BED, Items.GREEN_BANNER, Items.GREEN_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.CYAN, Items.CYAN_BED, Items.CYAN_BANNER, Items.CYAN_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.LIGHT_BLUE, Items.LIGHT_BLUE_BED, Items.LIGHT_BLUE_BANNER, Items.LIGHT_BLUE_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.BLUE, Items.BLUE_BED, Items.BLUE_BANNER, Items.BLUE_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.PURPLE, Items.PURPLE_BED, Items.PURPLE_BANNER, Items.PURPLE_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.MAGENTA, Items.MAGENTA_BED, Items.MAGENTA_BANNER, Items.MAGENTA_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.PINK, Items.PINK_BED, Items.PINK_BANNER, Items.PINK_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.WHITE, Items.WHITE_BED, Items.WHITE_BANNER, Items.WHITE_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.LIGHT_GRAY, Items.LIGHT_GRAY_BED, Items.LIGHT_GRAY_BANNER, Items.LIGHT_GRAY_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.GRAY, Items.GRAY_BED, Items.GRAY_BANNER, Items.GRAY_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, registrar);
-		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, registrar);
+		this.addWoolRecipesFor(DyeColor.RED, Items.RED_BED, Items.RED_BANNER, Items.RED_CARPET, Textiles.ITEMS.CUSHION_RED, registrar);
+		this.addWoolRecipesFor(DyeColor.ORANGE, Items.ORANGE_BED, Items.ORANGE_BANNER, Items.ORANGE_CARPET, Textiles.ITEMS.CUSHION_ORANGE, registrar);
+		this.addWoolRecipesFor(DyeColor.YELLOW, Items.YELLOW_BED, Items.YELLOW_BANNER, Items.YELLOW_CARPET, Textiles.ITEMS.CUSHION_YELLOW, registrar);
+		this.addWoolRecipesFor(DyeColor.LIME, Items.LIME_BED, Items.LIME_BANNER, Items.LIME_CARPET, Textiles.ITEMS.CUSHION_LIME, registrar);
+		this.addWoolRecipesFor(DyeColor.GREEN, Items.GREEN_BED, Items.GREEN_BANNER, Items.GREEN_CARPET, Textiles.ITEMS.CUSHION_GREEN, registrar);
+		this.addWoolRecipesFor(DyeColor.CYAN, Items.CYAN_BED, Items.CYAN_BANNER, Items.CYAN_CARPET, Textiles.ITEMS.CUSHION_CYAN, registrar);
+		this.addWoolRecipesFor(DyeColor.LIGHT_BLUE, Items.LIGHT_BLUE_BED, Items.LIGHT_BLUE_BANNER, Items.LIGHT_BLUE_CARPET, Textiles.ITEMS.CUSHION_LIGHT_BLUE, registrar);
+		this.addWoolRecipesFor(DyeColor.BLUE, Items.BLUE_BED, Items.BLUE_BANNER, Items.BLUE_CARPET, Textiles.ITEMS.CUSHION_BLUE, registrar);
+		this.addWoolRecipesFor(DyeColor.PURPLE, Items.PURPLE_BED, Items.PURPLE_BANNER, Items.PURPLE_CARPET, Textiles.ITEMS.CUSHION_PURPLE, registrar);
+		this.addWoolRecipesFor(DyeColor.MAGENTA, Items.MAGENTA_BED, Items.MAGENTA_BANNER, Items.MAGENTA_CARPET, Textiles.ITEMS.CUSHION_MAGENTA, registrar);
+		this.addWoolRecipesFor(DyeColor.PINK, Items.PINK_BED, Items.PINK_BANNER, Items.PINK_CARPET, Textiles.ITEMS.CUSHION_PINK, registrar);
+		this.addWoolRecipesFor(DyeColor.WHITE, Items.WHITE_BED, Items.WHITE_BANNER, Items.WHITE_CARPET, Textiles.ITEMS.CUSHION_WHITE, registrar);
+		this.addWoolRecipesFor(DyeColor.LIGHT_GRAY, Items.LIGHT_GRAY_BED, Items.LIGHT_GRAY_BANNER, Items.LIGHT_GRAY_CARPET, Textiles.ITEMS.CUSHION_LIGHT_GRAY, registrar);
+		this.addWoolRecipesFor(DyeColor.GRAY, Items.GRAY_BED, Items.GRAY_BANNER, Items.GRAY_CARPET, Textiles.ITEMS.CUSHION_GRAY, registrar);
+		this.addWoolRecipesFor(DyeColor.BLACK, Items.BLACK_BED, Items.BLACK_BANNER, Items.BLACK_CARPET, Textiles.ITEMS.CUSHION_BLACK, registrar);
+		this.addWoolRecipesFor(DyeColor.BROWN, Items.BROWN_BED, Items.BROWN_BANNER, Items.BROWN_CARPET, Textiles.ITEMS.CUSHION_BROWN, registrar);
 		
 		// Flaxseed Oil
 		final int seedsPerBottle = 2;
@@ -318,6 +319,19 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_BOAT, Items.OAK_BOAT, Items.SPRUCE_BOAT, Items.DARK_OAK_BOAT);
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_DOOR, Items.OAK_DOOR, Items.SPRUCE_DOOR, Items.DARK_OAK_DOOR);
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.OAK_TRAPDOOR, Items.SPRUCE_TRAPDOOR, Items.DARK_OAK_TRAPDOOR);
+		
+		// Packed Feathers
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.patternLine("###")
+			.patternLine("###")
+			.patternLine("###")
+			.key('#', Items.FEATHER)
+			.addCriterion(RecipeHelper.createCriterionName(Items.FEATHER), RecipeHelper.hasItem(Items.FEATHER))
+			.build(registrar);
+		ShapelessRecipeBuilder.shapelessRecipe(Items.FEATHER)
+			.addIngredient(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_PACKED_FEATHERS), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_PACKED_FEATHERS))
+			.build(registrar, this.nameFrom(Items.FEATHER, "unpacking"));
 	}
 
 	/* Internal Methods */
@@ -421,8 +435,10 @@ final class RecipeGenerator extends RecipeHelper {
 		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
 	}
 	
-	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, Consumer<IFinishedRecipe> registrar) {
+	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, RegistryObject<Item> cushion, Consumer<IFinishedRecipe> registrar) {
 		final INamedTag<Item> woolTag = Utilities.Tags.forgeItemTag(ItemTagsGenerator.TAG_WOOL, color.getString());
+		final INamedTag<Item> dyeTag = Utilities.Tags.forgeItemTag("dyes", color.getString());
+		final INamedTag<Item> cushionTag = Utilities.Tags.itemTag(Textiles.MOD_ID, ItemTagsGenerator.TAG_CUSHION);
 		final ICriterionInstance hasWool =  RecipeHelper.hasItem(woolTag);
 		final String hasWoolName = RecipeHelper.criterionName(woolTag);
 		
@@ -452,6 +468,25 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('#', woolTag)
 			.addCriterion(hasWoolName, hasWool)
 			.build(registrar, nameFromPath(carpet));
+		
+		// Cushions
+		ShapedRecipeBuilder.shapedRecipe(cushion.get(), 2)
+			.patternLine("XXX")
+			.patternLine("S#S")
+			.patternLine("XXX")
+			.key('X', woolTag)
+			.key('S', Tags.Items.STRING)
+			.key('#', Ingredient.fromItems(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
+			.addCriterion(hasWoolName, hasWool)
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.hasItem(Tags.Items.STRING))
+			.addCriterion("has_padding", RecipeHelper.hasItem(ItemPredicate.Builder.create().item(Items.HAY_BLOCK).item(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
+			.build(registrar);
+		ShapelessRecipeBuilder.shapelessRecipe(cushion.get())
+			.addIngredient(cushionTag)
+			.addIngredient(dyeTag)
+			.addCriterion(RecipeHelper.criterionName(dyeTag), RecipeHelper.hasItem(dyeTag))
+			.addCriterion(RecipeHelper.criterionName(carpet), RecipeHelper.hasItem(cushionTag))
+			.build(registrar, this.nameFrom(cushion.get(), "dye"));
 	}
 
 	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
