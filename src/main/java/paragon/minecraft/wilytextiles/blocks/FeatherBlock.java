@@ -1,5 +1,6 @@
 package paragon.minecraft.wilytextiles.blocks;
 
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -13,6 +14,10 @@ public class FeatherBlock extends BlockPadding {
 	
 	/* Internal Fields */
 	protected static final float FALL_DISTANCE_BREAK_THRESHOLD = 0.5F;
+	
+	public FeatherBlock() {
+		this(BlockPadding.createPropertiesFrom(MaterialColor.SNOW));
+	}
 
 	public FeatherBlock(Properties properties) {
 		super(properties);

@@ -13,7 +13,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
-import paragon.minecraft.wilytextiles.blocks.BlockPadding;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
@@ -79,7 +78,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
 	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
 	
-	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, () -> new FeatherBlock(BlockPadding.createPropertiesFrom(MaterialColor.SNOW)));
+	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
 	
 	/* Internal Methods */
 	
