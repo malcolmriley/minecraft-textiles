@@ -3,6 +3,7 @@ package paragon.minecraft.wilytextiles.generators;
 import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.ItemTagsProvider;
+import net.minecraft.data.TagsProvider;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.tags.ITag.INamedTag;
@@ -23,6 +24,7 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 	/* Constants */
 	static final String DOMAIN_MINECRAFT = "minecraft";
 	static final String TAG_WOOL = "wool";
+	static final String TAG_CUSHION = "cushions";
 
 	ItemTagsGenerator(DataGenerator generator, ExistingFileHelper helper, BlockTagsProvider provider) {
 		super(generator, provider, Textiles.MOD_ID, helper);
@@ -77,6 +79,10 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		
 		// Copy grass block tags to items
 		this.copy(Utilities.Tags.forgeBlockTag(BlockTagsGenerator.TAG_GRASSES), Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES));
+		
+		// Cushion Tagging
+		TagsProvider.Builder<Item> cushionTags = this.getOrCreateBuilder(Utilities.Tags.itemTag(modId, TAG_CUSHION));
+		Textiles.ITEMS.streamCushionItems().forEach(cushionTags::add);
 	}
 	
 	/* Internal Methods */
