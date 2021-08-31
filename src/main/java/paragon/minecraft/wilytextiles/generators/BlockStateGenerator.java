@@ -97,15 +97,15 @@ final class BlockStateGenerator extends BlockStateHelper {
 		this.axisBlock((RotatedPillarBlock) Textiles.BLOCKS.PACKED_FEATHERS.get());
 		
 		// Cushion Block
-		this.createCushionModel(Textiles.BLOCKS.CUSHION_PLAIN);
+		Textiles.BLOCKS.streamCushionBlocks().forEach(this::createCushionModel);
 	}
 	
 	/* Internal Methods */
 	
-	protected void createCushionModel(RegistryObject<Block> target) {
-		final String baseName = target.getId().getPath();
+	protected void createCushionModel(Block target) {
+		final String baseName = target.getRegistryName().getPath();
 		final ResourceLocation sidesName = this.textureForBlock(baseName, TEXTURE_SIDES);
-		final VariantBlockStateBuilder builder = this.getVariantBuilder(target.get());
+		final VariantBlockStateBuilder builder = this.getVariantBuilder(target);
 		for (Direction.Axis axis : CushionBlock.AXIS.getAllowedValues()) {
 			final int xRotation = this.getXRotationFrom(axis);
 			final int yRotation = this.getYRotationFrom(axis);
