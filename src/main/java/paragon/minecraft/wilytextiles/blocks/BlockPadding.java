@@ -8,8 +8,6 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -26,15 +24,11 @@ import net.minecraft.world.World;
  *
  * @author Malcolm Riley
  */
-public class BlockPadding extends RotatedPillarBlock {
-
-	/* BlockState Properties */
-	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+public abstract class BlockPadding extends RotatedPillarBlock {
 
 	/* Internal Fields */
 	protected static final int SHAPE_OFFSET = 2;
 	protected static final VoxelShape PARTIAL_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
-	protected static final float FALL_REDUCTION = 0.8F;
 	protected static final float VELOCITY_REDUCTION = 0.5F;
 	protected static final float NOBOUNCE_VELOCITY_REDUCTION = 0.1F;
 
@@ -77,9 +71,7 @@ public class BlockPadding extends RotatedPillarBlock {
 
 	/* Internal Methods */
 	
-	protected float getFallReduction(World world, BlockPos position, Entity fallen, float distance) {
-		return FALL_REDUCTION;
-	}
+	protected abstract float getFallReduction(World world, BlockPos position, Entity fallen, float distance);
 	
 	protected static Vector3d calculateLandingVelocity(Vector3d original, Entity entity, boolean suppressBounce, float normalReduction, float noBounceReduction) {
 		float horizontalReduction = suppressBounce ? noBounceReduction : normalReduction;

@@ -14,6 +14,7 @@ public class FeatherBlock extends BlockPadding {
 	
 	/* Internal Fields */
 	protected static final float FALL_DISTANCE_BREAK_THRESHOLD = 0.5F;
+	protected static final float FALL_REDUCTION = 0.8F;
 	
 	public FeatherBlock() {
 		this(BlockPadding.createPropertiesFrom(MaterialColor.SNOW));
@@ -29,6 +30,11 @@ public class FeatherBlock extends BlockPadding {
 		if (distance > FALL_DISTANCE_BREAK_THRESHOLD) {
 			world.destroyBlock(position, true);
 		}
+	}
+
+	@Override
+	protected float getFallReduction(World world, BlockPos position, Entity fallen, float distance) {
+		return FALL_REDUCTION;
 	}
 
 }
