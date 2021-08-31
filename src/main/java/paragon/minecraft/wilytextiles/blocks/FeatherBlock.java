@@ -13,9 +13,6 @@ import paragon.minecraft.wilytextiles.Textiles;
  */
 public class FeatherBlock extends BlockPadding {
 	
-	/* Internal Fields */
-	protected static final float FALL_DISTANCE_BREAK_THRESHOLD = 0.5F;
-	
 	public FeatherBlock() {
 		this(BlockPadding.createPropertiesFrom(MaterialColor.SNOW));
 	}
@@ -29,7 +26,7 @@ public class FeatherBlock extends BlockPadding {
 	@Override
 	public void onFallenUpon(World world, BlockPos position, Entity entity, float distance) {
 		super.onFallenUpon(world, position, entity, distance);
-		if (distance > FALL_DISTANCE_BREAK_THRESHOLD) {
+		if (distance > Textiles.CONFIG.getFeatherBlockBreakThreshold()) {
 			world.destroyBlock(position, true);
 		}
 	}

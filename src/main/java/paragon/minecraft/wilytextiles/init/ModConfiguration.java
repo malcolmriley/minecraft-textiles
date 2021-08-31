@@ -30,7 +30,8 @@ public class ModConfiguration extends AbstractConfiguration {
 	protected int FALL_REDUCTION_CUSHION_SEEK = 4;
 	protected boolean FALL_REDUCTION_CUSHION_ENABLED = true;
 	protected boolean FALL_REDUCTION_FEATHER_ENABLED = true;
-	protected double FALL_REDUCTION_FEATHER = 0.8;
+	protected double FALL_DISTANCE_BREAK_FEATHER_THRESHOLD = 0.5D;
+	protected double FALL_REDUCTION_FEATHER = 0.2;
 	protected double FALL_REDUCTION_CUSHION = 0.2;
 	
 	/* Constants */
@@ -87,24 +88,46 @@ public class ModConfiguration extends AbstractConfiguration {
 		return this.WANDERER_TRADES_FABRIC;
 	}
 	
+	/**
+	 * @return The reduction to the effective fall distance applied by falling onto a bundle of feathers.
+	 */
 	public double getFeatherFallReduction() {
 		return this.FALL_REDUCTION_FEATHER;
 	}
 	
+	/**
+	 * @return The reduction to the effective fall distance applied per cushion in a stack of cushions.
+	 */
 	public double getCushionFallReduction() {
 		return this.FALL_REDUCTION_CUSHION;
 	}
 	
+	/**
+	 * @return The maximum number of blocks (beyond the first) that should be considered when calculating fall distance reduction for a stack of cushions
+	 */
 	public int getCushionFallMaxSeek() {
 		return this.FALL_REDUCTION_CUSHION_SEEK;
 	}
 	
+	/**
+	 * @return Whether or not cushions reduce effective fall distance at all
+	 */
 	public boolean cushionsReduceFall() {
 		return this.FALL_REDUCTION_CUSHION_ENABLED;
 	}
 	
+	/**
+	 * @return Whether or not bundled feather blocks reduce fall distance at all
+	 */
 	public boolean feathersReduceFall() {
 		return this.FALL_REDUCTION_FEATHER_ENABLED;
+	}
+	
+	/**
+	 * @return The fall distance threshold beyond which landing on a feather block will cause it to break
+	 */
+	public double getFeatherBlockBreakThreshold() {
+		return this.FALL_DISTANCE_BREAK_FEATHER_THRESHOLD;
 	}
 	
 	/* Supertype Override Methods */
@@ -159,6 +182,9 @@ public class ModConfiguration extends AbstractConfiguration {
 				"Therefore, a value of 0.3 will reduce the effective fall distance by 30%.",
 				"This value will have no effect if the feather fall reduction feature is disabled.")
 			.defineInRange("featherblock_fall_reduction", 0.2, 0.0, 1.0));
+		this.defineValue(value -> this.FALL_DISTANCE_BREAK_FEATHER_THRESHOLD = value, builder
+			.comment("The fall-distance threshold, in blocks, beyond which falling upon a feather bundle block will cause it to break.")
+			.defineInRange("featherblock_fall_break_threshold", 0.5D, 0.0D, Double.MAX_VALUE));
 		builder.pop();
 		return builder.build();
 	}
