@@ -33,7 +33,7 @@ public class BlockPadding extends RotatedPillarBlock {
 
 	/* Internal Fields */
 	protected static final int SHAPE_OFFSET = 2;
-	protected static final VoxelShape SHAPE_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_FULL = Block.makeCuboidShape(0, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
 	protected static final float FALL_REDUCTION = 0.8F;
 	protected static final float VELOCITY_REDUCTION = 0.5F;
 	protected static final float NOBOUNCE_VELOCITY_REDUCTION = 0.1F;
@@ -52,7 +52,7 @@ public class BlockPadding extends RotatedPillarBlock {
 
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		return SHAPE_FULL;
+		return PARTIAL_FULL;
 	}
 
 	@Override

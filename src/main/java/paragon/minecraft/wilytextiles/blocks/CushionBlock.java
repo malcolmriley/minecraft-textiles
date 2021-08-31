@@ -29,6 +29,13 @@ public class CushionBlock extends BlockPadding {
 	protected static final VoxelShape HALF_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
 	protected static final VoxelShape HALF_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
 	protected static final VoxelShape HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
+	
+	protected static final VoxelShape PARTIAL_HALF_TOP = Block.makeCuboidShape(0, 8, 0, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_BOTTOM = Block.makeCuboidShape(0, 0, 0, 16, 8 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_NORTH = Block.makeCuboidShape(0, 0, 0, 16, 16 - SHAPE_OFFSET, 8);
+	protected static final VoxelShape PARTIAL_HALF_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16 - SHAPE_OFFSET, 16);
 
 	public CushionBlock(MaterialColor color) {
 		this(BlockPadding.createPropertiesFrom(color));
@@ -41,22 +48,29 @@ public class CushionBlock extends BlockPadding {
 	/* Supertype Override Methods */
 
 	@Override
-	@SuppressWarnings("deprecation") // Return super.isTransparent() if type is not double
-	public boolean isTransparent(BlockState state) {
-		return CushionBlock.getTypeFrom(state).equals(SlabType.DOUBLE) ? false : super.isTransparent(state);
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+		return CushionBlock.getPartialShapeFrom(state);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		SlabType type = CushionBlock.getTypeFrom(state);
-		if (SlabType.DOUBLE.equals(type)) {
-			return VoxelShapes.fullCube();
-		}
-		switch(CushionBlock.getAxisFrom(state)) {
-			case X: return CushionBlock.shapeFrom(type, HALF_EAST, HALF_WEST);
-			case Z: return CushionBlock.shapeFrom(type, HALF_SOUTH, HALF_NORTH);
-			default: return CushionBlock.shapeFrom(type, HALF_TOP, HALF_BOTTOM);	
-		}
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos position) {
+		return CushionBlock.getFullShapeFrom(state);
+	}
+
+	@Override
+	public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos position, ISelectionContext context) {
+		return CushionBlock.getFullShapeFrom(state);
+	}
+
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+		return CushionBlock.getFullShapeFrom(state);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation") // Return super.isTransparent() if type is not double
+	public boolean isTransparent(BlockState state) {
+		return CushionBlock.getTypeFrom(state).equals(SlabType.DOUBLE) ? false : super.isTransparent(state);
 	}
 
 	@Override
@@ -84,6 +98,26 @@ public class CushionBlock extends BlockPadding {
 	}
 
 	/* Internal Methods */
+	
+	protected static VoxelShape getFullShapeFrom(BlockState state) {
+		return CushionBlock.selectShapeFrom(state, VoxelShapes.fullCube(), HALF_EAST, HALF_WEST, HALF_SOUTH, HALF_NORTH, HALF_TOP, HALF_BOTTOM);
+	}
+	
+	protected static VoxelShape getPartialShapeFrom(BlockState state) {
+		return CushionBlock.selectShapeFrom(state, PARTIAL_FULL, PARTIAL_HALF_EAST, PARTIAL_HALF_WEST, PARTIAL_HALF_SOUTH, PARTIAL_HALF_NORTH, PARTIAL_HALF_TOP, PARTIAL_HALF_BOTTOM);
+	}
+	
+	protected static VoxelShape selectShapeFrom(BlockState state, VoxelShape full, VoxelShape east, VoxelShape west, VoxelShape south, VoxelShape north, VoxelShape top, VoxelShape bottom) {
+		SlabType type = CushionBlock.getTypeFrom(state);
+		if (SlabType.DOUBLE.equals(type)) {
+			return full;
+		}
+		switch(CushionBlock.getAxisFrom(state)) {
+			case X: return CushionBlock.shapeFrom(type, east, west);
+			case Z: return CushionBlock.shapeFrom(type, south, north);
+			default: return CushionBlock.shapeFrom(type, top, bottom);	
+		}
+	}
 	
 	protected static BlockState applyDirectionTo(BlockState original, Direction facing) {
 		return original.with(CushionBlock.AXIS, facing.getAxis()).with(CushionBlock.TYPE, CushionBlock.typeFromFacing(facing));
