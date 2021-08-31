@@ -70,6 +70,24 @@ final class LangGenerator extends LanguageProvider {
 		this.add(Textiles.BLOCKS.FABRIC_GRAY.get(), "Gray Fabric");
 		this.add(Textiles.BLOCKS.FABRIC_BLACK.get(), "Black Fabric");
 		this.add(Textiles.BLOCKS.FABRIC_BROWN.get(), "Brown Fabric");
+
+		this.add(Textiles.BLOCKS.CUSHION_PLAIN.get(), "Plain Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_RED.get(), "Red Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_ORANGE.get(), "Orange Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_YELLOW.get(), "Yellow Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_LIME.get(), "Lime Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_GREEN.get(), "Green Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_CYAN.get(), "Cyan Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_LIGHT_BLUE.get(), "Light Blue Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_BLUE.get(), "Blue Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_PURPLE.get(), "Purple Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_MAGENTA.get(), "Magenta Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_PINK.get(), "Pink Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_WHITE.get(), "White Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_LIGHT_GRAY.get(), "Light Gray Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_GRAY.get(), "Gray Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_BLACK.get(), "Black Cushion");
+		this.add(Textiles.BLOCKS.CUSHION_BROWN.get(), "Brown Cushion");
 		
 		this.add(Textiles.BLOCKS.PACKED_FEATHERS.get(), "Bundle of Feathers");
 	}
