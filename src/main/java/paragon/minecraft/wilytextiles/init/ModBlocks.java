@@ -13,6 +13,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.BlockPadding;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
@@ -57,6 +58,8 @@ public class ModBlocks extends ContentProvider<Block> {
 	private static final float HARDNESS_BASKET = 0.8F;
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
 	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
+	
+	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, () -> new BlockPadding(BlockPadding.createDefaultProperties()));
 	
 	/* Internal Methods */
 	
@@ -110,6 +113,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		public static final String FLAX_CROP = "crop_flax";
 		public static final String BASKET = "basket";
 		public static final String BASKET_STURDY = "basket_sturdy";
+		public static final String PACKED_FEATHERS = "packed_feathers";
 		
 		public static final String FABRIC_PLAIN = "fabric_plain";
 		public static final String FABRIC_RED = "fabric_red";
