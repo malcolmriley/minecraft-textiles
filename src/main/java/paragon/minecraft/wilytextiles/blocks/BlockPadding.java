@@ -39,7 +39,7 @@ public abstract class BlockPadding extends RotatedPillarBlock {
 	/* Public Methods */
 
 	public static AbstractBlock.Properties createPropertiesFrom(MaterialColor color) {
-		return AbstractBlock.Properties.create(Material.CARPET, color).sound(SoundType.CLOTH).speedFactor(0.75F).hardnessAndResistance(0.1F);
+		return AbstractBlock.Properties.create(Material.CARPET, color).sound(SoundType.CLOTH).speedFactor(0.85F).hardnessAndResistance(0.1F);
 	}
 
 	/* Supertype Override Methods */
