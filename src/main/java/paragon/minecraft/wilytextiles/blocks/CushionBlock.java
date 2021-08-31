@@ -100,7 +100,7 @@ public class CushionBlock extends BlockPadding {
 	}
 	
 	@Override
-	protected float getFallReduction(World world, BlockPos position, Entity fallen, float distance) {
+	protected float getFallDistanceModifier(World world, BlockPos position, Entity fallen, float distance) {
 		
 		// Get values from original fallen-upon cushion block
 		final BlockState originalState = world.getBlockState(position);
