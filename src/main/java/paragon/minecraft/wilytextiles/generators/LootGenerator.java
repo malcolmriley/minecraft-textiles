@@ -32,7 +32,6 @@ import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
-import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
@@ -63,25 +62,26 @@ final class LootGenerator extends LootHelper {
 
 		@Override
 		public void addTables() {
-			// Fiber Bales
+			// Raw Fiber Bales
 			final LootTable.Builder baleBuilder = LootTable.builder();
 			for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
 				baleBuilder.addLootPool(LootPool.builder()
-					.acceptCondition(this.countAndAge(count, 0))
+					.acceptCondition(this.count(Textiles.BLOCKS.RAW_FIBERS, count))
 					.rolls(ConstantRange.of(count))
 					.addEntry(ItemLootEntry.builder(Textiles.BLOCKS.RAW_FIBERS.get())));
-				baleBuilder.addLootPool(LootPool.builder()
-					.acceptCondition(this.countAndAge(count, 1))
-					.rolls(ConstantRange.of(count))
-					.addEntry(ItemLootEntry.builder(Textiles.BLOCKS.RAW_FIBERS.get()).weight(12))
-					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.TWINE.get()).weight(1).quality(3)));
-				baleBuilder.addLootPool(LootPool.builder()
-					.acceptCondition(this.countAndAge(count, 2))
+			}
+			this.registerLootTable(Textiles.BLOCKS.RAW_FIBERS.get(), baleBuilder);
+
+			// Retted Fiber Bales
+			final LootTable.Builder rettedBales = LootTable.builder();
+			for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
+				rettedBales.addLootPool(LootPool.builder()
+					.acceptCondition(this.count(Textiles.BLOCKS.RETTED_FIBERS, count))
 					.rolls(RandomValueRange.of(count, count * 1.5F))
 					.bonusRolls(1.0F, 2.0F)
 					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.TWINE.get())));
 			}
-			this.registerLootTable(Textiles.BLOCKS.RAW_FIBERS.get(), baleBuilder);
+			this.registerLootTable(Textiles.BLOCKS.RETTED_FIBERS.get(), rettedBales);
 
 			// Basket Block
 			this.registerLootTable(Textiles.BLOCKS.BASKET.get(), BlockLootTables.droppingWithName(Textiles.BLOCKS.BASKET.get()));
@@ -198,8 +198,8 @@ final class LootGenerator extends LootHelper {
 			return BlockStateProperty.builder(Textiles.BLOCKS.FLAX_CROP.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(TallCrop.AGE, age).withBoolProp(TallCrop.BOTTOM, bottom));
 		}
 
-		protected BlockStateProperty.Builder countAndAge(int count, int age) {
-			return BlockStateProperty.builder(Textiles.BLOCKS.RAW_FIBERS.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count).withIntProp(RawFiberBlock.AGE, age));
+		protected BlockStateProperty.Builder count(RegistryObject<Block> block, int count) {
+			return BlockStateProperty.builder(block.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count));
 		}
 
 	}

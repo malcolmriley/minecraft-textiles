@@ -40,7 +40,6 @@ final class BlockStateGenerator extends BlockStateHelper {
 	static final String TEXTURE_BOTTOM = "bottom";
 	static final String TEXTURE_INNER = "inner";
 	static final String TEXTURE_EXTRAS = "extras";
-	static final String FIBER_TEXTURE_BASE = "retting_fiber";
 	static final String BASE_FIBERS_NAME = "fiber_";
 
 	BlockStateGenerator(DataGenerator generator, String modid, ExistingFileHelper helper) {
@@ -51,15 +50,24 @@ final class BlockStateGenerator extends BlockStateHelper {
 	protected void registerStatesAndModels() {
 		// Raw Fibers
 		final VariantBlockStateBuilder fiberBuilder = this.getVariantBuilder(Textiles.BLOCKS.RAW_FIBERS.get());
-		final PartialBlockstate baseFiberState = fiberBuilder.partialState();
 		for (int count = 1; count <= RawFiberBlock.MAX_COUNT; count += 1) {
 			for (int age = 0; age <= RawFiberBlock.MAX_AGE; age += 1) {
-				final ModelFile model = this.models().withExistingParent(Utilities.Strings.name(FIBER_TEXTURE_BASE, String.valueOf(count), String.valueOf(age)), this.modLoc(BASE_FIBERS_NAME + count))
-					.texture(TEXTURE_ENDS, this.blockFolderTexture(Utilities.Strings.name(FIBER_TEXTURE_BASE, TEXTURE_ENDS, String.valueOf(age))))
-					.texture(TEXTURE_SIDES, this.blockFolderTexture(Utilities.Strings.name(FIBER_TEXTURE_BASE, TEXTURE_SIDES, String.valueOf(age))));
-				final PartialBlockstate state = baseFiberState.with(SoakableBlock.COUNT, Integer.valueOf(count)).with(RawFiberBlock.AGE, age);
+				final ModelFile model = this.models().withExistingParent(Utilities.Strings.name(ModBlocks.Names.RAW_FIBERS, String.valueOf(count), String.valueOf(age)), this.modLoc(BASE_FIBERS_NAME + count))
+					.texture(TEXTURE_ENDS, this.textureForBlock(ModBlocks.Names.RAW_FIBERS, TEXTURE_ENDS, String.valueOf(age)))
+					.texture(TEXTURE_SIDES, this.textureForBlock(ModBlocks.Names.RAW_FIBERS, TEXTURE_SIDES, String.valueOf(age)));
+				final PartialBlockstate state = fiberBuilder.partialState().with(SoakableBlock.COUNT, Integer.valueOf(count)).with(RawFiberBlock.AGE, age);
 				fiberBuilder.addModels(state, ConfiguredModel.allYRotations(model, 0, false));
 			}
+		}
+		
+		// Retted Fibers
+		final VariantBlockStateBuilder rettedBuilder = this.getVariantBuilder(Textiles.BLOCKS.RETTED_FIBERS.get());
+		for (int count = 1; count <= RawFiberBlock.MAX_COUNT; count += 1) {
+			final ModelFile model = this.models().withExistingParent(Utilities.Strings.name(ModBlocks.Names.RETTED_FIBERS, String.valueOf(count)), this.modLoc(BASE_FIBERS_NAME + count))
+				.texture(TEXTURE_ENDS, this.textureForBlock(ModBlocks.Names.RETTED_FIBERS, TEXTURE_ENDS))
+				.texture(TEXTURE_SIDES, this.textureForBlock(ModBlocks.Names.RETTED_FIBERS, TEXTURE_SIDES));
+			final PartialBlockstate state = rettedBuilder.partialState().with(SoakableBlock.COUNT, Integer.valueOf(count));
+			rettedBuilder.addModels(state, ConfiguredModel.allYRotations(model, 0, false));
 		}
 		
 		// Flax Crop

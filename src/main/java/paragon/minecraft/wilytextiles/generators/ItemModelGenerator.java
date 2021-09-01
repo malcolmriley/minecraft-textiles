@@ -50,7 +50,8 @@ final class ItemModelGenerator extends ItemModelHelper {
 			.texture("layer1", this.modLoc(ITEM_PREFIX + ModItems.Names.FLAXSEED_OIL_BUCKET));
 		
 		// Block Items
-		this.blockItem(ModBlocks.Names.RAW_FIBERS, BlockStateGenerator.FIBER_TEXTURE_BASE + "_1_0");
+		this.variantBlockItem(ModBlocks.Names.RAW_FIBERS, "1_0");
+		this.variantBlockItem(ModBlocks.Names.RETTED_FIBERS, "1");
 		this.variantBlockItem(ModBlocks.Names.BASKET, "upright");
 		this.variantBlockItem(ModBlocks.Names.BASKET_STURDY, "upright");
 		this.blockItem(ModBlocks.Names.PACKED_FEATHERS);
