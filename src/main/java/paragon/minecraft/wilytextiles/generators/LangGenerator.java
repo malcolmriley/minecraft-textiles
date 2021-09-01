@@ -31,44 +31,65 @@ final class LangGenerator extends LanguageProvider {
 		this.add("container." + ModBlocks.Names.BASKET, "Basket");
 		
 		// Items
-		this.add(Textiles.ITEMS.CHAIN_MESH.get(), "Chain Mesh");
-		this.add(Textiles.ITEMS.FLAX_STALKS.get(), "Flax Stalks");
-		this.add(Textiles.ITEMS.FLAX_PALE.get(), "Pale Flax Blossoms");
-		this.add(Textiles.ITEMS.FLAX_VIBRANT.get(), "Vibrant Flax Blossoms");
-		this.add(Textiles.ITEMS.FLAX_PURPLE.get(), "Exquisite Flax Blossoms");
-		this.add(Textiles.ITEMS.FLAX_SEEDS.get(), "Flax Seeds");
-		this.add(Textiles.ITEMS.TWINE.get(), "Twine");
-		this.add(Textiles.ITEMS.SILK.get(), "Silk Thread");
-		this.add(Textiles.ITEMS.SILK_WISPS.get(), "Silk Wisps");
-		this.add(Textiles.ITEMS.WICKER.get(), "Wicker Patch");
-		this.add(Textiles.ITEMS.PLANT_FIBERS.get(), "Raw Plant Fibers");
-		this.add(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), "Flaxseed Oil Bottle");
-		this.add(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get(), "Flaxseed Oil Bucket");
-		this.add(Textiles.ITEMS.WOOD_STAIN.get(), "Wood Stain");
-		this.add(Textiles.ITEMS.WOOD_BLEACH.get(), "Wood Bleach");
+		this.addItem(Textiles.ITEMS.CHAIN_MESH, "Chain Mesh");
+		this.addItem(Textiles.ITEMS.FLAX_STALKS, "Flax Stalks");
+		this.addItem(Textiles.ITEMS.FLAX_PALE, "Pale Flax Blossoms");
+		this.addItem(Textiles.ITEMS.FLAX_VIBRANT, "Vibrant Flax Blossoms");
+		this.addItem(Textiles.ITEMS.FLAX_PURPLE, "Exquisite Flax Blossoms");
+		this.addItem(Textiles.ITEMS.FLAX_SEEDS, "Flax Seeds");
+		this.addItem(Textiles.ITEMS.TWINE, "Twine");
+		this.addItem(Textiles.ITEMS.SILK, "Silk Thread");
+		this.addItem(Textiles.ITEMS.SILK_WISPS, "Silk Wisps");
+		this.addItem(Textiles.ITEMS.WICKER, "Wicker Patch");
+		this.addItem(Textiles.ITEMS.PLANT_FIBERS, "Raw Plant Fibers");
+		this.addItem(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE, "Flaxseed Oil Bottle");
+		this.addItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET, "Flaxseed Oil Bucket");
+		this.addItem(Textiles.ITEMS.WOOD_STAIN, "Wood Stain");
+		this.addItem(Textiles.ITEMS.WOOD_BLEACH, "Wood Bleach");
 		
 		// Blocks
-		this.add(Textiles.BLOCKS.RAW_FIBERS.get(), "Raw Fiber Bale");
-		this.add(Textiles.BLOCKS.FLAX_CROP.get(), "Flax Flowers");
-		this.add(Textiles.BLOCKS.BASKET.get(), "Basket");
+		this.addBlock(Textiles.BLOCKS.RAW_FIBERS, "Raw Fiber Bale");
+		this.addBlock(Textiles.BLOCKS.RETTED_FIBERS, "Retted Fiber Bale");
+		this.addBlock(Textiles.BLOCKS.FLAX_CROP, "Flax Flowers");
+		this.addBlock(Textiles.BLOCKS.BASKET, "Basket");
+		this.addBlock(Textiles.BLOCKS.BASKET_STURDY, "Sturdy Basket");
+		this.addBlock(Textiles.BLOCKS.PACKED_FEATHERS, "Bundle of Feathers");
 
-		this.add(Textiles.BLOCKS.FABRIC_PLAIN.get(), "Plain Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_RED.get(), "Red Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_ORANGE.get(), "Orange Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_YELLOW.get(), "Yellow Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_LIME.get(), "Lime Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_GREEN.get(), "Green Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_CYAN.get(), "Cyan Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_LIGHT_BLUE.get(), "Light Blue Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_BLUE.get(), "Blue Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_PURPLE.get(), "Purple Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_MAGENTA.get(), "Magenta Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_PINK.get(), "Pink Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_WHITE.get(), "White Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_LIGHT_GRAY.get(), "Light Gray Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_GRAY.get(), "Gray Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_BLACK.get(), "Black Fabric");
-		this.add(Textiles.BLOCKS.FABRIC_BROWN.get(), "Brown Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_PLAIN, "Plain Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_RED, "Red Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_ORANGE, "Orange Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_YELLOW, "Yellow Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_LIME, "Lime Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_GREEN, "Green Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_CYAN, "Cyan Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_LIGHT_BLUE, "Light Blue Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_BLUE, "Blue Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_PURPLE, "Purple Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_MAGENTA, "Magenta Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_PINK, "Pink Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_WHITE, "White Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_LIGHT_GRAY, "Light Gray Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_GRAY, "Gray Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_BLACK, "Black Fabric");
+		this.addBlock(Textiles.BLOCKS.FABRIC_BROWN, "Brown Fabric");
+
+		this.addBlock(Textiles.BLOCKS.CUSHION_PLAIN, "Plain Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_RED, "Red Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_ORANGE, "Orange Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_YELLOW, "Yellow Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_LIME, "Lime Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_GREEN, "Green Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_CYAN, "Cyan Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_LIGHT_BLUE, "Light Blue Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_BLUE, "Blue Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_PURPLE, "Purple Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_MAGENTA, "Magenta Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_PINK, "Pink Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_WHITE, "White Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_LIGHT_GRAY, "Light Gray Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_GRAY, "Gray Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_BLACK, "Black Cushion");
+		this.addBlock(Textiles.BLOCKS.CUSHION_BROWN, "Brown Cushion");
 	}
 
 }

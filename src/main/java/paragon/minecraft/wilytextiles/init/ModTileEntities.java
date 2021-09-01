@@ -21,7 +21,7 @@ public class ModTileEntities extends ContentProvider<TileEntityType<?>> {
 	
 	/* RegistryObject Fields */
 	
-	public final RegistryObject<TileEntityType<?>> BASKET = this.add(Names.BASKET, () -> TileEntityType.Builder.create(TEBasket::new, Textiles.BLOCKS.BASKET.get()).build(null));
+	public final RegistryObject<TileEntityType<?>> BASKET = this.add(Names.BASKET, () -> TileEntityType.Builder.create(TEBasket::new, Textiles.BLOCKS.BASKET.get(), Textiles.BLOCKS.BASKET_STURDY.get()).build(null));
 	
 	/* Tile Entity Type Names */
 	

@@ -1,10 +1,5 @@
 package paragon.minecraft.wilytextiles.init;
 
-import java.util.Random;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.fml.config.ModConfig;
@@ -27,6 +22,13 @@ public class ModConfiguration extends AbstractConfiguration {
 	protected boolean WANDERER_TRADES_FABRIC = true;
 	protected VillagerLevel SHEPHERD_SKILL_REQUIRED = VillagerLevel.JOURNEYMAN;
 	
+	protected int FALL_REDUCTION_CUSHION_SEEK = 4;
+	protected boolean FALL_REDUCTION_CUSHION_ENABLED = true;
+	protected boolean FALL_REDUCTION_FEATHER_ENABLED = true;
+	protected double FALL_DISTANCE_BREAK_FEATHER_THRESHOLD = 0.5D;
+	protected double FALL_REDUCTION_FEATHER = 0.2;
+	protected double FALL_REDUCTION_CUSHION = 0.2;
+	
 	/* Constants */
 	private static final String CHANGE_REQUIRES_RESTART = "Changes to this value will require that the current World be reloaded.";
 
@@ -35,29 +37,24 @@ public class ModConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
-	 * Method for determining whether a retting fiber bale should grow based purely on configuration-sensitive values (random chance).
-	 * 
-	 * @param state - The {@link BlockState} of the provided raw fiber bale (currently unused)
-	 * @param world - The {@link ServerWorld} that the raw fiber bale exists within (currently unused)
-	 * @param position - The {@link BlockPos} of the fiber bale
-	 * @param random - A reference to a {@link Random} instance
-	 * @return Whether the fiber bale should cure based purely on configuration-sensitive values.
+	 * @return The progression rate modifier that should be applied to retting fiber bales.
 	 */
-	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
-		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
+	public double baleProgressModifier() {
+		return this.BALE_PROGRESS_CHANCE;
 	}
-
+	
 	/**
-	 * Method for determining whether the flax crop should grow based purely on configuration-sensitive values (light and random chance).
-	 * 
-	 * @param state - The {@link BlockState} of the provided flax crop (currently unused)
-	 * @param world - The {@link ServerWorld} that the flax crop exists within
-	 * @param position - The {@link BlockPos} of the flax crop
-	 * @param random - A reference to a {@link Random} instance
-	 * @return Whether the flax crop should grow based purely on configuration-sensitive values.
+	 * @return The growth rate modifier that should be applied to the flax crop.
 	 */
-	public boolean shouldFlaxGrow(BlockState state, ServerWorld world, BlockPos position, Random random) {
-		return this.isLightAdequateForFlax(world, position) && random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
+	public double flaxGrowthModifier() {
+		return this.FLAX_GROWTH_MODIFIER;
+	}
+	
+	/**
+	 * @return The minimum light level that the flax crop can grow in.
+	 */
+	public int flaxMinLight() {
+		return this.FLAX_MIN_LIGHTLEVEL;
 	}
 	
 	/**
@@ -81,33 +78,124 @@ public class ModConfiguration extends AbstractConfiguration {
 		return this.WANDERER_TRADES_FABRIC;
 	}
 	
+	/**
+	 * @return The reduction to the effective fall distance applied by falling onto a bundle of feathers.
+	 */
+	public double getFeatherFallReduction() {
+		return this.FALL_REDUCTION_FEATHER;
+	}
+	
+	/**
+	 * @return The reduction to the effective fall distance applied per cushion in a stack of cushions.
+	 */
+	public double getCushionFallReduction() {
+		return this.FALL_REDUCTION_CUSHION;
+	}
+	
+	/**
+	 * @return The maximum number of blocks (beyond the first) that should be considered when calculating fall distance reduction for a stack of cushions
+	 */
+	public int getCushionFallMaxSeek() {
+		return this.FALL_REDUCTION_CUSHION_SEEK;
+	}
+	
+	/**
+	 * @return Whether or not cushions reduce effective fall distance at all
+	 */
+	public boolean cushionsReduceFall() {
+		return this.FALL_REDUCTION_CUSHION_ENABLED;
+	}
+	
+	/**
+	 * @return Whether or not bundled feather blocks reduce fall distance at all
+	 */
+	public boolean feathersReduceFall() {
+		return this.FALL_REDUCTION_FEATHER_ENABLED;
+	}
+	
+	/**
+	 * @return The fall distance threshold beyond which landing on a feather block will cause it to break
+	 */
+	public double getFeatherBlockBreakThreshold() {
+		return this.FALL_DISTANCE_BREAK_FEATHER_THRESHOLD;
+	}
+	
 	/* Supertype Override Methods */
 
 	@Override
 	protected ForgeConfigSpec buildSpec(Builder builder) {
-		builder.push("General");
+		builder.push("Harvestables");
 		this.defineValue(value -> this.BALE_PROGRESS_CHANCE = value, builder
-			.comment("The chance that the \"age\" property of retting fiber bales will progress with each growth opportunity.", "Lower values mean a lower chance of progress (slower progress), whereas higher values mean a higher chance (quicker progress).")
+			.comment(
+				"A global modifier for the probability that the \"age\" property of retting fiber bales will progress with each growth opportunity.",
+				"Lower values mean a lower chance of progress (slower progress), whereas higher values mean a higher chance (quicker progress).")
 			.defineInRange("retting_bale_tick_age_chance", 0.65D, 0.0D, 1.0D));
 		this.defineValue(value -> this.FLAX_GROWTH_MODIFIER = value, builder
-			.comment("A global modifier for the probability that the \"age\" value of the flax crop will increase with each growth opportunity.", "Lower values mean a lower chance of increase (slower growth), whereas higher values mean a higher chance of increase (quicker growth).")
+			.comment(
+				"A global modifier for the probability that the \"age\" value of the flax crop will increase with each growth opportunity.",
+				"Lower values mean a lower chance of increase (slower growth), whereas higher values mean a higher chance of increase (quicker growth).")
 			.defineInRange("flax_crop_growth_modifier", 1.0D, 0.0D, 1.0D));
 		this.defineValue(value -> this.FLAX_MIN_LIGHTLEVEL = value, builder
-			.comment("The minimum light level that Flax needs in order to grow.", "The light level at the crop's position must equal or exceed this value, else no growth will occur.")
+			.comment(
+				"The minimum light level that Flax needs in order to grow.",
+				"The light level at the crop's position must equal or exceed this value, else no growth will occur.")
 			.defineInRange("flax_min_lightlevel", 8, 0, 15));
+		builder.pop();
+		
+		builder.push("Trading");
 		this.defineValue(value -> this.SHEPHERD_TRADES_FABRIC = value, builder
-			.comment("Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("shepherd_trade_fabrics", true));
 		this.defineValue(value -> this.SHEPHERD_SKILL_REQUIRED = value, builder
-			.comment("The minimum skill level that Shepherd villagers must reach before Fabric trades become available.", "This value will have no effect if the shepherd trading feature is disabled.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"The minimum skill level that Shepherd villagers must reach before Fabric trades become available.",
+				"This value will have no effect if the shepherd trading feature is disabled.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.defineEnum("shepherd_trade_skill_threshold", VillagerLevel.JOURNEYMAN));
 		this.defineValue(value -> this.WANDERER_TRADES_FABRIC = value, builder
-			.comment("Whether the Wandering Trader will occasionally deal in Fabrics.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"Whether the Wandering Trader will occasionally deal in Fabrics.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("wandering_trader_trade_fabrics", true));
 		builder.pop();
+		
+		builder.push("Cushions and Padding");
+		this.defineValue(value -> this.FALL_REDUCTION_CUSHION_ENABLED = value, builder
+			.comment("Whether cushion blocks reduce effective fall distance when landed upon.")
+			.define("cushion_fall_reduction_enabled", true));
+		this.defineValue(value -> this.FALL_REDUCTION_FEATHER_ENABLED = value, builder
+			.comment("Whether bundled feather blocks reduce effective fall distance when landed upon.")
+			.define("featherblock_fall_reduction_enabled", true));
+		this.defineValue(value -> this.FALL_REDUCTION_CUSHION = value, builder
+			.comment(
+				"The amount each cushion in a stack of cushions will reduce effective fall distance by when landed upon.", 
+				"The formula used is: (EffectiveDistance) = (RealDistance) * (1.0 - (Reduction)^(CushionQuantity))", 
+				"Therefore, if this value is set to 0.2 and there are three cushions in the stack, the effective fall distance will be roughly halved.",
+				"This value will have no effect if the cushion fall reduction feature is disabled.")
+			.defineInRange("cushion_fall_reduction_per", 0.2, 0.0, 1.0));
+		this.defineValue(value -> this.FALL_REDUCTION_CUSHION_SEEK = value, builder
+			.comment(
+				"The maximum number of additional blocks to consider when calculating fall damage reduction for the Cushion block. Use in conjuction with the cushion fall reduction value for fine-tuning this feature.",
+				"This is the maximum number of whole block spaces BENEATH the fallen-upon cushion that will be examined. Use caution when supplying larger values.",
+				"This value will have no effect if the cushion fall reduction feature is disabled.")
+			.defineInRange("cushion_fall_reduction_seek", 4, 0, 16));
+		this.defineValue(value -> this.FALL_REDUCTION_FEATHER = value, builder
+			.comment(
+				"The flat amount of effective fall distance reduction applied by landing on a bundled feather block.",
+				"The formula used is (EffectiveDistance) = (RealDistance) * (1.0 - (Reduction))",
+				"Therefore, a value of 0.3 will reduce the effective fall distance by 30%.",
+				"This value will have no effect if the feather fall reduction feature is disabled.")
+			.defineInRange("featherblock_fall_reduction", 0.2, 0.0, 1.0));
+		this.defineValue(value -> this.FALL_DISTANCE_BREAK_FEATHER_THRESHOLD = value, builder
+			.comment("The fall-distance threshold, in blocks, beyond which falling upon a feather bundle block will cause it to break.")
+			.defineInRange("featherblock_fall_break_threshold", 0.5D, 0.0D, Double.MAX_VALUE));
+		builder.pop();
+		
 		return builder.build();
 	}
 	
@@ -137,19 +225,6 @@ public class ModConfiguration extends AbstractConfiguration {
 		public int getLevel() {
 			return this.LEVEL;
 		}
-	}
-	
-	/* Internal Methods */
-	
-	/**
-	 * Method to check whether the light value at the provided {@link BlockPos} is adequate for flax growth.
-	 * 
-	 * @param world - The {@link ServerWorld} that should be used to query light values
-	 * @param position - The {@link BlockPos} to examine the light value of
-	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
-	 */
-	protected boolean isLightAdequateForFlax(ServerWorld world, BlockPos position) {
-		return world.getLight(position) >= this.FLAX_MIN_LIGHTLEVEL;
 	}
 	
 

@@ -4,6 +4,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.Items;
@@ -18,6 +19,7 @@ import paragon.minecraft.library.item.CheckedBlockNamedItem;
 import paragon.minecraft.library.item.ItemSimpleFuel;
 import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 
 /**
  * Holder and initializer class for {@link Item} bearing {@link RegistryObject} instances.
@@ -53,9 +55,13 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
 	// Block Items
-	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
+	public final RegistryObject<Item> BLOCK_RAW_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RAW_FIBERS, 2);
+	public final RegistryObject<Item> BLOCK_RETTED_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RETTED_FIBERS, 2);
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
-	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
+	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
+	public final RegistryObject<Item> BLOCK_PACKED_FEATHERS = this.simpleBlockItem(Textiles.BLOCKS.PACKED_FEATHERS);
+	
+	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, FlaxCropBlock::canPlaceAt));
 	
 	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
 	public final RegistryObject<Item> FABRIC_RED = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_RED);
@@ -75,7 +81,55 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> FABRIC_BLACK = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BLACK);
 	public final RegistryObject<Item> FABRIC_BROWN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_BROWN);
 	
+	public final RegistryObject<Item> CUSHION_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PLAIN);
+	public final RegistryObject<Item> CUSHION_RED = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_RED);
+	public final RegistryObject<Item> CUSHION_ORANGE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_ORANGE);
+	public final RegistryObject<Item> CUSHION_YELLOW = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_YELLOW);
+	public final RegistryObject<Item> CUSHION_LIME = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIME);
+	public final RegistryObject<Item> CUSHION_GREEN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GREEN);
+	public final RegistryObject<Item> CUSHION_CYAN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_CYAN);
+	public final RegistryObject<Item> CUSHION_LIGHT_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_BLUE);
+	public final RegistryObject<Item> CUSHION_BLUE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLUE);
+	public final RegistryObject<Item> CUSHION_PURPLE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PURPLE);
+	public final RegistryObject<Item> CUSHION_MAGENTA = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_MAGENTA);
+	public final RegistryObject<Item> CUSHION_PINK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_PINK);
+	public final RegistryObject<Item> CUSHION_WHITE = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_WHITE);
+	public final RegistryObject<Item> CUSHION_LIGHT_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_LIGHT_GRAY);
+	public final RegistryObject<Item> CUSHION_GRAY = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_GRAY);
+	public final RegistryObject<Item> CUSHION_BLACK = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BLACK);
+	public final RegistryObject<Item> CUSHION_BROWN = this.simpleBlockItem(Textiles.BLOCKS.CUSHION_BROWN);
+	
 	/* Public Methods */
+
+	
+	/**
+	 * Returns a {@link Stream} over all cushion-type {@link Block} known to the mod.
+	 * <p>
+	 * The returned {@link Stream} is first filtered by checking the underlying {@link RegistryObject} for the presence of the {@link Block} (that is, whether the item is actually registered).
+	 * 
+	 * @return A {@link Stream} of all cushion-type {@link Block}.
+	 */
+	public Stream<Item> streamCushionItems() {
+		return this.filterUnregistered(Stream.of(
+			this.CUSHION_PLAIN,
+			this.CUSHION_RED,
+			this.CUSHION_ORANGE,
+			this.CUSHION_YELLOW,
+			this.CUSHION_LIME,
+			this.CUSHION_GREEN,
+			this.CUSHION_CYAN,
+			this.CUSHION_LIGHT_BLUE,
+			this.CUSHION_BLUE,
+			this.CUSHION_PURPLE,
+			this.CUSHION_MAGENTA,
+			this.CUSHION_PINK,
+			this.CUSHION_WHITE,
+			this.CUSHION_LIGHT_GRAY,
+			this.CUSHION_GRAY,
+			this.CUSHION_BLACK,
+			this.CUSHION_BROWN
+		));
+	}
 	
 	/**
 	 * Returns a {@link Stream} over all fabric-type {@link Item} known to the mod.
@@ -85,7 +139,7 @@ public class ModItems extends ContentProvider<Item> {
 	 * @return A {@link Stream} of all fabric-type {@link Items}.
 	 */
 	public Stream<Item> streamFabricItems() {
-		return Stream.of(
+		return this.filterUnregistered(Stream.of(
 			this.FABRIC_PLAIN,
 			this.FABRIC_RED,
 			this.FABRIC_ORANGE,
@@ -103,7 +157,7 @@ public class ModItems extends ContentProvider<Item> {
 			this.FABRIC_GRAY,
 			this.FABRIC_BLACK,
 			this.FABRIC_BROWN
-		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+		));
 	}
 	
 	/* Internal Methods */
@@ -140,7 +194,7 @@ public class ModItems extends ContentProvider<Item> {
 	}
 	
 	/**
-	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject}.
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject} and default properties.
 	 * <p>
 	 * The registry name of the resulting {@link BlockItem} will use the id of the {@link Block} held by the provided {@link RegistryObject}.
 	 * 
@@ -148,7 +202,31 @@ public class ModItems extends ContentProvider<Item> {
 	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
 	 */
 	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
-		return this.simpleBlockItem(block.getId().getPath(), block);
+		return this.simpleBlockItem(block, this.DEFAULT);
+	}
+	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItemSimpleFuel} lazily using the provided item-count burn time and default properties.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @param burnTime - The number of items that the {@link BlockItem} can smelt
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
+	protected RegistryObject<Item> burnableBlockItem(RegistryObject<Block> block, int burnTime) {
+		return this.add(block.getId().getPath(), () -> new BlockItemSimpleFuel(block.get(), DEFAULT, Utilities.Time.burnTimeFor(burnTime)));
+	}
+	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItem} lazily using the provided {@link RegistryObject}.
+	 * <p>
+	 * The registry name of the resulting {@link BlockItem} will use the id of the {@link Block} held by the provided {@link RegistryObject}.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @param properties - The {@link Item.Properties} to use for the resulting {@link BlockItem}
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
+	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block, Item.Properties properties) {
+		return this.simpleBlockItem(block.getId().getPath(), block, properties);
 	}
 	
 	/**
@@ -156,10 +234,11 @@ public class ModItems extends ContentProvider<Item> {
 	 * 
 	 * @param name - The registry name for the {@link BlockItem}
 	 * @param blockSupplier - A supplier of the target {@link Block}, to be called lazily
+	 * @param properties - The {@link Item.Properties} to use for the resulting {@link BlockItem}
 	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
 	 */
-	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier) {
-		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, DEFAULT));
+	protected RegistryObject<Item> simpleBlockItem(String name, Supplier<Block> blockSupplier, Item.Properties properties) {
+		return this.add(name, () -> new LazyInitBlockItem(blockSupplier, properties));
 	}
 	
 	/**
