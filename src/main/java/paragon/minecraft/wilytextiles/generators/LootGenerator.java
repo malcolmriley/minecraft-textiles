@@ -83,7 +83,7 @@ final class LootGenerator extends LootHelper {
 			}
 			this.registerLootTable(Textiles.BLOCKS.RETTED_FIBERS.get(), rettedBales);
 
-			// Basket Block
+			// Basket Blocks
 			this.registerLootTable(Textiles.BLOCKS.BASKET.get(), BlockLootTables.droppingWithName(Textiles.BLOCKS.BASKET.get()));
 			this.registerLootTable(Textiles.BLOCKS.BASKET_STURDY.get(), BlockLootTables.droppingWithContents(Textiles.BLOCKS.BASKET_STURDY.get()));
 
@@ -139,35 +139,17 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
 			
-			// Fabric Blocks
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PLAIN);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_RED);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_ORANGE);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_YELLOW);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIME);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GREEN);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_CYAN);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_BLUE);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLUE);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PURPLE);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_MAGENTA);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_PINK);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_WHITE);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_LIGHT_GRAY);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_GRAY);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BLACK);
-			this.fabricBlockLoot(Textiles.BLOCKS.FABRIC_BROWN);
-			
 			// Packed Feathers
 			final LootTable.Builder featherBuilder = LootTable.builder().addLootPool(LootPool.builder()
 				.addEntry(ItemLootEntry.builder(Items.FEATHER))
 				.rolls(ConstantRange.of(9)));
 			this.registerLootTable(Textiles.BLOCKS.PACKED_FEATHERS.get(), featherBuilder);
 			
+			// Fabric Blocks
+			Textiles.BLOCKS.streamFabricBlocks().forEach(this::fabricBlockLoot);
+			
 			// Cushion Blocks
-			Textiles.BLOCKS.streamCushionBlocks().forEach(cushion -> {
-				this.registerLootTable(cushion, BlockLoot.droppingSlab(cushion));
-			});
+			Textiles.BLOCKS.streamCushionBlocks().forEach(this::cushionBlockLoot);
 		}
 
 		@Override
@@ -175,15 +157,19 @@ final class LootGenerator extends LootHelper {
 			return Textiles.BLOCKS.iterateContent();
 		}
 		
-		protected void fabricBlockLoot(RegistryObject<Block> target) {
+		protected void cushionBlockLoot(Block target) {
+			this.registerLootTable(target, BlockLoot.droppingSlab(target));
+		}
+		
+		protected void fabricBlockLoot(Block target) {
 			LootTable.Builder builder = LootTable.builder();
 			for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
 				builder.addLootPool(LootPool.builder()
-					.acceptCondition(BlockStateProperty.builder(target.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(AxialMultipleBlock.COUNT, count)))
+					.acceptCondition(BlockStateProperty.builder(target).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(AxialMultipleBlock.COUNT, count)))
 					.rolls(ConstantRange.of(count))
-					.addEntry(ItemLootEntry.builder(target.get())));
+					.addEntry(ItemLootEntry.builder(target)));
 			}
-			this.registerLootTable(target.get(), builder);
+			this.registerLootTable(target, builder);
 		}
 
 		protected BlockStateProperty.Builder tallCropTop(int age) {
