@@ -30,7 +30,7 @@ import net.minecraftforge.common.IPlantable;
  * 
  * @author Malcolm Riley
  */
-public abstract class TallCrop extends BushBlock implements IGrowable {
+public abstract class TallCropBlock extends BushBlock implements IGrowable {
 
 	/* Blockstate Properties */
 	public static final int MIN_AGE = 0;
@@ -43,7 +43,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	public static final VoxelShape SHAPE_HALF = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
 	public static final VoxelShape SHAPE_WHOLE = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
 
-	public TallCrop(Properties builder) {
+	public TallCropBlock(Properties builder) {
 		super(builder.tickRandomly().doesNotBlockMovement());
 		this.setDefaultState(this.createDefaultState());
 	}
@@ -60,7 +60,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
 		if (this.isBottomBlock(state)) {
 			final int age = this.getAgeFrom(state);
-			if (age >= (TallCrop.MAX_AGE - 1)) {
+			if (age >= (TallCropBlock.MAX_AGE - 1)) {
 				BlockPos abovePosition = position.up();
 				BlockState aboveState = world.getBlockState(abovePosition);
 				if (aboveState.isIn(this)) {
@@ -90,7 +90,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(TallCrop.AGE, TallCrop.BOTTOM);
+		builder.add(TallCropBlock.AGE, TallCropBlock.BOTTOM);
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
 		final int age = this.getAgeFrom(state);
 		if (this.isBottomBlock(state)) {
-			if (age < (TallCrop.MAX_AGE - 1)) {
+			if (age < (TallCropBlock.MAX_AGE - 1)) {
 				return true;
 			}
 			BlockPos abovePosition = position.up();
@@ -126,11 +126,11 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	public void grow(ServerWorld world, Random RNG, BlockPos position, BlockState state) {
 		BlockPos targetPosition = position;
 		BlockState targetState = state;
-		int max = TallCrop.MAX_AGE;
+		int max = TallCropBlock.MAX_AGE;
 		if (this.isBottomBlock(state)) {
 			final int age = this.getAgeFrom(state);
-			max = TallCrop.MAX_AGE - 1;
-			if (age >= (TallCrop.MAX_AGE - 1)) {
+			max = TallCropBlock.MAX_AGE - 1;
+			if (age >= (TallCropBlock.MAX_AGE - 1)) {
 				BlockPos abovePosition = position.up();
 				BlockState aboveState = world.getBlockState(abovePosition);
 				if (this.canGrowInto(world, aboveState, abovePosition)) {
@@ -142,7 +142,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 						targetPosition = abovePosition;
 						targetState = aboveState;
 					}
-					max = TallCrop.MAX_AGE;
+					max = TallCropBlock.MAX_AGE;
 				}
 			}
 		}
@@ -161,8 +161,8 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	 */
 	protected BlockState createDefaultState() {
 		return this.stateContainer.getBaseState()
-			.with(TallCrop.AGE, Integer.valueOf(0))
-			.with(TallCrop.BOTTOM, Boolean.TRUE);
+			.with(TallCropBlock.AGE, Integer.valueOf(0))
+			.with(TallCropBlock.BOTTOM, Boolean.TRUE);
 	}
 
 	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
@@ -178,17 +178,17 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	}
 
 	protected void applyGrowth(ServerWorld world, BlockState state, BlockPos position, int quantity) {
-		this.applyGrowth(world, state, position, quantity, TallCrop.MAX_AGE);
+		this.applyGrowth(world, state, position, quantity, TallCropBlock.MAX_AGE);
 	}
 
 	protected void applyGrowth(ServerWorld world, BlockState state, BlockPos position, int quantity, int max) {
-		int newAge = MathHelper.clamp(this.getAgeFrom(state) + quantity, TallCrop.MIN_AGE, max);
-		world.setBlockState(position, state.with(TallCrop.AGE, newAge));
+		int newAge = MathHelper.clamp(this.getAgeFrom(state) + quantity, TallCropBlock.MIN_AGE, max);
+		world.setBlockState(position, state.with(TallCropBlock.AGE, newAge));
 	}
 
 	protected boolean tryGrowInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, BlockState aboveState, Random rng) {
 		if (this.canGrowInto(world, aboveState, abovePosition) && this.checkHooks(world, aboveState, abovePosition, rng)) {
-			this.growInto(world, state, position, abovePosition, TallCrop.MIN_AGE);
+			this.growInto(world, state, position, abovePosition, TallCropBlock.MIN_AGE);
 			ForgeHooks.onCropsGrowPost(world, position, state);
 			return true;
 		}
@@ -219,8 +219,8 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	 * @param age - The age that the newly-added top {@link BlockState} should have. 
 	 */
 	protected void growInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, int age) {
-		world.setBlockState(abovePosition, this.getDefaultState().with(TallCrop.AGE, Integer.valueOf(age)).with(TallCrop.BOTTOM, Boolean.FALSE));
-		world.setBlockState(position, state.with(TallCrop.BOTTOM, Boolean.TRUE));
+		world.setBlockState(abovePosition, this.getDefaultState().with(TallCropBlock.AGE, Integer.valueOf(age)).with(TallCropBlock.BOTTOM, Boolean.FALSE));
+		world.setBlockState(position, state.with(TallCropBlock.BOTTOM, Boolean.TRUE));
 	}
 
 	/**
@@ -240,7 +240,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	 * @return Whether the passed value is below {@value #MAX_AGE}.
 	 */
 	protected boolean belowMaxAge(int age) {
-		return age < TallCrop.MAX_AGE;
+		return age < TallCropBlock.MAX_AGE;
 	}
 	
 	/**
@@ -260,7 +260,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	 * @return The value of the provided {@link BlockState}'s {@link #AGE} property.
 	 */
 	protected int getAgeFrom(BlockState state) {
-		return state.get(TallCrop.AGE).intValue();
+		return state.get(TallCropBlock.AGE).intValue();
 	}
 
 	/**
@@ -270,7 +270,7 @@ public abstract class TallCrop extends BushBlock implements IGrowable {
 	 * @return Whether the provided {@link BlockState} has a {@link #BOTTOM} value of {@code TRUE}.
 	 */
 	protected boolean isBottomBlock(BlockState state) {
-		return state.get(TallCrop.BOTTOM).booleanValue();
+		return state.get(TallCropBlock.BOTTOM).booleanValue();
 	}
 
 }

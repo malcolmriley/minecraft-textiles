@@ -33,7 +33,7 @@ import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
-import paragon.minecraft.wilytextiles.blocks.TallCrop;
+import paragon.minecraft.wilytextiles.blocks.TallCropBlock;
 
 /**
  * Data generator class for mod loot tables.
@@ -94,44 +94,44 @@ final class LootGenerator extends LootHelper {
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
 
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE - 1))
+				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE - 1))
 				.rolls(BinomialRange.of(3, 0.65F))
 				.bonusRolls(0, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
 
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE - 1))
+				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
 				.rolls(RandomValueRange.of(1.0F, 3.0F))
 				.bonusRolls(0, 1)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get())));
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE - 1))
+				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
 				.rolls(BinomialRange.of(1, 0.6F))
 				.bonusRolls(0, 1)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
 
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE))
+				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE))
 				.rolls(BinomialRange.of(1, 0.35F))
 				.bonusRolls(0, 1)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCrop.MAX_AGE))
+				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE))
 				.rolls(BinomialRange.of(2, 0.75F))
 				.bonusRolls(1, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get()).weight(4))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(1)));
 
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE))
+				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE))
 				.rolls(BinomialRange.of(3, 0.8F))
 				.bonusRolls(1, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get()).weight(1))
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(4)));
 			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCrop.MAX_AGE))
+				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE))
 				.rolls(BinomialRange.of(1, 0.1F))
 				.bonusRolls(1, 2)
 				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
@@ -181,7 +181,7 @@ final class LootGenerator extends LootHelper {
 		}
 
 		protected BlockStateProperty.Builder tallCropProperties(int age, boolean bottom) {
-			return BlockStateProperty.builder(Textiles.BLOCKS.FLAX_CROP.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(TallCrop.AGE, age).withBoolProp(TallCrop.BOTTOM, bottom));
+			return BlockStateProperty.builder(Textiles.BLOCKS.FLAX_CROP.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(TallCropBlock.AGE, age).withBoolProp(TallCropBlock.BOTTOM, bottom));
 		}
 
 		protected BlockStateProperty.Builder count(RegistryObject<Block> block, int count) {

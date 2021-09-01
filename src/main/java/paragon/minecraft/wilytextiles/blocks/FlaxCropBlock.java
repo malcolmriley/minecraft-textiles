@@ -13,11 +13,11 @@ import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
 /**
- * Subclass implementation of {@link TallCrop} to be used for the Flax crop.
+ * Subclass implementation of {@link TallCropBlock} to be used for the Flax crop.
  * 
  * @author Malcolm Riley
  */
-public class FlaxCropBlock extends TallCrop {
+public class FlaxCropBlock extends TallCropBlock {
 	
 	public FlaxCropBlock() {
 		this(FlaxCropBlock.createDefaultProperties());

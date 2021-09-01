@@ -21,7 +21,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import paragon.minecraft.wilytextiles.Textiles;
 
-public class CushionBlock extends BlockPadding {
+public class CushionBlock extends PaddedBlock {
 
 	/* BlockState Properties */
 	public static final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
@@ -42,7 +42,7 @@ public class CushionBlock extends BlockPadding {
 	protected static final VoxelShape PARTIAL_HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16 - SHAPE_OFFSET, 16);
 
 	public CushionBlock(MaterialColor color) {
-		this(BlockPadding.createPropertiesFrom(color));
+		this(PaddedBlock.createPropertiesFrom(color));
 	}
 
 	public CushionBlock(Properties properties) {

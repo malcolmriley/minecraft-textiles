@@ -11,10 +11,10 @@ import paragon.minecraft.wilytextiles.Textiles;
  * 
  * @author Malcolm Riley
  */
-public class FeatherBlock extends BlockPadding {
+public class FeatherBlock extends PaddedBlock {
 	
 	public FeatherBlock() {
-		this(BlockPadding.createPropertiesFrom(MaterialColor.SNOW));
+		this(PaddedBlock.createPropertiesFrom(MaterialColor.SNOW));
 	}
 
 	public FeatherBlock(Properties properties) {

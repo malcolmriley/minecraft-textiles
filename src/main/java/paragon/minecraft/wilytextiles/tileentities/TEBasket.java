@@ -29,7 +29,7 @@ import paragon.minecraft.library.client.ui.AbstractContainer;
 import paragon.minecraft.library.client.ui.FilteredSlot;
 import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
-import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
 /**
@@ -58,7 +58,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	/**
 	 * Provides the {@link InventoryHandler} instance of this {@link TEBasket}.
 	 * <p>
-	 * Needed because {@link BlockBasket.KeepInventory#getDrops(BlockState, net.minecraft.loot.LootContext.Builder)} uses it to add dynamic drops.
+	 * Needed because {@link BasketBlock.KeepInventory#getDrops(BlockState, net.minecraft.loot.LootContext.Builder)} uses it to add dynamic drops.
 	 * 
 	 * @return The {@link InventoryHandler} for this {@link TEBasket}.
 	 */
@@ -156,7 +156,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	}
 	
 	protected AxisAlignedBB getCaptureArea() {
-		return BlockBasket.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
+		return BasketBlock.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
 	}
 	
 	protected void tryCaptureItem(ItemEntity entity) {

@@ -51,7 +51,7 @@ import paragon.minecraft.wilytextiles.tileentities.TEBasket;
  * 
  * @author Malcolm Riley
  */
-public abstract class BlockBasket extends ContainerBlock implements IWaterLoggable {
+public abstract class BasketBlock extends ContainerBlock implements IWaterLoggable {
 
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
@@ -71,28 +71,28 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	public static final VoxelShape CAPTURE_EAST = Block.makeCuboidShape(16, 0, 0, 24, 16, 16);
 	public static final VoxelShape CAPTURE_WEST = Block.makeCuboidShape(-8, 0, 0, 0, 16, 16);
 
-	public BlockBasket(Properties builder) {
+	public BasketBlock(Properties builder) {
 		super(builder);
 		this.setDefaultState(this.createDefaultState());
 	}
 	
 	/**
-	 * Returns the suggested default properties for a {@link BlockBasket}.
+	 * Returns the suggested default properties for a {@link BasketBlock}.
 	 * 
-	 * @return Some suggested default properties for a {@link BlockBasket}.
+	 * @return Some suggested default properties for a {@link BasketBlock}.
 	 */
 	public static AbstractBlock.Properties createDefaultProperties() {
 		return AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO);
 	}
 	
 	/**
-	 * Returns the item capture area {@link VoxelShape} for the {@link BlockBasket} based on the provided {@link BlockState}
+	 * Returns the item capture area {@link VoxelShape} for the {@link BasketBlock} based on the provided {@link BlockState}
 	 * 
 	 * @param state - The {@link BlockState} to examine
 	 * @return The {@link VoxelShape} item capture area
 	 */
 	public static VoxelShape getCaptureShapeFrom(BlockState state) {
-		Direction facing = BlockBasket.getFacingFrom(state);
+		Direction facing = BasketBlock.getFacingFrom(state);
 		switch(facing) {
 			case NORTH: return CAPTURE_NORTH;
 			case SOUTH: return CAPTURE_SOUTH;
@@ -144,15 +144,15 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		switch (BlockBasket.getFacingFrom(state)) {
+		switch (BasketBlock.getFacingFrom(state)) {
 			case EAST:
 			case WEST:
-				return BlockBasket.SHAPE_EAST_WEST;
+				return BasketBlock.SHAPE_EAST_WEST;
 			case NORTH:
 			case SOUTH:
-				return BlockBasket.SHAPE_NORTH_SOUTH;
+				return BasketBlock.SHAPE_NORTH_SOUTH;
 			default:
-				return BlockBasket.SHAPE_UPRIGHT;
+				return BasketBlock.SHAPE_UPRIGHT;
 		}
 	}
 
@@ -182,26 +182,26 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
 		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
-		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BlockBasket.FACING, facing));
+		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BasketBlock.FACING, facing));
 	}
 	
 	@Override
 	public BlockState rotate(BlockState state, Rotation rotation) {
-		Direction facing = BlockBasket.getFacingFrom(state);
-		return facing.equals(Direction.UP) ? state : state.with(BlockBasket.FACING, rotation.rotate(facing));
+		Direction facing = BasketBlock.getFacingFrom(state);
+		return facing.equals(Direction.UP) ? state : state.with(BasketBlock.FACING, rotation.rotate(facing));
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Call super.mirror if facing is not UP.
 	public BlockState mirror(BlockState state, Mirror mirror) {
-		final Direction facing = state.get(BlockBasket.FACING);
-		return facing != Direction.UP ? super.mirror(state, mirror) : state.with(BlockBasket.FACING, facing.getOpposite());
+		final Direction facing = state.get(BasketBlock.FACING);
+		return facing != Direction.UP ? super.mirror(state, mirror) : state.with(BasketBlock.FACING, facing.getOpposite());
 	}
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(BlockBasket.FACING, BlockBasket.WATERLOGGED);
+		builder.add(BasketBlock.FACING, BasketBlock.WATERLOGGED);
 	}
 
 	/* Internal Methods */
@@ -213,7 +213,7 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	 * @return The {@link #FACING} property of that {@link BlockState}.
 	 */
 	protected static Direction getFacingFrom(BlockState state) {
-		return state.get(BlockBasket.FACING);
+		return state.get(BasketBlock.FACING);
 	}
 	
 	/**
@@ -230,14 +230,14 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	/* Specific Implementations */
 	
 	/**
-	 * Normal {@link BlockBasket} implementation, functions the same as other inventory blocks.
+	 * Normal {@link BasketBlock} implementation, functions the same as other inventory blocks.
 	 * 
 	 * @author Malcolm Riley
 	 */
-	public static class Normal extends BlockBasket {
+	public static class Normal extends BasketBlock {
 		
 		public Normal() {
-			this(BlockBasket.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS));
+			this(BasketBlock.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS));
 		}
 
 		public Normal(Properties builder) {
@@ -255,17 +255,17 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	}
 	
 	/**
-	 * Specialized {@link BlockBasket} implementation, keeps inventory when block is dropped.
+	 * Specialized {@link BasketBlock} implementation, keeps inventory when block is dropped.
 	 * 
 	 * @author Malcolm Riley
 	 */
-	public static class KeepInventory extends BlockBasket {
+	public static class KeepInventory extends BasketBlock {
 		
 		/* Internal Fields */
 		protected static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
 		
 		public KeepInventory() {
-			this(BlockBasket.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS, 6.0F));
+			this(BasketBlock.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS, 6.0F));
 		}
 
 		public KeepInventory(Properties builder) {

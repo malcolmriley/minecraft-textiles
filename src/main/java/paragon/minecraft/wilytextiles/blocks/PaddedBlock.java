@@ -24,7 +24,7 @@ import net.minecraft.world.World;
  *
  * @author Malcolm Riley
  */
-public abstract class BlockPadding extends RotatedPillarBlock {
+public abstract class PaddedBlock extends RotatedPillarBlock {
 
 	/* Internal Fields */
 	protected static final int SHAPE_OFFSET = 2;
@@ -32,7 +32,7 @@ public abstract class BlockPadding extends RotatedPillarBlock {
 	protected static final float VELOCITY_REDUCTION = 0.5F;
 	protected static final float NOBOUNCE_VELOCITY_REDUCTION = 0.1F;
 
-	public BlockPadding(Properties properties) {
+	public PaddedBlock(Properties properties) {
 		super(properties);
 	}
 
@@ -67,7 +67,7 @@ public abstract class BlockPadding extends RotatedPillarBlock {
 
 	@Override
 	public void onLanded(IBlockReader world, Entity entity) {
-		entity.setMotion(BlockPadding.calculateLandingVelocity(entity.getMotion(), entity, entity.isSuppressingBounce(), VELOCITY_REDUCTION, NOBOUNCE_VELOCITY_REDUCTION));
+		entity.setMotion(PaddedBlock.calculateLandingVelocity(entity.getMotion(), entity, entity.isSuppressingBounce(), VELOCITY_REDUCTION, NOBOUNCE_VELOCITY_REDUCTION));
 	}
 
 	/* Internal Methods */
@@ -82,7 +82,7 @@ public abstract class BlockPadding extends RotatedPillarBlock {
 	}
 	
 	protected static Direction.Axis getAxisFrom(BlockState state) {
-		return state.get(BlockPadding.AXIS);
+		return state.get(PaddedBlock.AXIS);
 	}
 
 }

@@ -19,11 +19,11 @@ import paragon.minecraft.library.Utilities;
 import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
-import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
-import paragon.minecraft.wilytextiles.blocks.TallCrop;
+import paragon.minecraft.wilytextiles.blocks.TallCropBlock;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
 /**
@@ -74,11 +74,11 @@ final class BlockStateGenerator extends BlockStateHelper {
 		
 		// Flax Crop
 		final VariantBlockStateBuilder flaxBuilder = this.getVariantBuilder(Textiles.BLOCKS.FLAX_CROP.get());
-		for (int age = 0; age <= TallCrop.MAX_AGE; age += 1) {
+		for (int age = 0; age <= TallCropBlock.MAX_AGE; age += 1) {
 			final ModelFile bottomModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, TEXTURE_BOTTOM, age);
 			final ModelFile topModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, TEXTURE_TOP, age);
-			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
-			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
+			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCropBlock.AGE, age).with(TallCropBlock.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
+			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCropBlock.AGE, age).with(TallCropBlock.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
 		}
 		
 		// Baskets
@@ -128,14 +128,14 @@ final class BlockStateGenerator extends BlockStateHelper {
 		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(target.get());
 		final ModelFile uprightModel = this.basketBlockModel(baseName, "upright");
 		final ModelFile sideModel = this.basketBlockModel(baseName, "side");
-		for (Direction facing : BlockBasket.FACING.getAllowedValues()) {
+		for (Direction facing : BasketBlock.FACING.getAllowedValues()) {
 			if (facing == Direction.UP) {
 				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(uprightModel).nextModel().modelFile(uprightModel).rotationY(90);
-				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.build());
+				basketBuilder.addModels(basketBuilder.partialState().with(BasketBlock.FACING, facing), builder.build());
 			}
 			else {
 				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(sideModel);
-				basketBuilder.addModels(basketBuilder.partialState().with(BlockBasket.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
+				basketBuilder.addModels(basketBuilder.partialState().with(BasketBlock.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
 			}
 		}
 	}
