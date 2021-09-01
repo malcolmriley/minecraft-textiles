@@ -84,23 +84,7 @@ final class BlockStateGenerator extends BlockStateHelper {
 		this.createBasketModel(Textiles.BLOCKS.BASKET_STURDY);
 		
 		// Bolt of Fabric
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_PLAIN, "plain");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_RED, "red");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_ORANGE, "orange");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_YELLOW, "yellow");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIME, "lime");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_GREEN, "green");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_CYAN, "cyan");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIGHT_BLUE, "light_blue");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_BLUE, "blue");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_PURPLE, "purple");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_MAGENTA, "magenta");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_PINK, "pink");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_WHITE, "white");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_LIGHT_GRAY, "light_gray");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_GRAY, "gray");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_BLACK, "black");
-		this.createFabricModel(Textiles.BLOCKS.FABRIC_BROWN, "brown");
+		Textiles.BLOCKS.streamFabricBlocks().forEach(this::createFabricModel);
 		
 		// Packed Feathers
 		this.axisBlock((RotatedPillarBlock) Textiles.BLOCKS.PACKED_FEATHERS.get());
@@ -162,20 +146,20 @@ final class BlockStateGenerator extends BlockStateHelper {
 			.texture(TEXTURE_INNER, this.blockFolderTexture(Utilities.Strings.name(name, TEXTURE_INNER)));
 	}
 	
-	protected void createFabricModel(RegistryObject<Block> target, String color) {
-		final VariantBlockStateBuilder fabricBuilder = this.getVariantBuilder(target.get());
+	protected void createFabricModel(Block target) {
+		final VariantBlockStateBuilder fabricBuilder = this.getVariantBuilder(target);
 		for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
-			ModelFile model = this.fabricBlockModel("fabric", color, count);
+			ModelFile model = this.fabricBlockModel(target.getRegistryName().getPath(), count);
 			fabricBuilder.addModels(fabricBuilder.partialState().with(AxialMultipleBlock.COUNT, count).with(AxialMultipleBlock.FACING, Axis.Z), ConfiguredModel.builder().modelFile(model).nextModel().modelFile(model).rotationY(180).build());
 			fabricBuilder.addModels(fabricBuilder.partialState().with(AxialMultipleBlock.COUNT, count).with(AxialMultipleBlock.FACING, Axis.X), ConfiguredModel.builder().modelFile(model).rotationY(-90).nextModel().modelFile(model).rotationY(90).build());
 		}
 	}
 	
-	protected ModelFile fabricBlockModel(String parent, String color, int count) {
-		return this.models().withExistingParent(Utilities.Strings.name(parent, color, String.valueOf(count)), this.modLoc(Utilities.Strings.name(parent, String.valueOf(count))))
-			.texture(TEXTURE_SIDES, this.blockFolderTexture(Utilities.Strings.name(parent, color, TEXTURE_SIDES)))
-			.texture(TEXTURE_ENDS, this.blockFolderTexture(Utilities.Strings.name(parent, color, TEXTURE_ENDS)))
-			.texture(TEXTURE_EXTRAS, this.blockFolderTexture(Utilities.Strings.name(parent, color, TEXTURE_EXTRAS)));
+	protected ModelFile fabricBlockModel(String parent, int count) {
+		return this.models().withExistingParent(Utilities.Strings.name(parent, String.valueOf(count)), this.modLoc(Utilities.Strings.name("fabric", String.valueOf(count))))
+			.texture(TEXTURE_SIDES, this.textureForBlock(parent, TEXTURE_SIDES))
+			.texture(TEXTURE_ENDS, this.textureForBlock(parent, TEXTURE_ENDS))
+			.texture(TEXTURE_EXTRAS, this.textureForBlock(parent, TEXTURE_EXTRAS));
 	}
 	
 	protected ModelFile crossCropModel(String parent, String variant, int age) {
