@@ -39,6 +39,8 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> RETTED_FIBERS = this.add(Names.RETTED_FIBERS, RettedFiberBlock::new);
 	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, FlaxCropBlock::new);
 	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
+	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, BlockBasket.Normal::new);
+	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, BlockBasket.KeepInventory::new);
 	
 	public final RegistryObject<Block> CUSHION_PLAIN = this.cushionBlock(Names.CUSHION_PLAIN, MaterialColor.SAND);
 	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.RED);
@@ -75,10 +77,6 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> FABRIC_GRAY = this.textileBlock(Names.FABRIC_GRAY, MaterialColor.GRAY);
 	public final RegistryObject<Block> FABRIC_BLACK = this.textileBlock(Names.FABRIC_BLACK, MaterialColor.BLACK);
 	public final RegistryObject<Block> FABRIC_BROWN = this.textileBlock(Names.FABRIC_BROWN, MaterialColor.BROWN);
-	
-	private static final float HARDNESS_BASKET = 0.8F;
-	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
-	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
 	
 	/* Internal Methods */
 	

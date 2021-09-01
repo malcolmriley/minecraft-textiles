@@ -56,6 +56,9 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	
+	/* Internal Fields */
+	private static final float DEFAULT_HARDNESS = 0.8F;
 
 	private static final double OFFSET = 1;
 	public static final VoxelShape SHAPE_UPRIGHT = Block.makeCuboidShape(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
@@ -72,8 +75,6 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 		super(builder);
 		this.setDefaultState(this.createDefaultState());
 	}
-	
-	/* Public Methods */
 	
 	/**
 	 * Returns the suggested default properties for a {@link BlockBasket}.
@@ -234,6 +235,10 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 	 * @author Malcolm Riley
 	 */
 	public static class Normal extends BlockBasket {
+		
+		public Normal() {
+			this(BlockBasket.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS));
+		}
 
 		public Normal(Properties builder) {
 			super(builder);
@@ -258,6 +263,10 @@ public abstract class BlockBasket extends ContainerBlock implements IWaterLoggab
 		
 		/* Internal Fields */
 		protected static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
+		
+		public KeepInventory() {
+			this(BlockBasket.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS, 6.0F));
+		}
 
 		public KeepInventory(Properties builder) {
 			super(builder);
