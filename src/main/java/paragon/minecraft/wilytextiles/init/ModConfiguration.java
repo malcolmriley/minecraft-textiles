@@ -124,28 +124,47 @@ public class ModConfiguration extends AbstractConfiguration {
 
 	@Override
 	protected ForgeConfigSpec buildSpec(Builder builder) {
-		builder.push("General");
+		builder.push("Harvestables");
 		this.defineValue(value -> this.BALE_PROGRESS_CHANCE = value, builder
-			.comment("The chance that the \"age\" property of retting fiber bales will progress with each growth opportunity.", "Lower values mean a lower chance of progress (slower progress), whereas higher values mean a higher chance (quicker progress).")
+			.comment(
+				"A global modifier for the probability that the \"age\" property of retting fiber bales will progress with each growth opportunity.",
+				"Lower values mean a lower chance of progress (slower progress), whereas higher values mean a higher chance (quicker progress).")
 			.defineInRange("retting_bale_tick_age_chance", 0.65D, 0.0D, 1.0D));
 		this.defineValue(value -> this.FLAX_GROWTH_MODIFIER = value, builder
-			.comment("A global modifier for the probability that the \"age\" value of the flax crop will increase with each growth opportunity.", "Lower values mean a lower chance of increase (slower growth), whereas higher values mean a higher chance of increase (quicker growth).")
+			.comment(
+				"A global modifier for the probability that the \"age\" value of the flax crop will increase with each growth opportunity.",
+				"Lower values mean a lower chance of increase (slower growth), whereas higher values mean a higher chance of increase (quicker growth).")
 			.defineInRange("flax_crop_growth_modifier", 1.0D, 0.0D, 1.0D));
 		this.defineValue(value -> this.FLAX_MIN_LIGHTLEVEL = value, builder
-			.comment("The minimum light level that Flax needs in order to grow.", "The light level at the crop's position must equal or exceed this value, else no growth will occur.")
+			.comment(
+				"The minimum light level that Flax needs in order to grow.",
+				"The light level at the crop's position must equal or exceed this value, else no growth will occur.")
 			.defineInRange("flax_min_lightlevel", 8, 0, 15));
+		builder.pop();
+		
+		builder.push("Trading");
 		this.defineValue(value -> this.SHEPHERD_TRADES_FABRIC = value, builder
-			.comment("Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"Whether Shepherd villagers should sell Fabric if they are sufficiently skilled.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("shepherd_trade_fabrics", true));
 		this.defineValue(value -> this.SHEPHERD_SKILL_REQUIRED = value, builder
-			.comment("The minimum skill level that Shepherd villagers must reach before Fabric trades become available.", "This value will have no effect if the shepherd trading feature is disabled.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"The minimum skill level that Shepherd villagers must reach before Fabric trades become available.",
+				"This value will have no effect if the shepherd trading feature is disabled.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.defineEnum("shepherd_trade_skill_threshold", VillagerLevel.JOURNEYMAN));
 		this.defineValue(value -> this.WANDERER_TRADES_FABRIC = value, builder
-			.comment("Whether the Wandering Trader will occasionally deal in Fabrics.", CHANGE_REQUIRES_RESTART)
+			.comment(
+				"Whether the Wandering Trader will occasionally deal in Fabrics.",
+				CHANGE_REQUIRES_RESTART)
 			.worldRestart()
 			.define("wandering_trader_trade_fabrics", true));
+		builder.pop();
+		
+		builder.push("Cushions and Padding");
 		this.defineValue(value -> this.FALL_REDUCTION_CUSHION_ENABLED = value, builder
 			.comment("Whether cushion blocks reduce effective fall distance when landed upon.")
 			.define("cushion_fall_reduction_enabled", true));
@@ -176,6 +195,7 @@ public class ModConfiguration extends AbstractConfiguration {
 			.comment("The fall-distance threshold, in blocks, beyond which falling upon a feather bundle block will cause it to break.")
 			.defineInRange("featherblock_fall_break_threshold", 0.5D, 0.0D, Double.MAX_VALUE));
 		builder.pop();
+		
 		return builder.build();
 	}
 	
