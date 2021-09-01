@@ -16,6 +16,11 @@ import net.minecraft.world.server.ServerWorld;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
+/**
+ * Specialized implementation for the raw flax fiber blocks.
+ * 
+ * @author Malcolm Riley
+ */
 public class RawFiberBlock extends SoakableBlock {
 
 	/* BlockState Properties */
@@ -45,11 +50,16 @@ public class RawFiberBlock extends SoakableBlock {
 
 	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
-		if (this.shouldAge(state, world, position, RNG) && state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
+		boolean isWaterlogged = SoakableBlock.getWaterlogStateFrom(state);
+		if (this.shouldAge(state, world, position, RNG) && isWaterlogged) {
 			int age = state.get(RawFiberBlock.AGE).intValue();
 			if (age < 2) {
 				age += 1;
 				world.setBlockState(position, state.with(RawFiberBlock.AGE, age));
+			}
+			else if (Textiles.BLOCKS.RETTED_FIBERS.isPresent()) {
+				int count = SoakableBlock.getCountFrom(state);
+				world.setBlockState(position, Textiles.BLOCKS.RETTED_FIBERS.get().getDefaultState().with(SoakableBlock.COUNT, count).with(SoakableBlock.WATERLOGGED, isWaterlogged));
 			}
 		}
 	}

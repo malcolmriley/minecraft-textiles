@@ -49,7 +49,7 @@ final class BlockStateGenerator extends BlockStateHelper {
 
 	@Override
 	protected void registerStatesAndModels() {
-		// Retting Fibers
+		// Raw Fibers
 		final VariantBlockStateBuilder fiberBuilder = this.getVariantBuilder(Textiles.BLOCKS.RAW_FIBERS.get());
 		final PartialBlockstate baseFiberState = fiberBuilder.partialState();
 		for (int count = 1; count <= RawFiberBlock.MAX_COUNT; count += 1) {

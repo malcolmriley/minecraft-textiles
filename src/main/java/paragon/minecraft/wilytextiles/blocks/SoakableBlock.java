@@ -8,6 +8,7 @@ import net.minecraft.block.IWaterLoggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -33,6 +34,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	/* Blockstate Fields */
 	public static final int MAX_COUNT = 6;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 	public static final VoxelShape SHAPE_1 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
 	public static final VoxelShape SHAPE_2 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
 	public static final VoxelShape SHAPE_3 = VoxelShapes.fullCube();
@@ -115,8 +117,16 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	 */
 	protected BlockState createDefaultState() {
 		return this.stateContainer.getBaseState()
-			.with(BlockStateProperties.WATERLOGGED, false)
+			.with(SoakableBlock.WATERLOGGED, false)
 			.with(SoakableBlock.COUNT, Integer.valueOf(1));
+	}
+	
+	protected static boolean getWaterlogStateFrom(BlockState state) {
+		return state.get(SoakableBlock.WATERLOGGED).booleanValue();
+	}
+	
+	protected static int getCountFrom(BlockState state) {
+		return state.get(SoakableBlock.COUNT).intValue();
 	}
 
 }

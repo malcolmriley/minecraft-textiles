@@ -55,7 +55,8 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
 	// Block Items
-	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
+	public final RegistryObject<Item> BLOCK_RAW_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RAW_FIBERS, 2);
+	public final RegistryObject<Item> BLOCK_RETTED_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RETTED_FIBERS, 2);
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
 	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
 	public final RegistryObject<Item> BLOCK_PACKED_FEATHERS = this.simpleBlockItem(Textiles.BLOCKS.PACKED_FEATHERS);
@@ -202,6 +203,17 @@ public class ModItems extends ContentProvider<Item> {
 	 */
 	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
 		return this.simpleBlockItem(block, this.DEFAULT);
+	}
+	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItemSimpleFuel} lazily using the provided item-count burn time and default properties.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @param burnTime - The number of items that the {@link BlockItem} can smelt
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
+	protected RegistryObject<Item> burnableBlockItem(RegistryObject<Block> block, int burnTime) {
+		return this.add(block.getId().getPath(), () -> new BlockItemSimpleFuel(block.get(), DEFAULT, Utilities.Time.burnTimeFor(burnTime)));
 	}
 	
 	/**

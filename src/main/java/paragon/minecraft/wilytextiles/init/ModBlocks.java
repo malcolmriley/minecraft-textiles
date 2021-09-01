@@ -15,6 +15,7 @@ import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
 import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
+import paragon.minecraft.wilytextiles.blocks.RettedFiberBlock;
 
 /**
  * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
@@ -35,6 +36,7 @@ public class ModBlocks extends ContentProvider<Block> {
 	}
 	
 	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, RawFiberBlock::new);
+	public final RegistryObject<Block> RETTED_FIBERS = this.add(Names.RETTED_FIBERS, RettedFiberBlock::new);
 	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, FlaxCropBlock::new);
 	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
 	
@@ -169,6 +171,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		private Names() {}
 
 		public static final String RAW_FIBERS = "raw_fibers";
+		public static final String RETTED_FIBERS = "retted_fibers";
 		public static final String FLAX_CROP = "crop_flax";
 		public static final String BASKET = "basket";
 		public static final String BASKET_STURDY = "basket_sturdy";

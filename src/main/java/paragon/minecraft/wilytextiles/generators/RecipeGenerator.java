@@ -61,20 +61,20 @@ final class RecipeGenerator extends RecipeHelper {
 			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.DEAD_BUSH));
 		
 		// Retting fiber bundles
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
 			.patternLine("## ")
 			.patternLine("###")
 			.patternLine(" ##")
 			.key('#', Textiles.ITEMS.PLANT_FIBERS.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS, Textiles.ITEMS.PLANT_FIBERS));
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.PLANT_FIBERS));
 		
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS.get())
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
 			.patternLine("##")
 			.patternLine("##")
 			.key('#', Textiles.ITEMS.FLAX_STALKS.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RETTING_FIBERS, Textiles.ITEMS.FLAX_STALKS));
+			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.FLAX_STALKS));
 
 		// Wicker
 		this.addStickMeshRecipe(Textiles.ITEMS.WICKER, 3, Items.SUGAR_CANE, registrar);
