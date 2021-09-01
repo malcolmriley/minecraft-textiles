@@ -16,8 +16,8 @@ import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
+import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
-import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
 /**
  * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
@@ -29,14 +29,16 @@ import paragon.minecraft.wilytextiles.blocks.TallCrop;
 public class ModBlocks extends ContentProvider<Block> {
 	
 	/** An {@link IPositionPredicate} that always returns {@code FALSE}. */
-	private final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
+	public static final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
+	/** An {@link IPositionPredicate} that always returns {@code TRUE}. */
+	public static final IPositionPredicate ALWAYS_TRUE = (state, reader, position) -> true;
 
 	public ModBlocks() {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
 	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque(ALWAYS_FALSE)));
-	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, () -> new TallCrop(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.45F).notSolid().setOpaque(ALWAYS_FALSE)));
+	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, FlaxCropBlock::new);
 	
 	public final RegistryObject<Block> CUSHION_PLAIN = this.cushionBlock(Names.CUSHION_PLAIN, MaterialColor.SAND);
 	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.RED);

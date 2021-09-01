@@ -53,18 +53,19 @@ public class ModConfiguration extends AbstractConfiguration {
 	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
 		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
 	}
-
+	
 	/**
-	 * Method for determining whether the flax crop should grow based purely on configuration-sensitive values (light and random chance).
-	 * 
-	 * @param state - The {@link BlockState} of the provided flax crop (currently unused)
-	 * @param world - The {@link ServerWorld} that the flax crop exists within
-	 * @param position - The {@link BlockPos} of the flax crop
-	 * @param random - A reference to a {@link Random} instance
-	 * @return Whether the flax crop should grow based purely on configuration-sensitive values.
+	 * @return The growth rate modifier that should be applied to the flax crop.
 	 */
-	public boolean shouldFlaxGrow(BlockState state, ServerWorld world, BlockPos position, Random random) {
-		return this.isLightAdequateForFlax(world, position) && random.nextDouble() < this.FLAX_GROWTH_MODIFIER ;
+	public double flaxGrowthModifier() {
+		return this.FLAX_GROWTH_MODIFIER;
+	}
+	
+	/**
+	 * @return The minimum light level that the flax crop can grow in.
+	 */
+	public int flaxMinLight() {
+		return this.FLAX_MIN_LIGHTLEVEL;
 	}
 	
 	/**
@@ -215,19 +216,6 @@ public class ModConfiguration extends AbstractConfiguration {
 		public int getLevel() {
 			return this.LEVEL;
 		}
-	}
-	
-	/* Internal Methods */
-	
-	/**
-	 * Method to check whether the light value at the provided {@link BlockPos} is adequate for flax growth.
-	 * 
-	 * @param world - The {@link ServerWorld} that should be used to query light values
-	 * @param position - The {@link BlockPos} to examine the light value of
-	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
-	 */
-	protected boolean isLightAdequateForFlax(ServerWorld world, BlockPos position) {
-		return world.getLight(position) >= this.FLAX_MIN_LIGHTLEVEL;
 	}
 	
 

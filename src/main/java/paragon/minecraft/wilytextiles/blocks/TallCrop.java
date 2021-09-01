@@ -21,7 +21,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
-import paragon.minecraft.wilytextiles.Textiles;
 
 /**
  * Implementation of a two-block tall crop {@link Block}.
@@ -31,7 +30,7 @@ import paragon.minecraft.wilytextiles.Textiles;
  * 
  * @author Malcolm Riley
  */
-public class TallCrop extends BushBlock implements IGrowable {
+public abstract class TallCrop extends BushBlock implements IGrowable {
 
 	/* Blockstate Properties */
 	public static final int MIN_AGE = 0;
@@ -149,6 +148,9 @@ public class TallCrop extends BushBlock implements IGrowable {
 		}
 		this.applyGrowth(world, targetState, targetPosition, this.getBonemealGrowth(RNG), max);
 	}
+	
+	/* Abstract Methods */
+	protected abstract boolean shouldGrow(ServerWorld world, BlockState state, BlockPos position, Random RNG);
 
 	/* Internal Methods */
 	
@@ -202,8 +204,8 @@ public class TallCrop extends BushBlock implements IGrowable {
 	 * @param RNG - A reference to a {@link Random} instance
 	 * @return Whether all "external" validators permit the growth.
 	 */
-	protected boolean checkHooks(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
-		return ForgeHooks.onCropsGrowPre(world, position, state, Textiles.CONFIG.shouldFlaxGrow(state, world, position, RNG));
+	protected final boolean checkHooks(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
+		return ForgeHooks.onCropsGrowPre(world, position, state, this.shouldGrow(world, state, position, RNG));
 	}
 
 	/**
