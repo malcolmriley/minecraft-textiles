@@ -37,7 +37,9 @@ final class BlockStateGenerator extends BlockStateHelper {
 	static final String TEXTURE_SIDES = "sides";
 	static final String TEXTURE_SIDES_ALT = "sides_alt";
 	static final String TEXTURE_ENDS = "ends";
+	static final String TEXTURE_TOP = "top";
 	static final String TEXTURE_BOTTOM = "bottom";
+	static final String TEXTURE_CROSS = "cross";
 	static final String TEXTURE_INNER = "inner";
 	static final String TEXTURE_EXTRAS = "extras";
 	static final String BASE_FIBERS_NAME = "fiber_";
@@ -73,8 +75,8 @@ final class BlockStateGenerator extends BlockStateHelper {
 		// Flax Crop
 		final VariantBlockStateBuilder flaxBuilder = this.getVariantBuilder(Textiles.BLOCKS.FLAX_CROP.get());
 		for (int age = 0; age <= TallCrop.MAX_AGE; age += 1) {
-			final ModelFile bottomModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "bottom", age);
-			final ModelFile topModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, "top", age);
+			final ModelFile bottomModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, TEXTURE_BOTTOM, age);
+			final ModelFile topModel = this.crossCropModel(ModBlocks.Names.FLAX_CROP, TEXTURE_TOP, age);
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, true), ConfiguredModel.builder().modelFile(bottomModel).build());
 			flaxBuilder.addModels(flaxBuilder.partialState().with(TallCrop.AGE, age).with(TallCrop.BOTTOM, false), ConfiguredModel.builder().modelFile(topModel).build());
 		}
@@ -109,10 +111,10 @@ final class BlockStateGenerator extends BlockStateHelper {
 					.modelFile(this.models().cubeColumn(Utilities.Strings.name(baseName, "full", variant), sidesName, endsName))
 					.rotationX(xRotation).rotationY(yRotation);
 				ConfiguredModel.Builder<?> topModelBuilder = ConfiguredModel.builder()
-					.modelFile(this.models().slabTop(Utilities.Strings.name(baseName, "top", variant), sidesName, endsName, endsName))
+					.modelFile(this.models().slabTop(Utilities.Strings.name(baseName, TEXTURE_TOP, variant), sidesName, endsName, endsName))
 					.rotationX(xRotation).rotationY(yRotation);
 				ConfiguredModel.Builder<?> bottomModelBuilder = ConfiguredModel.builder()
-					.modelFile(this.models().slab(Utilities.Strings.name(baseName, "bottom", variant), sidesName, endsName, endsName))
+					.modelFile(this.models().slab(Utilities.Strings.name(baseName, TEXTURE_BOTTOM, variant), sidesName, endsName, endsName))
 					.rotationX(xRotation).rotationY(yRotation);
 				builder.addModels(builder.partialState().with(CushionBlock.AXIS, axis).with(CushionBlock.TYPE, SlabType.DOUBLE), cubeModelBuilder.build());
 				builder.addModels(builder.partialState().with(CushionBlock.AXIS, axis).with(CushionBlock.TYPE, SlabType.BOTTOM), bottomModelBuilder.build());
@@ -164,7 +166,7 @@ final class BlockStateGenerator extends BlockStateHelper {
 	
 	protected ModelFile crossCropModel(String parent, String variant, int age) {
 		final String name = Utilities.Strings.name(parent, variant, String.valueOf(age));
-		return this.models().withExistingParent(name, this.mcLoc("cross")).texture("cross", this.blockFolderTexture(name));
+		return this.models().withExistingParent(name, this.mcLoc(TEXTURE_CROSS)).texture(TEXTURE_CROSS, this.blockFolderTexture(name));
 	}
 	
 	/* Internal Methods */
