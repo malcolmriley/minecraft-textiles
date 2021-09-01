@@ -344,10 +344,23 @@ final class RecipeGenerator extends RecipeHelper {
 			.key('#', Items.FEATHER)
 			.addCriterion(RecipeHelper.createCriterionName(Items.FEATHER), RecipeHelper.hasItem(Items.FEATHER))
 			.build(registrar);
-		ShapelessRecipeBuilder.shapelessRecipe(Items.FEATHER)
+		ShapelessRecipeBuilder.shapelessRecipe(Items.FEATHER, 9)
 			.addIngredient(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
 			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_PACKED_FEATHERS), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_PACKED_FEATHERS))
 			.build(registrar, this.nameFrom(Items.FEATHER, "unpacking"));
+		
+		// Plain Cushion
+		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CUSHION_PLAIN.get(), 2)
+			.patternLine("XXX")
+			.patternLine("S#S")
+			.patternLine("XXX")
+			.key('X', Textiles.ITEMS.FABRIC_PLAIN.get())
+			.key('S', Tags.Items.STRING)
+			.key('#', Ingredient.fromItems(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
+			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FABRIC_PLAIN), RecipeHelper.hasItem(Textiles.ITEMS.FABRIC_PLAIN))
+			.addCriterion(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.hasItem(Tags.Items.STRING))
+			.addCriterion("has_padding", RecipeHelper.hasItem(ItemPredicate.Builder.create().item(Items.HAY_BLOCK).item(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
+			.build(registrar);
 	}
 
 	/* Internal Methods */
