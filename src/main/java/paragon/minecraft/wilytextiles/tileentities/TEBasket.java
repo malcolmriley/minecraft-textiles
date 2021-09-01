@@ -16,7 +16,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.EntityPredicates;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -30,9 +29,14 @@ import paragon.minecraft.library.client.ui.AbstractContainer;
 import paragon.minecraft.library.client.ui.FilteredSlot;
 import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
-import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
+/**
+ * Tile Entity implementation for the Basket block.
+ * 
+ * @author Malcolm Riley
+ */
 public class TEBasket extends LockableLootTileEntity implements ITickableTileEntity {
 
 	/* Shared Fields */
@@ -50,15 +54,24 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	}
 	
 	/* Public Methods */
-	
-	public void onItemEntityCollide(ItemEntity entity, Direction facing) {
-		HopperTileEntity.captureItem(this, entity); // Why reinvent the wheel?
-	}
 
+	/**
+	 * Provides the {@link InventoryHandler} instance of this {@link TEBasket}.
+	 * <p>
+	 * Needed because {@link BasketBlock.KeepInventory#getDrops(BlockState, net.minecraft.loot.LootContext.Builder)} uses it to add dynamic drops.
+	 * 
+	 * @return The {@link InventoryHandler} for this {@link TEBasket}.
+	 */
 	public InventoryHandler getInventory() {
 		return this.ITEMS;
 	}
 	
+	/**
+	 * Returns whether or not the basket can hold the provided {@link ItemStack}.
+	 * 
+	 * @param instance - The {@link ItemStack} to check
+	 * @return Whether the provided {@link ItemStack} can be inserted into this {@link TEBasket}.
+	 */
 	public boolean canHold(ItemStack instance) {
 		// TODO: Separate into another TE type?
 		if (this.getBlockState().isIn(Textiles.BLOCKS.BASKET_STURDY.get())) {
@@ -143,7 +156,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	}
 	
 	protected AxisAlignedBB getCaptureArea() {
-		return BlockBasket.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
+		return BasketBlock.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
 	}
 	
 	protected void tryCaptureItem(ItemEntity entity) {

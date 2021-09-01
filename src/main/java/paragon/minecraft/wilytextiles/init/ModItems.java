@@ -19,6 +19,7 @@ import paragon.minecraft.library.item.CheckedBlockNamedItem;
 import paragon.minecraft.library.item.ItemSimpleFuel;
 import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 
 /**
  * Holder and initializer class for {@link Item} bearing {@link RegistryObject} instances.
@@ -54,12 +55,13 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
 	// Block Items
-	public final RegistryObject<Item> BLOCK_RETTING_FIBERS = this.add(ModBlocks.Names.RAW_FIBERS, () -> new BlockItemSimpleFuel(Textiles.BLOCKS.RAW_FIBERS.get(), DEFAULT, Utilities.Time.burnTimeFor(2)));
+	public final RegistryObject<Item> BLOCK_RAW_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RAW_FIBERS, 2);
+	public final RegistryObject<Item> BLOCK_RETTED_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RETTED_FIBERS, 2);
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
 	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
 	public final RegistryObject<Item> BLOCK_PACKED_FEATHERS = this.simpleBlockItem(Textiles.BLOCKS.PACKED_FEATHERS);
 	
-	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, context -> !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get())));
+	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, FlaxCropBlock::canPlaceAt));
 	
 	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
 	public final RegistryObject<Item> FABRIC_RED = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_RED);
@@ -137,7 +139,7 @@ public class ModItems extends ContentProvider<Item> {
 	 * @return A {@link Stream} of all fabric-type {@link Items}.
 	 */
 	public Stream<Item> streamFabricItems() {
-		return Stream.of(
+		return this.filterUnregistered(Stream.of(
 			this.FABRIC_PLAIN,
 			this.FABRIC_RED,
 			this.FABRIC_ORANGE,
@@ -155,7 +157,7 @@ public class ModItems extends ContentProvider<Item> {
 			this.FABRIC_GRAY,
 			this.FABRIC_BLACK,
 			this.FABRIC_BROWN
-		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+		));
 	}
 	
 	/* Internal Methods */
@@ -201,6 +203,17 @@ public class ModItems extends ContentProvider<Item> {
 	 */
 	protected RegistryObject<Item> simpleBlockItem(RegistryObject<Block> block) {
 		return this.simpleBlockItem(block, this.DEFAULT);
+	}
+	
+	/**
+	 * Creates a {@link RegistryObject} that will instantiate a new {@link BlockItemSimpleFuel} lazily using the provided item-count burn time and default properties.
+	 * 
+	 * @param block - A {@link RegistryObject} holding the target {@link Block}, to be queried lazily
+	 * @param burnTime - The number of items that the {@link BlockItem} can smelt
+	 * @return A {@link RegistryObject} holding the requisite {@link BlockItem}.
+	 */
+	protected RegistryObject<Item> burnableBlockItem(RegistryObject<Block> block, int burnTime) {
+		return this.add(block.getId().getPath(), () -> new BlockItemSimpleFuel(block.get(), DEFAULT, Utilities.Time.burnTimeFor(burnTime)));
 	}
 	
 	/**

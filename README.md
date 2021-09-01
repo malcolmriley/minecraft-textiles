@@ -12,7 +12,11 @@ If you're tired of sleepless nights spent mugging Spiders for their string, then
 * A way to get more out of **Spider Webs**, by recrafting them into **Silk**
 * A way to create **Chainmail Armor** pieces, via **Chain Mesh**
 * A way to convert wooden items into other varieties using **Wood Stain** and **Wood Bleach**
+* A way to break your fall with **Cushions**
+* A way to store all those **Feathers** you have via the **Bundle of Feathers**, which can also break your fall (and themselves)
 * ... And more to come! Maybe! We'll see!
+
+[Official builds are available on CurseForge.](https://www.curseforge.com/minecraft/mc-mods/wily-textiles)
 
 ## Attributions and Credits
 * Texture assets used with own permission from my other project, [unused-textures](https://github.com/malcolmriley/unused-textures) via CC-BY-4.0.

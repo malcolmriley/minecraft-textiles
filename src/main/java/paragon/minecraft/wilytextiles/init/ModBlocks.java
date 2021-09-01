@@ -2,22 +2,20 @@ package paragon.minecraft.wilytextiles.init;
 
 import java.util.stream.Stream;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
 import paragon.minecraft.library.ContentProvider;
 import paragon.minecraft.wilytextiles.Textiles;
-import paragon.minecraft.wilytextiles.blocks.BlockBasket;
+import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
-import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
-import paragon.minecraft.wilytextiles.blocks.TallCrop;
+import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
+import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
+import paragon.minecraft.wilytextiles.blocks.RettedFiberBlock;
 
 /**
  * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
@@ -29,14 +27,20 @@ import paragon.minecraft.wilytextiles.blocks.TallCrop;
 public class ModBlocks extends ContentProvider<Block> {
 	
 	/** An {@link IPositionPredicate} that always returns {@code FALSE}. */
-	private final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
+	public static final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
+	/** An {@link IPositionPredicate} that always returns {@code TRUE}. */
+	public static final IPositionPredicate ALWAYS_TRUE = (state, reader, position) -> true;
 
 	public ModBlocks() {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
-	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque(ALWAYS_FALSE)));
-	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, () -> new TallCrop(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.45F).notSolid().setOpaque(ALWAYS_FALSE)));
+	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, RawFiberBlock::new);
+	public final RegistryObject<Block> RETTED_FIBERS = this.add(Names.RETTED_FIBERS, RettedFiberBlock::new);
+	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, FlaxCropBlock::new);
+	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
+	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, BasketBlock.Normal::new);
+	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, BasketBlock.KeepInventory::new);
 	
 	public final RegistryObject<Block> CUSHION_PLAIN = this.cushionBlock(Names.CUSHION_PLAIN, MaterialColor.SAND);
 	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.RED);
@@ -73,12 +77,6 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> FABRIC_GRAY = this.textileBlock(Names.FABRIC_GRAY, MaterialColor.GRAY);
 	public final RegistryObject<Block> FABRIC_BLACK = this.textileBlock(Names.FABRIC_BLACK, MaterialColor.BLACK);
 	public final RegistryObject<Block> FABRIC_BROWN = this.textileBlock(Names.FABRIC_BROWN, MaterialColor.BROWN);
-	
-	private static final float HARDNESS_BASKET = 0.8F;
-	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
-	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
-	
-	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
 	
 	/* Internal Methods */
 	
@@ -171,6 +169,7 @@ public class ModBlocks extends ContentProvider<Block> {
 		private Names() {}
 
 		public static final String RAW_FIBERS = "raw_fibers";
+		public static final String RETTED_FIBERS = "retted_fibers";
 		public static final String FLAX_CROP = "crop_flax";
 		public static final String BASKET = "basket";
 		public static final String BASKET_STURDY = "basket_sturdy";
