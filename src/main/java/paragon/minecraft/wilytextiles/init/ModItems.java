@@ -139,7 +139,7 @@ public class ModItems extends ContentProvider<Item> {
 	 * @return A {@link Stream} of all fabric-type {@link Items}.
 	 */
 	public Stream<Item> streamFabricItems() {
-		return Stream.of(
+		return this.filterUnregistered(Stream.of(
 			this.FABRIC_PLAIN,
 			this.FABRIC_RED,
 			this.FABRIC_ORANGE,
@@ -157,7 +157,7 @@ public class ModItems extends ContentProvider<Item> {
 			this.FABRIC_GRAY,
 			this.FABRIC_BLACK,
 			this.FABRIC_BROWN
-		).filter(RegistryObject::isPresent).map(RegistryObject::get);
+		));
 	}
 	
 	/* Internal Methods */
