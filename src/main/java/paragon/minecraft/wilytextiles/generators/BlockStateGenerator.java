@@ -21,6 +21,7 @@ import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
 import paragon.minecraft.wilytextiles.blocks.BlockBasket;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
+import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
@@ -51,12 +52,12 @@ final class BlockStateGenerator extends BlockStateHelper {
 		// Retting Fibers
 		final VariantBlockStateBuilder fiberBuilder = this.getVariantBuilder(Textiles.BLOCKS.RAW_FIBERS.get());
 		final PartialBlockstate baseFiberState = fiberBuilder.partialState();
-		for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
-			for (int age = 0; age <= SoakableBlock.MAX_AGE; age += 1) {
+		for (int count = 1; count <= RawFiberBlock.MAX_COUNT; count += 1) {
+			for (int age = 0; age <= RawFiberBlock.MAX_AGE; age += 1) {
 				final ModelFile model = this.models().withExistingParent(Utilities.Strings.name(FIBER_TEXTURE_BASE, String.valueOf(count), String.valueOf(age)), this.modLoc(BASE_FIBERS_NAME + count))
 					.texture(TEXTURE_ENDS, this.blockFolderTexture(Utilities.Strings.name(FIBER_TEXTURE_BASE, TEXTURE_ENDS, String.valueOf(age))))
 					.texture(TEXTURE_SIDES, this.blockFolderTexture(Utilities.Strings.name(FIBER_TEXTURE_BASE, TEXTURE_SIDES, String.valueOf(age))));
-				final PartialBlockstate state = baseFiberState.with(SoakableBlock.COUNT, Integer.valueOf(count)).with(SoakableBlock.AGE, age);
+				final PartialBlockstate state = baseFiberState.with(SoakableBlock.COUNT, Integer.valueOf(count)).with(RawFiberBlock.AGE, age);
 				fiberBuilder.addModels(state, ConfiguredModel.allYRotations(model, 0, false));
 			}
 		}

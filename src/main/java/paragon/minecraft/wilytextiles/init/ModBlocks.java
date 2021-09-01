@@ -2,11 +2,8 @@ package paragon.minecraft.wilytextiles.init;
 
 import java.util.stream.Stream;
 
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.AbstractBlock.IPositionPredicate;
 import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,7 +14,7 @@ import paragon.minecraft.wilytextiles.blocks.CushionBlock;
 import paragon.minecraft.wilytextiles.blocks.FabricBlock;
 import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
 import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
-import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
+import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 
 /**
  * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
@@ -37,8 +34,9 @@ public class ModBlocks extends ContentProvider<Block> {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
 	}
 	
-	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, () -> new SoakableBlock(AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.VINE).hardnessAndResistance(0.3F).notSolid().setOpaque(ALWAYS_FALSE)));
+	public final RegistryObject<Block> RAW_FIBERS = this.add(Names.RAW_FIBERS, RawFiberBlock::new);
 	public final RegistryObject<Block> FLAX_CROP = this.add(Names.FLAX_CROP, FlaxCropBlock::new);
+	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
 	
 	public final RegistryObject<Block> CUSHION_PLAIN = this.cushionBlock(Names.CUSHION_PLAIN, MaterialColor.SAND);
 	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.RED);
@@ -79,8 +77,6 @@ public class ModBlocks extends ContentProvider<Block> {
 	private static final float HARDNESS_BASKET = 0.8F;
 	public final RegistryObject<Block> BASKET = this.add(Names.BASKET, () -> new BlockBasket.Normal(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET)));
 	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, () -> new BlockBasket.KeepInventory(BlockBasket.createDefaultProperties().hardnessAndResistance(HARDNESS_BASKET, 6.0F)));
-	
-	public final RegistryObject<Block> PACKED_FEATHERS = this.add(Names.PACKED_FEATHERS, FeatherBlock::new);
 	
 	/* Internal Methods */
 	

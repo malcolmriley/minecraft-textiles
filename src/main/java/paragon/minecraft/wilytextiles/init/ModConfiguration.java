@@ -1,10 +1,5 @@
 package paragon.minecraft.wilytextiles.init;
 
-import java.util.Random;
-
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.fml.config.ModConfig;
@@ -42,16 +37,10 @@ public class ModConfiguration extends AbstractConfiguration {
 	}
 	
 	/**
-	 * Method for determining whether a retting fiber bale should grow based purely on configuration-sensitive values (random chance).
-	 * 
-	 * @param state - The {@link BlockState} of the provided raw fiber bale (currently unused)
-	 * @param world - The {@link ServerWorld} that the raw fiber bale exists within (currently unused)
-	 * @param position - The {@link BlockPos} of the fiber bale
-	 * @param random - A reference to a {@link Random} instance
-	 * @return Whether the fiber bale should cure based purely on configuration-sensitive values.
+	 * @return The progression rate modifier that should be applied to retting fiber bales.
 	 */
-	public boolean shouldBaleAge(BlockState state, ServerWorld world, BlockPos position, Random random) {
-		return random.nextDouble() < this.BALE_PROGRESS_CHANCE;
+	public double baleProgressModifier() {
+		return this.BALE_PROGRESS_CHANCE;
 	}
 	
 	/**

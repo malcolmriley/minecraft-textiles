@@ -32,6 +32,7 @@ import net.minecraftforge.fml.RegistryObject;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
+import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCrop;
 
@@ -198,7 +199,7 @@ final class LootGenerator extends LootHelper {
 		}
 
 		protected BlockStateProperty.Builder countAndAge(int count, int age) {
-			return BlockStateProperty.builder(Textiles.BLOCKS.RAW_FIBERS.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count).withIntProp(SoakableBlock.AGE, age));
+			return BlockStateProperty.builder(Textiles.BLOCKS.RAW_FIBERS.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count).withIntProp(RawFiberBlock.AGE, age));
 		}
 
 	}

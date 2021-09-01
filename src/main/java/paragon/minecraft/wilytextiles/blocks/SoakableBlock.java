@@ -1,7 +1,5 @@
 package paragon.minecraft.wilytextiles.blocks;
 
-import java.util.Random;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Block;
@@ -21,9 +19,7 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
-import net.minecraft.world.server.ServerWorld;
 import paragon.minecraft.library.Utilities;
-import paragon.minecraft.wilytextiles.Textiles;
 
 /**
  * Represents a block that "ages" while waterlogged.
@@ -36,15 +32,13 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 
 	/* Blockstate Fields */
 	public static final int MAX_COUNT = 6;
-	public static final int MAX_AGE = 2;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
-	public static final IntegerProperty AGE = BlockStateProperties.AGE_0_2;
 	public static final VoxelShape SHAPE_1 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
 	public static final VoxelShape SHAPE_2 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
 	public static final VoxelShape SHAPE_3 = VoxelShapes.fullCube();
 
 	public SoakableBlock(Properties properties) {
-		super(properties.tickRandomly());
+		super(properties);
 		this.setDefaultState(this.createDefaultState());
 	}
 
@@ -70,7 +64,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	@Override
 	@SuppressWarnings("deprecation") // Return super.isReplaceable as default if not this
 	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT)  && (state.get(AGE).intValue() == 0)? true : super.isReplaceable(state, useContext);
+		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT) ? true : super.isReplaceable(state, useContext);
 	}
 
 	@Override
@@ -80,7 +74,7 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 		// If the target block is this, add one to the "count" state parameter
 		if (state.isIn(this)) {
 			int currentCount = state.get(SoakableBlock.COUNT);
-			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1))).with(AGE, Integer.valueOf(0));
+			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1)));
 		}
 		// Otherwise, update fluid state
 		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context));
@@ -101,20 +95,9 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
-		if (Textiles.CONFIG.shouldBaleAge(state, world, position, RNG) && state.get(BlockStateProperties.WATERLOGGED).booleanValue()) {
-			int age = state.get(SoakableBlock.AGE).intValue();
-			if (age < 2) {
-				age += 1;
-				world.setBlockState(position, state.with(SoakableBlock.AGE, age));
-			}
-		}
-	}
-
-	@Override
 	public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
-		builder.add(BlockStateProperties.WATERLOGGED, SoakableBlock.AGE, SoakableBlock.COUNT);
+		builder.add(BlockStateProperties.WATERLOGGED, SoakableBlock.COUNT);
 	}
 
 	@Override
@@ -133,7 +116,6 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	protected BlockState createDefaultState() {
 		return this.stateContainer.getBaseState()
 			.with(BlockStateProperties.WATERLOGGED, false)
-			.with(SoakableBlock.AGE, Integer.valueOf(0))
 			.with(SoakableBlock.COUNT, Integer.valueOf(1));
 	}
 
