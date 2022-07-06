@@ -33,8 +33,8 @@ public class SoakableBlock extends Block implements SimpleWaterloggedBlock {
 	public static final int MAX_COUNT = 6;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	public static final VoxelShape SHAPE_1 = Block.box(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
-	public static final VoxelShape SHAPE_2 = Block.box(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
+	public static final VoxelShape SHAPE_1 = Shapes.box(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
+	public static final VoxelShape SHAPE_2 = Shapes.box(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
 	public static final VoxelShape SHAPE_3 = Shapes.block();
 
 	public SoakableBlock(Properties properties) {

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
@@ -38,8 +39,8 @@ public abstract class TallCropBlock extends BushBlock implements IPlantable, Bon
 
 	private static final double HORIZONTAL_MIN = 0.25D;
 	private static final double HORIZONTAL_MAX = 1.0 - HORIZONTAL_MIN;
-	public static final VoxelShape SHAPE_HALF = Block.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
-	public static final VoxelShape SHAPE_WHOLE = Block.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
+	public static final VoxelShape SHAPE_HALF = Shapes.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
+	public static final VoxelShape SHAPE_WHOLE = Shapes.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
 
 	public TallCropBlock(Properties builder) {
 		super(builder.randomTicks().noCollission());
