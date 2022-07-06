@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[40,)"
-license="CC-BY-4.0"
+license="Code: MIT, Textures: CC-BY-4.0"
 issueTrackerURL="https://github.com/malcolmriley/minecraft-textiles/issues"
 
 [[mods]]
