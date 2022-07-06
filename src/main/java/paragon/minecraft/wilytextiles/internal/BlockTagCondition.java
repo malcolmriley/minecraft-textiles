@@ -44,8 +44,11 @@ public class BlockTagCondition implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext context) {
-		BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
-		return this.BLOCK_TAG.isPresent() && Objects.nonNull(state) ? state.is(this.BLOCK_TAG.get()) : false;
+		if (context.hasParam(LootContextParams.BLOCK_STATE)) {
+			BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
+			return this.BLOCK_TAG.isPresent() && Objects.nonNull(state) && state.is(this.BLOCK_TAG.get());
+		}
+		return false;
 	}
 
 	@Override
