@@ -5,12 +5,12 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.event.RegistryEvent;
@@ -25,7 +25,7 @@ public class AddLootModifier extends LootModifier {
 	protected final ResourceLocation LOOT_TABLE;
 	protected boolean isModifying = false;
 
-	protected AddLootModifier(ILootCondition[] conditionsIn, ResourceLocation lootTable) {
+	protected AddLootModifier(LootItemCondition[] conditionsIn, ResourceLocation lootTable) {
 		super(conditionsIn);
 		this.LOOT_TABLE = lootTable;
 	}
@@ -38,7 +38,7 @@ public class AddLootModifier extends LootModifier {
 		LootTable discovered = context.getLootTable(this.LOOT_TABLE);
 		if (Objects.nonNull(discovered)) {
 			this.isModifying = true;
-			generated.addAll(discovered.generate(context));
+			generated.addAll(discovered.getRandomItems(context));
 			this.isModifying = false;
 		}
 		return generated;
@@ -59,8 +59,8 @@ public class AddLootModifier extends LootModifier {
 		/* Supertype Override Methods */
 
 		@Override
-		public AddLootModifier read(ResourceLocation location, JsonObject serialized, ILootCondition[] conditions) {
-			return new AddLootModifier(conditions, new ResourceLocation(JSONUtils.getString(serialized, Serializer.FIELD_LOOT_TABLE)));
+		public AddLootModifier read(ResourceLocation location, JsonObject serialized, LootItemCondition[] conditions) {
+			return new AddLootModifier(conditions, new ResourceLocation(GsonHelper.getAsString(serialized, Serializer.FIELD_LOOT_TABLE)));
 		}
 
 		@Override

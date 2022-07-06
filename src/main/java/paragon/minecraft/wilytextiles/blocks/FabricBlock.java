@@ -1,17 +1,17 @@
 package paragon.minecraft.wilytextiles.blocks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Specific implementation of {@link AxialMultipleBlock} for use by Fabric blocks.
@@ -27,36 +27,36 @@ public class FabricBlock extends AxialMultipleBlock {
 
 	/* Internal Fields */
 	private static final int SHAPE_INSET = 2;
-	public static final VoxelShape SHAPE_X_1 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16.0 / 3.0, 16);
-	public static final VoxelShape SHAPE_X_2 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 32.0 / 3.0, 16);
-	public static final VoxelShape SHAPE_X_3 = Block.makeCuboidShape(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16, 16);
+	public static final VoxelShape SHAPE_X_1 = Block.box(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16.0 / 3.0, 16);
+	public static final VoxelShape SHAPE_X_2 = Block.box(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 32.0 / 3.0, 16);
+	public static final VoxelShape SHAPE_X_3 = Block.box(0 + SHAPE_INSET, 0, 0, 16 - SHAPE_INSET, 16, 16);
 
-	public static final VoxelShape SHAPE_Z_1 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 16.0 / 3.0, 16 - SHAPE_INSET);
-	public static final VoxelShape SHAPE_Z_2 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 32.0 / 3.0, 16 - SHAPE_INSET);
-	public static final VoxelShape SHAPE_Z_3 = Block.makeCuboidShape(0, 0, 0 + SHAPE_INSET, 16, 16, 16 - SHAPE_INSET);
+	public static final VoxelShape SHAPE_Z_1 = Block.box(0, 0, 0 + SHAPE_INSET, 16, 16.0 / 3.0, 16 - SHAPE_INSET);
+	public static final VoxelShape SHAPE_Z_2 = Block.box(0, 0, 0 + SHAPE_INSET, 16, 32.0 / 3.0, 16 - SHAPE_INSET);
+	public static final VoxelShape SHAPE_Z_3 = Block.box(0, 0, 0 + SHAPE_INSET, 16, 16, 16 - SHAPE_INSET);
 
 	public FabricBlock(final Properties properties) {
 		super(properties);
 	}
 
-	public FabricBlock(final MaterialColor color, final IPositionPredicate opacityPredicate) {
-		this(FabricBlock.createPropertiesFrom(color, opacityPredicate));
+	public FabricBlock(final MaterialColor color, final StatePredicate alwaysFalse) {
+		this(FabricBlock.createPropertiesFrom(color, alwaysFalse));
 	}
 
 	/* Supertype Override Methods */
 
 	@Override
-	public int getFlammability(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return FIRE_FLAMMABILITY;
 	}
 
 	@Override
-	public int getFireSpreadSpeed(BlockState state, IBlockReader world, BlockPos pos, Direction face) {
+	public int getFireSpreadSpeed(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
 		return FIRE_ENCOURAGEMENT;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos position, CollisionContext context) {
 		int count = AxialMultipleBlock.getCountFrom(state);
 		Axis axis = AxialMultipleBlock.getAxisFrom(state);
 		switch (count) {
@@ -81,11 +81,11 @@ public class FabricBlock extends AxialMultipleBlock {
 	 * sets the hardness and resistance to {@link #DEFAULT_HARDNESS}, as well as setting the block to be non-solid.
 	 *
 	 * @param color - The {@link MaterialColor} to use for the {@link FabricBlock}
-	 * @param opacityPredicate - An opacity checking {@link IPositionPredicate}
-	 * @return A suitable {@link AbstractBlock.Properties} instance to use.
+	 * @param opacityPredicate - An opacity checking {@link StatePredicate}
+	 * @return A suitable {@link BlockBehaviour.Properties} instance to use.
 	 */
-	protected static AbstractBlock.Properties createPropertiesFrom(final MaterialColor color, final IPositionPredicate opacityPredicate) {
-		return AbstractBlock.Properties.create(Material.CARPET, color).sound(SoundType.CLOTH).hardnessAndResistance(DEFAULT_HARDNESS).setOpaque(opacityPredicate).notSolid();
+	protected static Properties createPropertiesFrom(final MaterialColor color, final StatePredicate opacityPredicate) {
+		return Properties.of(Material.CLOTH_DECORATION, color).sound(SoundType.WOOL).explosionResistance(DEFAULT_HARDNESS).isViewBlocking(opacityPredicate);
 	}
 
 }

@@ -1,16 +1,16 @@
 package paragon.minecraft.wilytextiles.client;
 
-import net.minecraft.block.Block;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import paragon.minecraft.library.client.ClientUtilities;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.client.ui.ScreenBasket;
+import paragon.minecraft.wilytextiles.internal.ClientUtilities;
 
 /**
  * Event handler for client-only events.
@@ -44,16 +44,26 @@ public final class ClientOnly {
 	 */
 	private static void registerRenderTypeLookups() {
 		ClientOnly.setCutoutRender(Textiles.BLOCKS.FLAX_CROP);
-		Textiles.BLOCKS.streamFabricBlocks().forEach(block -> RenderTypeLookup.setRenderLayer(block, RenderType.getCutout()));
+		Textiles.BLOCKS.streamFabricBlocks().forEach(ClientOnly::setCutoutRender);
 	}
 	
 	/**
-	 * Sets the {@link RenderType} of the {@link Block} contained in the provided {@link RegistryObject} to {@link RenderType#getCutout()}.
+	 * Sets the {@link RenderType} of the {@link Block} contained in the provided {@link RegistryObject} to {@link RenderType#cutout()}.
 	 * 
 	 * @param registryObject - A {@link RegistryObject} containing a {@link Block} to set to the cutout render type.
 	 */
 	private static void setCutoutRender(RegistryObject<Block> registryObject) {
-		ClientOnly.setRenderType(registryObject, RenderType.getCutout());
+		ClientOnly.setRenderType(registryObject.get(), RenderType.cutout());
+	}
+
+	
+	/**
+	 * Sets the {@link RenderType} of the {@link Block} to {@link RenderType#cutout()}.
+	 * 
+	 * @param registryObject - A {@link Block} to set to the cutout render type.
+	 */
+	private static void setCutoutRender(Block block) {
+		ClientOnly.setRenderType(block, RenderType.cutout());
 	}
 	
 	/**
@@ -62,10 +72,8 @@ public final class ClientOnly {
 	 * @param registryObject - A {@link RegistryObject}, potentially holding a {@link Block}
 	 * @param type - The {@link RenderType} to set to the {@link Block} held by the provided {@link RegistryObject}.
 	 */
-	private static void setRenderType(RegistryObject<Block> registryObject, RenderType type) {
-		if (registryObject.isPresent()) {
-			RenderTypeLookup.setRenderLayer(registryObject.get(), type);
-		}
+	private static void setRenderType(Block block, RenderType type) {
+		ItemBlockRenderTypes.setRenderLayer(block, type);
 	}
 
 }

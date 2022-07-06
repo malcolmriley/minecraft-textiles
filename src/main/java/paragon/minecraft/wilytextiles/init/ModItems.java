@@ -3,23 +3,23 @@ package paragon.minecraft.wilytextiles.init;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
-import net.minecraft.item.Rarity;
-import net.minecraft.util.IItemProvider;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
-import paragon.minecraft.library.ContentProvider;
-import paragon.minecraft.library.Utilities;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.library.item.BlockItemSimpleFuel;
-import paragon.minecraft.library.item.CheckedBlockNamedItem;
 import paragon.minecraft.library.item.ItemSimpleFuel;
 import paragon.minecraft.library.item.LazyInitBlockItem;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
+import paragon.minecraft.wilytextiles.internal.ContentProvider;
+import paragon.minecraft.wilytextiles.internal.Utilities;
+import paragon.minecraft.wilytextiles.items.ItemNameCheckedBlockItem;
 
 /**
  * Holder and initializer class for {@link Item} bearing {@link RegistryObject} instances.
@@ -29,7 +29,7 @@ import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 public class ModItems extends ContentProvider<Item> {
 
 	/* Internal Fields */
-	protected final ItemGroup GROUP = Utilities.Game.createGroupFrom(Textiles.MOD_ID, () -> Textiles.ITEMS.FLAX_STALKS.get());
+	protected final CreativeModeTab GROUP = Utilities.Game.createGroupFrom(Textiles.MOD_ID, () -> Textiles.ITEMS.FLAX_STALKS.get());
 	protected final Item.Properties DEFAULT = this.defaultProperties();
 
 	public ModItems() {
@@ -50,7 +50,7 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> SILK = this.simpleItem(Names.SILK);
 	public final RegistryObject<Item> SILK_WISPS = this.simpleItem(Names.SILK_WISP);
 	public final RegistryObject<Item> FLAXSEED_OIL_BOTTLE = this.bottledItem(Names.FLAXSEED_OIL_BOTTLE);
-	public final RegistryObject<Item> FLAXSEED_OIL_BUCKET = this.add(Names.FLAXSEED_OIL_BUCKET, () -> new ItemSimpleFuel(this.defaultWithContainer(Items.BUCKET).maxStackSize(1), Utilities.Time.burnTimeFor(6)));
+	public final RegistryObject<Item> FLAXSEED_OIL_BUCKET = this.add(Names.FLAXSEED_OIL_BUCKET, () -> new ItemSimpleFuel(this.defaultWithContainer(Items.BUCKET).stacksTo(1), Utilities.Time.burnTimeFor(6)));
 	public final RegistryObject<Item> WOOD_STAIN = this.bottledItem(Names.WOOD_STAIN);
 	public final RegistryObject<Item> WOOD_BLEACH = this.bottledItem(Names.WOOD_BLEACH);
 	
@@ -58,10 +58,10 @@ public class ModItems extends ContentProvider<Item> {
 	public final RegistryObject<Item> BLOCK_RAW_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RAW_FIBERS, 2);
 	public final RegistryObject<Item> BLOCK_RETTED_FIBERS = this.burnableBlockItem(Textiles.BLOCKS.RETTED_FIBERS, 2);
 	public final RegistryObject<Item> BLOCK_BASKET = this.simpleBlockItem(Textiles.BLOCKS.BASKET);
-	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().maxStackSize(1));
+	public final RegistryObject<Item> BLOCK_BASKET_STURDY = this.simpleBlockItem(Textiles.BLOCKS.BASKET_STURDY, this.defaultProperties().stacksTo(1));
 	public final RegistryObject<Item> BLOCK_PACKED_FEATHERS = this.simpleBlockItem(Textiles.BLOCKS.PACKED_FEATHERS);
 	
-	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new CheckedBlockNamedItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, FlaxCropBlock::canPlaceAt));
+	public final RegistryObject<Item> FLAX_SEEDS = this.add(Names.FLAX_SEEDS, () -> new ItemNameCheckedBlockItem(Textiles.BLOCKS.FLAX_CROP.get(), DEFAULT, FlaxCropBlock::canPlaceAt));
 	
 	public final RegistryObject<Item> FABRIC_PLAIN = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_PLAIN);
 	public final RegistryObject<Item> FABRIC_RED = this.simpleBlockItem(Textiles.BLOCKS.FABRIC_RED);
@@ -242,20 +242,20 @@ public class ModItems extends ContentProvider<Item> {
 	}
 	
 	/**
-	 * Returns a new, default {@link Item.Properties} instance via {@link #defaultProperties()} and sets the container item to the provided {@link IItemProvider}.
+	 * Returns a new, default {@link Item.Properties} instance via {@link #defaultProperties()} and sets the container item to the provided {@link ItemLike}.
 	 * 
-	 * @param container - The {@link IItemProvider} to use as a container.
+	 * @param container - The {@link ItemLike} to use as a container.
 	 * @return A new, default {@link Item.Properties} instance with the provided container item.
 	 */
-	private Item.Properties defaultWithContainer(IItemProvider container) {
-		return this.defaultProperties().containerItem(container.asItem());
+	private Item.Properties defaultWithContainer(ItemLike container) {
+		return this.defaultProperties().craftRemainder(container.asItem());
 	}
 	
 	/**
-	 * @return A new, default {@link Item.Properties} instance using the appropriate {@link ItemGroup} for the mod.
+	 * @return A new, default {@link Item.Properties} instance using the appropriate {@link CreativeModeTab} for the mod.
 	 */
 	private Item.Properties defaultProperties() {
-		return new Item.Properties().group(GROUP);
+		return new Item.Properties().tab(GROUP);
 	}
 	
 	/* Item Names */

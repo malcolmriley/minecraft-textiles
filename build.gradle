@@ -8,17 +8,19 @@ buildscript {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
+plugins {
+    id 'eclipse'
+    id 'maven-publish'
+}
 apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 apply from: 'project.config'
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 version = "${ext.mc_version}-${ext.version}"
-archivesBaseName = "${ext.name}"
+archivesBaseName = "${ext.name}-Forge"
 
 /*************************** ONLY EDIT BELOW THIS LINE ***************************/
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: mappings_channel, version: mappings_version
 
@@ -106,4 +108,8 @@ publishing {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }

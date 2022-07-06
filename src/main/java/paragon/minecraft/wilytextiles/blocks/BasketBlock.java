@@ -2,45 +2,48 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.block.ShulkerBoxBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import paragon.minecraft.library.Utilities;
+import javax.annotation.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import paragon.minecraft.library.capabilities.InventoryHandler;
+import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
 /**
@@ -48,52 +51,52 @@ import paragon.minecraft.wilytextiles.tileentities.TEBasket;
  * <p>
  * Baskets are 4x4 inventories that capture {@link EntityItem} within about a half-block's distance from their open face.
  * They can be oriented every direction except downwards.
- * 
+ *
  * @author Malcolm Riley
  */
-public abstract class BasketBlock extends ContainerBlock implements IWaterLoggable {
+public abstract class BasketBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
 
 	/* BlockProperty Fields */
 	public static final DirectionProperty FACING = DirectionProperty.create("facing", (direction) -> direction != Direction.DOWN); // Cannot face down
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	
+
 	/* Internal Fields */
 	private static final float DEFAULT_HARDNESS = 0.8F;
 
 	private static final double OFFSET = 1;
-	public static final VoxelShape SHAPE_UPRIGHT = Block.makeCuboidShape(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
-	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.makeCuboidShape(OFFSET, 0, 0, 16 - OFFSET, 16 - (OFFSET * 2), 16);
-	public static final VoxelShape SHAPE_EAST_WEST = Block.makeCuboidShape(0, 0, OFFSET, 16, 16 - (OFFSET * 2), 16 - OFFSET);
-	
-	public static final VoxelShape CAPTURE_UP = Block.makeCuboidShape(0, 0, 0, 16, 24, 16);
-	public static final VoxelShape CAPTURE_NORTH = Block.makeCuboidShape(0, 0, -8, 0, 16, 16);
-	public static final VoxelShape CAPTURE_SOUTH = Block.makeCuboidShape(0, 0, 16, 16, 16, 24);
-	public static final VoxelShape CAPTURE_EAST = Block.makeCuboidShape(16, 0, 0, 24, 16, 16);
-	public static final VoxelShape CAPTURE_WEST = Block.makeCuboidShape(-8, 0, 0, 0, 16, 16);
+	public static final VoxelShape SHAPE_UPRIGHT = Block.box(OFFSET, 0, OFFSET, 16 - OFFSET, 16, 16 - OFFSET);
+	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(OFFSET, 0, 0, 16 - OFFSET, 16 - (OFFSET * 2), 16);
+	public static final VoxelShape SHAPE_EAST_WEST = Block.box(0, 0, OFFSET, 16, 16 - (OFFSET * 2), 16 - OFFSET);
+
+	public static final VoxelShape CAPTURE_UP = Block.box(0, 0, 0, 16, 24, 16);
+	public static final VoxelShape CAPTURE_NORTH = Block.box(0, 0, -8, 0, 16, 16);
+	public static final VoxelShape CAPTURE_SOUTH = Block.box(0, 0, 16, 16, 16, 24);
+	public static final VoxelShape CAPTURE_EAST = Block.box(16, 0, 0, 24, 16, 16);
+	public static final VoxelShape CAPTURE_WEST = Block.box(-8, 0, 0, 0, 16, 16);
 
 	public BasketBlock(Properties builder) {
 		super(builder);
-		this.setDefaultState(this.createDefaultState());
+		this.registerDefaultState(this.createDefaultState());
 	}
-	
+
 	/**
 	 * Returns the suggested default properties for a {@link BasketBlock}.
-	 * 
+	 *
 	 * @return Some suggested default properties for a {@link BasketBlock}.
 	 */
-	public static AbstractBlock.Properties createDefaultProperties() {
-		return AbstractBlock.Properties.create(Material.LEAVES).sound(SoundType.BAMBOO);
+	public static Properties createDefaultProperties() {
+		return Properties.of(Material.LEAVES).strength(0.6F).sound(SoundType.BAMBOO);
 	}
-	
+
 	/**
 	 * Returns the item capture area {@link VoxelShape} for the {@link BasketBlock} based on the provided {@link BlockState}
-	 * 
+	 *
 	 * @param state - The {@link BlockState} to examine
 	 * @return The {@link VoxelShape} item capture area
 	 */
 	public static VoxelShape getCaptureShapeFrom(BlockState state) {
 		Direction facing = BasketBlock.getFacingFrom(state);
-		switch(facing) {
+		switch (facing) {
 			case NORTH: return CAPTURE_NORTH;
 			case SOUTH: return CAPTURE_SOUTH;
 			case EAST: return CAPTURE_EAST;
@@ -103,47 +106,46 @@ public abstract class BasketBlock extends ContainerBlock implements IWaterLoggab
 	}
 
 	/* Supertype Override Methods */
-	
+
 	@Override
-	@SuppressWarnings("deprecation") // Call super.onReplaced at end of method
-	public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
-		if (world.getTileEntity(position) instanceof IInventory) {
-	        world.updateComparatorOutputLevel(position, this);
-		}
-        super.onReplaced(state, world, position, newState, isMoving);
+	@Nullable
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> entityType) {
+		return Utilities.Game.getTicker(world, entityType, Textiles.TILE_ENTITIES.BASKET, TEBasket::tick);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state) {
+	@SuppressWarnings("deprecation") // Call super.onReplaced at end of method
+	public void onRemove(BlockState state, Level world, BlockPos position, BlockState newState, boolean isMoving) {
+		if (world.getBlockEntity(position) instanceof Container) {
+			world.updateNeighbourForOutputSignal(position, this);
+		}
+		super.onRemove(state, world, position, newState, isMoving);
+	}
+
+	@Override
+	public boolean hasAnalogOutputSignal(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World world, BlockPos position) {
-		return Container.calcRedstone(world.getTileEntity(position));
-	}
-	
-	@Override
-	public void onBlockPlacedBy(World world, BlockPos position, BlockState state, LivingEntity placer, ItemStack stack) {
-		super.onBlockPlacedBy(world, position, state, placer, stack);
-		Utilities.Game.tryRenameFrom(world.getTileEntity(position), stack);
+	public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos position) {
+		return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(position));
 	}
 
 	@Override
-	@SuppressWarnings("deprecation") // Return super.updatePostPlacement after queueing water tick
-	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos position, BlockPos facingPosition) {
-		Utilities.States.applyWaterlogPostPlacement(state, world, position);
-		return super.updatePostPlacement(state, facing, facingState, world, position, facingPosition);
+	public void setPlacedBy(Level world, BlockPos position, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.setPlacedBy(world, position, state, placer, stack);
+		Utilities.Game.tryRenameFrom(world.getBlockEntity(position), stack);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Returning super.getFluidState as default if not waterlogged
 	public FluidState getFluidState(BlockState state) {
-		return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos position, CollisionContext context) {
 		switch (BasketBlock.getFacingFrom(state)) {
 			case EAST:
 			case WEST:
@@ -157,50 +159,45 @@ public abstract class BasketBlock extends ContainerBlock implements IWaterLoggab
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos position, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote) {
-			return Utilities.UI.openUIFor(player, world, position) ? ActionResultType.CONSUME : ActionResultType.SUCCESS;
+	public InteractionResult use(BlockState state, Level world, BlockPos position, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide()) {
+			return Utilities.UI.openUIFor(player, world, position) ? InteractionResult.CONSUME : InteractionResult.SUCCESS;
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(IBlockReader worldIn) {
-		return new TEBasket();
+	public BlockEntity newBlockEntity(BlockPos position, BlockState state) {
+		return new TEBasket(position, state);
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state) {
-		return BlockRenderType.MODEL;
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.MODEL;
 	}
 
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		Direction facing = context.getFace() == Direction.DOWN ? Direction.UP : context.getFace();
-		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context).with(BasketBlock.FACING, facing));
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction facing = context.getClickedFace() == Direction.DOWN ? Direction.UP : context.getClickedFace();
+		return super.getStateForPlacement(context).setValue(BasketBlock.FACING, facing);
 	}
-	
+
 	@Override
 	public BlockState rotate(BlockState state, Rotation rotation) {
 		Direction facing = BasketBlock.getFacingFrom(state);
-		return facing.equals(Direction.UP) ? state : state.with(BasketBlock.FACING, rotation.rotate(facing));
+		return facing.equals(Direction.UP) ? state : state.setValue(BasketBlock.FACING, rotation.rotate(facing));
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Call super.mirror if facing is not UP.
 	public BlockState mirror(BlockState state, Mirror mirror) {
-		final Direction facing = state.get(BasketBlock.FACING);
-		return facing != Direction.UP ? super.mirror(state, mirror) : state.with(BasketBlock.FACING, facing.getOpposite());
+		final Direction facing = state.getValue(BasketBlock.FACING);
+		return facing != Direction.UP ? super.mirror(state, mirror) : state.setValue(BasketBlock.FACING, facing.getOpposite());
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(BasketBlock.FACING, BasketBlock.WATERLOGGED);
 	}
 
@@ -208,75 +205,74 @@ public abstract class BasketBlock extends ContainerBlock implements IWaterLoggab
 
 	/**
 	 * Extracts the {@link #FACING} property from the provided {@link BlockState}.
-	 * 
+	 *
 	 * @param state The {@link BlockState} to extract from
 	 * @return The {@link #FACING} property of that {@link BlockState}.
 	 */
 	protected static Direction getFacingFrom(BlockState state) {
-		return state.get(BasketBlock.FACING);
+		return state.getValue(BasketBlock.FACING);
 	}
-	
+
 	/**
 	 * Creates the default {@link BlockState} for this {@link Block}.
-	 * 
+	 *
 	 * @return The default {@link BlockState} for this {@link Block}.
 	 */
 	protected BlockState createDefaultState() {
-		return this.stateContainer.getBaseState()
-			.with(FACING, Direction.UP)
-			.with(WATERLOGGED, Boolean.FALSE);
+		return this.stateDefinition.any()
+			.setValue(FACING, Direction.UP)
+			.setValue(WATERLOGGED, Boolean.FALSE);
 	}
-	
+
 	/* Specific Implementations */
-	
+
 	/**
 	 * Normal {@link BasketBlock} implementation, functions the same as other inventory blocks.
-	 * 
+	 *
 	 * @author Malcolm Riley
 	 */
 	public static class Normal extends BasketBlock {
-		
+
 		public Normal() {
-			this(BasketBlock.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS));
+			this(BasketBlock.createDefaultProperties().explosionResistance(DEFAULT_HARDNESS));
 		}
 
 		public Normal(Properties builder) {
 			super(builder);
 		}
-		
+
 		/* Supertype Override Methods */
 
 		@Override
-		public void onReplaced(BlockState state, World world, BlockPos position, BlockState newState, boolean isMoving) {
+		public void onRemove(BlockState state, Level world, BlockPos position, BlockState newState, boolean isMoving) {
 			InventoryHandler.dropContents(state, world, position, newState);
-			super.onReplaced(state, world, position, newState, isMoving);
+			super.onRemove(state, world, position, newState, isMoving);
 		}
-		
+
 	}
-	
+
 	/**
 	 * Specialized {@link BasketBlock} implementation, keeps inventory when block is dropped.
-	 * 
+	 *
 	 * @author Malcolm Riley
 	 */
 	public static class KeepInventory extends BasketBlock {
-		
+
 		/* Internal Fields */
-		protected static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
-		
+		public static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
+
 		public KeepInventory() {
-			this(BasketBlock.createDefaultProperties().hardnessAndResistance(DEFAULT_HARDNESS, 6.0F));
+			this(BasketBlock.createDefaultProperties().explosionResistance(6.0F));
 		}
 
 		public KeepInventory(Properties builder) {
 			super(builder);
 		}
-		
+
+		@Override
 		@SuppressWarnings("deprecation") // Return super.getDrops()
 		public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-			TileEntity discovered = builder.get(LootParameters.BLOCK_ENTITY);
-			if (discovered instanceof TEBasket) {
-				TEBasket basket = (TEBasket) discovered;
+			if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof TEBasket basket) {
 				if (!basket.isEmpty()) {
 					builder.withDynamicDrop(BLOCK_ENTITY_CONTENTS, (context, consumer) -> {
 						basket.getInventory().getItems().forEach(consumer);

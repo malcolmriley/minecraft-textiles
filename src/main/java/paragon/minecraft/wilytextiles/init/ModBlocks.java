@@ -2,12 +2,11 @@ package paragon.minecraft.wilytextiles.init;
 
 import java.util.stream.Stream;
 
-import net.minecraft.block.AbstractBlock.IPositionPredicate;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour.StatePredicate;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.registries.ForgeRegistries;
-import paragon.minecraft.library.ContentProvider;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.blocks.CushionBlock;
@@ -16,6 +15,7 @@ import paragon.minecraft.wilytextiles.blocks.FeatherBlock;
 import paragon.minecraft.wilytextiles.blocks.FlaxCropBlock;
 import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.RettedFiberBlock;
+import paragon.minecraft.wilytextiles.internal.ContentProvider;
 
 /**
  * Holder and initializer class for {@link Block} bearing {@link RegistryObject}.
@@ -27,9 +27,9 @@ import paragon.minecraft.wilytextiles.blocks.RettedFiberBlock;
 public class ModBlocks extends ContentProvider<Block> {
 	
 	/** An {@link IPositionPredicate} that always returns {@code FALSE}. */
-	public static final IPositionPredicate ALWAYS_FALSE = (state, reader, position) -> false;
+	public static final StatePredicate ALWAYS_FALSE = (state, reader, position) -> false;
 	/** An {@link IPositionPredicate} that always returns {@code TRUE}. */
-	public static final IPositionPredicate ALWAYS_TRUE = (state, reader, position) -> true;
+	public static final StatePredicate ALWAYS_TRUE = (state, reader, position) -> true;
 
 	public ModBlocks() {
 		super(ForgeRegistries.BLOCKS, Textiles.MOD_ID);
@@ -43,40 +43,40 @@ public class ModBlocks extends ContentProvider<Block> {
 	public final RegistryObject<Block> BASKET_STURDY = this.add(Names.BASKET_STURDY, BasketBlock.KeepInventory::new);
 	
 	public final RegistryObject<Block> CUSHION_PLAIN = this.cushionBlock(Names.CUSHION_PLAIN, MaterialColor.SAND);
-	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.RED);
-	public final RegistryObject<Block> CUSHION_ORANGE = this.cushionBlock(Names.CUSHION_ORANGE, MaterialColor.ADOBE); // Same MaterialColor as Orange Wool
-	public final RegistryObject<Block> CUSHION_YELLOW = this.cushionBlock(Names.CUSHION_YELLOW, MaterialColor.YELLOW);
-	public final RegistryObject<Block> CUSHION_LIME = this.cushionBlock(Names.CUSHION_LIME, MaterialColor.LIME);
-	public final RegistryObject<Block> CUSHION_GREEN = this.cushionBlock(Names.CUSHION_GREEN, MaterialColor.GREEN);
-	public final RegistryObject<Block> CUSHION_CYAN = this.cushionBlock(Names.CUSHION_CYAN, MaterialColor.CYAN);
-	public final RegistryObject<Block> CUSHION_LIGHT_BLUE = this.cushionBlock(Names.CUSHION_LIGHT_BLUE, MaterialColor.LIGHT_BLUE);
-	public final RegistryObject<Block> CUSHION_BLUE = this.cushionBlock(Names.CUSHION_BLUE, MaterialColor.BLUE);
-	public final RegistryObject<Block> CUSHION_PURPLE = this.cushionBlock(Names.CUSHION_PURPLE, MaterialColor.PURPLE);
-	public final RegistryObject<Block> CUSHION_MAGENTA = this.cushionBlock(Names.CUSHION_MAGENTA, MaterialColor.MAGENTA);
-	public final RegistryObject<Block> CUSHION_PINK = this.cushionBlock(Names.CUSHION_PINK, MaterialColor.PINK);
+	public final RegistryObject<Block> CUSHION_RED = this.cushionBlock(Names.CUSHION_RED, MaterialColor.COLOR_RED);
+	public final RegistryObject<Block> CUSHION_ORANGE = this.cushionBlock(Names.CUSHION_ORANGE, MaterialColor.COLOR_ORANGE);
+	public final RegistryObject<Block> CUSHION_YELLOW = this.cushionBlock(Names.CUSHION_YELLOW, MaterialColor.COLOR_YELLOW);
+	public final RegistryObject<Block> CUSHION_LIME = this.cushionBlock(Names.CUSHION_LIME, MaterialColor.COLOR_LIGHT_GREEN);
+	public final RegistryObject<Block> CUSHION_GREEN = this.cushionBlock(Names.CUSHION_GREEN, MaterialColor.COLOR_GREEN);
+	public final RegistryObject<Block> CUSHION_CYAN = this.cushionBlock(Names.CUSHION_CYAN, MaterialColor.COLOR_CYAN);
+	public final RegistryObject<Block> CUSHION_LIGHT_BLUE = this.cushionBlock(Names.CUSHION_LIGHT_BLUE, MaterialColor.COLOR_LIGHT_BLUE);
+	public final RegistryObject<Block> CUSHION_BLUE = this.cushionBlock(Names.CUSHION_BLUE, MaterialColor.COLOR_BLUE);
+	public final RegistryObject<Block> CUSHION_PURPLE = this.cushionBlock(Names.CUSHION_PURPLE, MaterialColor.COLOR_PURPLE);
+	public final RegistryObject<Block> CUSHION_MAGENTA = this.cushionBlock(Names.CUSHION_MAGENTA, MaterialColor.COLOR_MAGENTA);
+	public final RegistryObject<Block> CUSHION_PINK = this.cushionBlock(Names.CUSHION_PINK, MaterialColor.COLOR_PINK);
 	public final RegistryObject<Block> CUSHION_WHITE = this.cushionBlock(Names.CUSHION_WHITE, MaterialColor.SNOW); // Same MaterialColor as White Wool
-	public final RegistryObject<Block> CUSHION_LIGHT_GRAY = this.cushionBlock(Names.CUSHION_LIGHT_GRAY, MaterialColor.LIGHT_GRAY);
-	public final RegistryObject<Block> CUSHION_GRAY = this.cushionBlock(Names.CUSHION_GRAY, MaterialColor.GRAY);
-	public final RegistryObject<Block> CUSHION_BLACK = this.cushionBlock(Names.CUSHION_BLACK, MaterialColor.BLACK);
-	public final RegistryObject<Block> CUSHION_BROWN = this.cushionBlock(Names.CUSHION_BROWN, MaterialColor.BROWN);
+	public final RegistryObject<Block> CUSHION_LIGHT_GRAY = this.cushionBlock(Names.CUSHION_LIGHT_GRAY, MaterialColor.COLOR_LIGHT_GRAY);
+	public final RegistryObject<Block> CUSHION_GRAY = this.cushionBlock(Names.CUSHION_GRAY, MaterialColor.COLOR_GRAY);
+	public final RegistryObject<Block> CUSHION_BLACK = this.cushionBlock(Names.CUSHION_BLACK, MaterialColor.COLOR_BLACK);
+	public final RegistryObject<Block> CUSHION_BROWN = this.cushionBlock(Names.CUSHION_BROWN, MaterialColor.COLOR_BROWN);
 
 	public final RegistryObject<Block> FABRIC_PLAIN = this.textileBlock(Names.FABRIC_PLAIN, MaterialColor.SAND);
-	public final RegistryObject<Block> FABRIC_RED = this.textileBlock(Names.FABRIC_RED, MaterialColor.RED);
-	public final RegistryObject<Block> FABRIC_ORANGE = this.textileBlock(Names.FABRIC_ORANGE, MaterialColor.ADOBE); // Same MaterialColor as Orange Wool
-	public final RegistryObject<Block> FABRIC_YELLOW = this.textileBlock(Names.FABRIC_YELLOW, MaterialColor.YELLOW);
-	public final RegistryObject<Block> FABRIC_LIME = this.textileBlock(Names.FABRIC_LIME, MaterialColor.LIME);
-	public final RegistryObject<Block> FABRIC_GREEN = this.textileBlock(Names.FABRIC_GREEN, MaterialColor.GREEN);
-	public final RegistryObject<Block> FABRIC_CYAN = this.textileBlock(Names.FABRIC_CYAN, MaterialColor.CYAN);
-	public final RegistryObject<Block> FABRIC_LIGHT_BLUE = this.textileBlock(Names.FABRIC_LIGHT_BLUE, MaterialColor.LIGHT_BLUE);
-	public final RegistryObject<Block> FABRIC_BLUE = this.textileBlock(Names.FABRIC_BLUE, MaterialColor.BLUE);
-	public final RegistryObject<Block> FABRIC_PURPLE = this.textileBlock(Names.FABRIC_PURPLE, MaterialColor.PURPLE);
-	public final RegistryObject<Block> FABRIC_MAGENTA = this.textileBlock(Names.FABRIC_MAGENTA, MaterialColor.MAGENTA);
-	public final RegistryObject<Block> FABRIC_PINK = this.textileBlock(Names.FABRIC_PINK, MaterialColor.PINK);
+	public final RegistryObject<Block> FABRIC_RED = this.textileBlock(Names.FABRIC_RED, MaterialColor.COLOR_RED);
+	public final RegistryObject<Block> FABRIC_ORANGE = this.textileBlock(Names.FABRIC_ORANGE, MaterialColor.COLOR_ORANGE);
+	public final RegistryObject<Block> FABRIC_YELLOW = this.textileBlock(Names.FABRIC_YELLOW, MaterialColor.COLOR_YELLOW);
+	public final RegistryObject<Block> FABRIC_LIME = this.textileBlock(Names.FABRIC_LIME, MaterialColor.COLOR_LIGHT_GREEN);
+	public final RegistryObject<Block> FABRIC_GREEN = this.textileBlock(Names.FABRIC_GREEN, MaterialColor.COLOR_GREEN);
+	public final RegistryObject<Block> FABRIC_CYAN = this.textileBlock(Names.FABRIC_CYAN, MaterialColor.COLOR_CYAN);
+	public final RegistryObject<Block> FABRIC_LIGHT_BLUE = this.textileBlock(Names.FABRIC_LIGHT_BLUE, MaterialColor.COLOR_LIGHT_BLUE);
+	public final RegistryObject<Block> FABRIC_BLUE = this.textileBlock(Names.FABRIC_BLUE, MaterialColor.COLOR_BLUE);
+	public final RegistryObject<Block> FABRIC_PURPLE = this.textileBlock(Names.FABRIC_PURPLE, MaterialColor.COLOR_PURPLE);
+	public final RegistryObject<Block> FABRIC_MAGENTA = this.textileBlock(Names.FABRIC_MAGENTA, MaterialColor.COLOR_MAGENTA);
+	public final RegistryObject<Block> FABRIC_PINK = this.textileBlock(Names.FABRIC_PINK, MaterialColor.COLOR_PINK);
 	public final RegistryObject<Block> FABRIC_WHITE = this.textileBlock(Names.FABRIC_WHITE, MaterialColor.SNOW); // Same MaterialColor as White Wool
-	public final RegistryObject<Block> FABRIC_LIGHT_GRAY = this.textileBlock(Names.FABRIC_LIGHT_GRAY, MaterialColor.LIGHT_GRAY);
-	public final RegistryObject<Block> FABRIC_GRAY = this.textileBlock(Names.FABRIC_GRAY, MaterialColor.GRAY);
-	public final RegistryObject<Block> FABRIC_BLACK = this.textileBlock(Names.FABRIC_BLACK, MaterialColor.BLACK);
-	public final RegistryObject<Block> FABRIC_BROWN = this.textileBlock(Names.FABRIC_BROWN, MaterialColor.BROWN);
+	public final RegistryObject<Block> FABRIC_LIGHT_GRAY = this.textileBlock(Names.FABRIC_LIGHT_GRAY, MaterialColor.COLOR_LIGHT_GRAY);
+	public final RegistryObject<Block> FABRIC_GRAY = this.textileBlock(Names.FABRIC_GRAY, MaterialColor.COLOR_GRAY);
+	public final RegistryObject<Block> FABRIC_BLACK = this.textileBlock(Names.FABRIC_BLACK, MaterialColor.COLOR_BLACK);
+	public final RegistryObject<Block> FABRIC_BROWN = this.textileBlock(Names.FABRIC_BROWN, MaterialColor.COLOR_BROWN);
 	
 	/* Internal Methods */
 	
