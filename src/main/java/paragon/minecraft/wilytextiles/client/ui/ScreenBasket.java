@@ -5,7 +5,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import paragon.minecraft.library.client.ui.SimpleContainerScreen;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
