@@ -96,7 +96,6 @@ public class TEBasket extends RandomizableContainerBlockEntity {
 	@Override
 	public void saveAdditional(CompoundTag compound) {
 		super.saveAdditional(compound);
-		this.saveAdditional(compound);
 		if (!this.trySaveLootTable(compound)) {
 			this.ITEMS.writeTo(compound);
 		}
