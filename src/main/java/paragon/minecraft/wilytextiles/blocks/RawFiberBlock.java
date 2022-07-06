@@ -42,7 +42,7 @@ public class RawFiberBlock extends SoakableBlock {
 	 * @return The recommended default {@link BlockBehaviour.Properties}.
 	 */
 	public static BlockBehaviour.Properties createDefaultProperties() {
-		return BlockBehaviour.Properties.of(Material.PLANT).sound(SoundType.VINE).explosionResistance(0.3F).noOcclusion();
+		return BlockBehaviour.Properties.of(Material.PLANT).sound(SoundType.CROP).explosionResistance(0.3F).noOcclusion();
 	}
 
 	/* Supertype Override Methods */
