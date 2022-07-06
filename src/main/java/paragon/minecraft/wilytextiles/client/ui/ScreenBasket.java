@@ -21,8 +21,8 @@ public class ScreenBasket extends SimpleContainerScreen<TEBasket.BasketMenu> {
 
 	public ScreenBasket(TEBasket.BasketMenu container, Inventory inventory, Component title) {
 		super(container, inventory, title);
-		this.width = 176;
-		this.height = 192;
+		this.imageWidth = 176;
+		this.imageHeight = 192;
 		this.inventoryLabelY = this.height - 94;
 	}
 
