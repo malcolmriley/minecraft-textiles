@@ -3,41 +3,39 @@ package paragon.minecraft.wilytextiles.tileentities;
 import java.util.List;
 
 import io.netty.util.internal.ThreadLocalRandom;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.HopperTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.util.EntityPredicates;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import paragon.minecraft.library.Utilities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import paragon.minecraft.library.capabilities.FilteredInventoryHandler;
 import paragon.minecraft.library.capabilities.InventoryHandler;
-import paragon.minecraft.library.client.ui.AbstractContainer;
 import paragon.minecraft.library.client.ui.FilteredSlot;
+import paragon.minecraft.library.client.ui.SimpleMenu;
 import paragon.minecraft.library.client.ui.SlotGroup;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.BasketBlock;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 
 /**
  * Tile Entity implementation for the Basket block.
  * 
  * @author Malcolm Riley
  */
-public class TEBasket extends LockableLootTileEntity implements ITickableTileEntity {
+public class TEBasket extends RandomizableContainerBlockEntity {
 
 	/* Shared Fields */
 	private static final int INVENTORY_WIDTH = 4;
@@ -45,12 +43,20 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	private static final int INVENTORY_SIZE = TEBasket.INVENTORY_WIDTH * TEBasket.INVENTORY_HEIGHT;
 
 	/* Internal Fields */
-	protected static final ITextComponent DEFAULT_NAME = new TranslationTextComponent("container." + ModBlocks.Names.BASKET);
+	protected static final Component DEFAULT_NAME = new TranslatableComponent("container." + ModBlocks.Names.BASKET);
 	protected final InventoryHandler ITEMS = new FilteredInventoryHandler(TEBasket.INVENTORY_SIZE, this, (index, stack) -> this.canHold(stack));
 	protected final int RANDOMIZER = ThreadLocalRandom.current().nextInt(20);
 
-	public TEBasket() {
-		super(Textiles.TILE_ENTITIES.BASKET.get());
+	public TEBasket(BlockPos position, BlockState state) {
+		super(Textiles.TILE_ENTITIES.BASKET.get(), position, state);
+	}
+	
+	/* BlockEntityTicker Implementation */
+	
+	public static void tick(Level level, BlockPos position, BlockState state, TEBasket instance) {
+		if (instance.shouldCaptureItems()) {
+			instance.captureItems();
+		}
 	}
 	
 	/* Public Methods */
@@ -74,7 +80,7 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	 */
 	public boolean canHold(ItemStack instance) {
 		// TODO: Separate into another TE type?
-		if (this.getBlockState().isIn(Textiles.BLOCKS.BASKET_STURDY.get())) {
+		if (this.getBlockState().is(Textiles.BLOCKS.BASKET_STURDY.get())) {
 			return !Utilities.Game.itemHasInventory(instance);
 		}
 		return true;
@@ -83,29 +89,28 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	/* Supertype Override Methods */
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
+	public boolean canPlaceItem(int index, ItemStack stack) {
 		return this.canHold(stack);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound) {
-		super.write(compound);
-		if (!this.checkLootAndWrite(compound)) {
+	public void saveAdditional(CompoundTag compound) {
+		super.saveAdditional(compound);
+		if (!this.trySaveLootTable(compound)) {
 			this.ITEMS.writeTo(compound);
 		}
-		return compound;
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound) {
-		super.read(state, compound);
-		if (!this.checkLootAndRead(compound)) {
+	public void load(CompoundTag compound) {
+		super.load(compound);
+		if (!this.tryLoadLootTable(compound)) {
 			this.ITEMS.readFrom(compound);
 		}
 	}
 
 	@Override
-	public int getSizeInventory() {
+	public int getContainerSize() {
 		return INVENTORY_SIZE;
 	}
 
@@ -122,23 +127,13 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	}
 
 	@Override
-	protected ITextComponent getDefaultName() {
+	protected Component getDefaultName() {
 		return TEBasket.DEFAULT_NAME;
 	}
 
 	@Override
-	protected Container createMenu(int id, PlayerInventory inventory) {
-		return ContainerImpl.create(id, inventory, this);
-	}
-	
-	/* ITickableTileEntity Compliance Methods */
-
-
-	@Override
-	public void tick() {
-		if (this.shouldCaptureItems()) {
-			this.captureItems();
-		}
+	protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
+		return BasketMenu.create(id, inventory, this);
 	}
 	
 	/* Internal Methods */
@@ -148,66 +143,68 @@ public class TEBasket extends LockableLootTileEntity implements ITickableTileEnt
 	}
 	
 	protected boolean shouldCaptureItems() {
-		return this.hasWorld() && !this.world.isRemote() && (this.world.getGameTime() + this.RANDOMIZER) % 5 == 0;
+		return this.hasLevel() && !this.level.isClientSide() && (this.level.getGameTime() + this.RANDOMIZER) % 5 == 0;
 	}
 	
 	protected List<ItemEntity> getCapturableItems() {
-		return this.getWorld().getEntitiesWithinAABB(ItemEntity.class, this.getCaptureArea(), EntityPredicates.IS_ALIVE);
+		return this.getLevel().getEntitiesOfClass(ItemEntity.class, this.getCaptureArea());
 	}
 	
-	protected AxisAlignedBB getCaptureArea() {
-		return BasketBlock.getCaptureShapeFrom(this.getBlockState()).getBoundingBox().offset(this.getPos());
+	protected AABB getCaptureArea() {
+		return BasketBlock.getCaptureShapeFrom(this.getBlockState()).bounds().move(this.getBlockPos());
 	}
 	
 	protected void tryCaptureItem(ItemEntity entity) {
 		if (this.canHold(entity.getItem())) {
-			HopperTileEntity.captureItem(this, entity); // Why re-invent the wheel?
+			HopperBlockEntity.addItem(this, entity); // Why re-invent the wheel?
 		}
 	}
 
 	/* Container Implementation */
 
-	public static class ContainerImpl extends AbstractContainer {
+	public static class BasketMenu extends SimpleMenu {
 
 		/* Internal Fields */
-		protected final IInventory basketInstance;
+		protected final TEBasket basketInstance;
 		protected final SlotGroup playerInventory;
 		protected final SlotGroup playerHotbar;
 		protected final SlotGroup basketGrid;
 
-		private ContainerImpl(int id, PlayerInventory inventory, TEBasket instance) {
+		private BasketMenu(int id, Inventory inventory, TEBasket instance) {
 			super(Textiles.CONTAINERS.BASKET.get(), id);
 			this.basketInstance = instance;
 			this.playerInventory = this.addPlayerInventory(inventory, 8, 110);
 			this.playerHotbar = this.addPlayerHotbar(inventory, 8, 168);
-			this.basketGrid = this.addSlotGrid(this.basketInstance, 53, 18, TEBasket.INVENTORY_WIDTH, TEBasket.INVENTORY_HEIGHT, ContainerImpl.createSlotFactory(instance));
+			this.basketGrid = this.addSlotGrid(this.basketInstance, 53, 18, TEBasket.INVENTORY_WIDTH, TEBasket.INVENTORY_HEIGHT, BasketMenu.createSlotFactory(instance));
 		}
 
 		/* Public Methods */
 
-		public static ContainerImpl create(int id, PlayerInventory inventory, TEBasket instance) {
-			return new ContainerImpl(id, inventory, instance);
+		public static BasketMenu create(int id, Inventory inventory, TEBasket instance) {
+			return new BasketMenu(id, inventory, instance);
 		}
 
-		public static ContainerImpl createClientContainer(int id, PlayerInventory inventory, PacketBuffer data) {
+		public static BasketMenu create(int id, Inventory inventory, FriendlyByteBuf data) {
 			final BlockPos position = data.readBlockPos();
-			final TEBasket basket = (TEBasket) inventory.player.world.getTileEntity(position);
-			return new ContainerImpl(id, inventory, basket);
+			final TEBasket basket = (TEBasket) inventory.player.getLevel().getBlockEntity(position);
+			return new BasketMenu(id, inventory, basket);
 		}
 
 		/* Supertype Override Methods */
 
 		@Override
-		public ItemStack onStackTransfer(PlayerEntity player, int sourceSlotIndex, ItemStack sourceStack) {
+		public ItemStack onStackTransfer(Player player, int sourceSlotIndex, ItemStack sourceStack) {
 			if (this.basketGrid.holdsSlot(sourceSlotIndex)) {
 				return this.tryApplyTransfer(sourceStack, false, this.playerHotbar, this.playerInventory);
 			}
 			return this.tryApplyTransfer(sourceStack, false, this.basketGrid);
 		}
+		
+		/* IForgeMenuType Compliance Methods */
 
 		@Override
-		public boolean canInteractWith(PlayerEntity player) {
-			return this.basketInstance.isUsableByPlayer(player);
+		public boolean stillValid(Player player) {
+			return this.basketInstance.canOpen(player);
 		}
 		
 		/* Internal Methods */

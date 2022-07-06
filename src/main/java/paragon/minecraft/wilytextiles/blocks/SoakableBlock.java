@@ -2,25 +2,24 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import paragon.minecraft.library.Utilities;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Represents a block that "ages" while waterlogged.
@@ -29,24 +28,24 @@ import paragon.minecraft.library.Utilities;
  *
  * @author Malcolm Riley
  */
-public class SoakableBlock extends Block implements IWaterLoggable {
+public class SoakableBlock extends Block implements SimpleWaterloggedBlock {
 
 	/* Blockstate Fields */
 	public static final int MAX_COUNT = 6;
 	public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, MAX_COUNT);
 	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-	public static final VoxelShape SHAPE_1 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 1.0 / 3.0, 1.0);
-	public static final VoxelShape SHAPE_2 = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 2.0 / 3.0, 1.0);
-	public static final VoxelShape SHAPE_3 = VoxelShapes.fullCube();
+	public static final VoxelShape SHAPE_1 = Block.box(1.0, 0.0, 1.0, 15.0, 16.0 / 3.0, 15.0);
+	public static final VoxelShape SHAPE_2 = Block.box(1.0, 0.0, 1.0, 15.0, 16.0 / 3.0, 15.0);
+	public static final VoxelShape SHAPE_3 = Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
 
 	public SoakableBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.createDefaultState());
+		this.registerDefaultState(this.createDefaultState());
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		int count = state.get(SoakableBlock.COUNT);
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos position, CollisionContext context) {
+		int count = state.getValue(SoakableBlock.COUNT);
 		switch (count) {
 			case 6:
 			case 5:
@@ -59,74 +58,79 @@ public class SoakableBlock extends Block implements IWaterLoggable {
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
-		return state.getFluidState().isEmpty();
+	@SuppressWarnings("deprecation") // Return super.updateShape after scheduling water update tick
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos position, BlockPos neighborPosition) {
+		if (SoakableBlock.getWaterlogStateFrom(state)) {
+			world.scheduleTick(position, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+		}
+		return super.updateShape(state, direction, neighborState, world, position, neighborPosition);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Return super.isReplaceable as default if not this
-	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT) ? true : super.isReplaceable(state, useContext);
+	public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+		return useContext.getItemInHand().getItem().equals(this.asItem()) && (state.getValue(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT) ? true : super.canBeReplaced(state, useContext);
+	}
+
+	@Override
+	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos position, PathComputationType pathType) {
+		return false;
 	}
 
 	@Override
 	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getPos());
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockState state = context.getLevel().getBlockState(context.getClickedPos());
 		// If the target block is this, add one to the "count" state parameter
-		if (state.isIn(this)) {
-			int currentCount = state.get(SoakableBlock.COUNT);
-			return state.with(SoakableBlock.COUNT, Integer.valueOf(Math.min(SoakableBlock.MAX_COUNT, currentCount + 1)));
+		if (state.is(this)) {
+			int currentCount = state.getValue(SoakableBlock.COUNT);
+			return state.setValue(SoakableBlock.COUNT, Math.min(SoakableBlock.MAX_COUNT, currentCount + 1));
 		}
 		// Otherwise, update fluid state
-		return Utilities.States.applyWaterlogPlacementState(context, super.getStateForPlacement(context));
+		else if (state.getFluidState().is(Fluids.WATER)) {
+			return this.defaultBlockState().setValue(SoakableBlock.WATERLOGGED, true);
+		}
+		return super.getStateForPlacement(context);
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos position) {
-		BlockPos below = position.down();
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos position) {
+		BlockPos below = position.below();
 		BlockState stateBelow = world.getBlockState(below);
-		return stateBelow.isSolidSide(world, below, Direction.UP) || stateBelow.isIn(this);
+		return stateBelow.isFaceSturdy(world, below, Direction.UP) || stateBelow.is(this);
 	}
 
 	@Override
-	@SuppressWarnings("deprecation") // Returning super.updatePostPlacement() as default if not waterlogged
-	public BlockState updatePostPlacement(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos position, BlockPos facingPosition) {
-		Utilities.States.applyWaterlogPostPlacement(state, world, position);
-		return super.updatePostPlacement(state, facing, facingState, world, position, facingPosition);
-	}
-
-	@Override
-	public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(BlockStateProperties.WATERLOGGED, SoakableBlock.COUNT);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Returning super.getFluidState() as default if not waterlogged.
 	public FluidState getFluidState(BlockState state) {
-		return state.get(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+		return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
 	}
-	
+
 	/* Internal Methods */
 
 	/**
 	 * Creates the default {@link BlockState} for this {@link Block}.
-	 * 
+	 *
 	 * @return The default {@link BlockState} for this {@link Block}.
 	 */
 	protected BlockState createDefaultState() {
-		return this.stateContainer.getBaseState()
-			.with(SoakableBlock.WATERLOGGED, false)
-			.with(SoakableBlock.COUNT, Integer.valueOf(1));
+		return this.stateDefinition.any()
+			.setValue(SoakableBlock.WATERLOGGED, false)
+			.setValue(SoakableBlock.COUNT, 1);
 	}
-	
+
 	protected static boolean getWaterlogStateFrom(BlockState state) {
-		return state.get(SoakableBlock.WATERLOGGED).booleanValue();
+		return state.getValue(SoakableBlock.WATERLOGGED).booleanValue();
 	}
-	
+
 	protected static int getCountFrom(BlockState state) {
-		return state.get(SoakableBlock.COUNT).intValue();
+		return state.getValue(SoakableBlock.COUNT).intValue();
 	}
 
 }

@@ -3,27 +3,27 @@ package paragon.minecraft.wilytextiles.generators;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import net.minecraft.advancements.ICriterionInstance;
-import net.minecraft.advancements.criterion.ItemPredicate;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger.TriggerInstance;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.IFinishedRecipe;
-import net.minecraft.data.RecipeProvider;
-import net.minecraft.data.ShapedRecipeBuilder;
-import net.minecraft.data.ShapelessRecipeBuilder;
-import net.minecraft.data.SmithingRecipeBuilder;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.UpgradeRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.fml.RegistryObject;
-import paragon.minecraft.library.Utilities;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.library.datageneration.RecipeHelper;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 
 /**
  * Data generation class for crafting recipes.
@@ -39,182 +39,182 @@ final class RecipeGenerator extends RecipeHelper {
 	/* Supertype Override Methods */
 
 	@Override
-	public void registerRecipes(final Consumer<IFinishedRecipe> registrar) {
+	public void buildCraftingRecipes(final Consumer<FinishedRecipe> registrar) {
 		// Dyes from blossoms
 		this.simpleShaplessMulti(registrar, Items.LIGHT_BLUE_DYE, Textiles.ITEMS.FLAX_PALE.get(), 3);
 		this.simpleShaplessMulti(registrar, Items.CYAN_DYE, Textiles.ITEMS.FLAX_VIBRANT.get(), 3);
 		this.simpleShaplessMulti(registrar, Items.PURPLE_DYE, Textiles.ITEMS.FLAX_PURPLE.get(), 3);
 		
 		// Raw Plant Fibers
-		final INamedTag<Item> grassTag = Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES);
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.PLANT_FIBERS.get())
-			.patternLine("## ")
-			.patternLine(" # ")
-			.patternLine(" ##")
-			.key('#', grassTag)
-			.addCriterion(RecipeHelper.criterionName(grassTag), RecipeHelper.hasItem(grassTag))
-			.build(registrar);
+		final TagKey<Item> grassTag = Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES);
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.PLANT_FIBERS.get())
+			.pattern("## ")
+			.pattern(" # ")
+			.pattern(" ##")
+			.define('#', grassTag)
+			.unlockedBy(RecipeHelper.criterionName(grassTag), RecipeHelper.has(grassTag))
+			.save(registrar);
 		
-		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
-			.addIngredient(Items.DEAD_BUSH, 4)
-			.addCriterion(RecipeHelper.criterionName(Items.DEAD_BUSH), RecipeHelper.hasItem(Items.DEAD_BUSH))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.DEAD_BUSH));
+		ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.PLANT_FIBERS.get(), 1)
+			.requires(Items.DEAD_BUSH, 4)
+			.unlockedBy(RecipeHelper.criterionName(Items.DEAD_BUSH), RecipeHelper.has(Items.DEAD_BUSH))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.PLANT_FIBERS.get(), Items.DEAD_BUSH));
 		
 		// Retting fiber bundles
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
-			.patternLine("## ")
-			.patternLine("###")
-			.patternLine(" ##")
-			.key('#', Textiles.ITEMS.PLANT_FIBERS.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.PLANT_FIBERS));
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
+			.pattern("## ")
+			.pattern("###")
+			.pattern(" ##")
+			.define('#', Textiles.ITEMS.PLANT_FIBERS.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.PLANT_FIBERS), RecipeHelper.hasItem(Textiles.ITEMS.PLANT_FIBERS))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.PLANT_FIBERS));
 		
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
-			.patternLine("##")
-			.patternLine("##")
-			.key('#', Textiles.ITEMS.FLAX_STALKS.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.FLAX_STALKS));
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.BLOCK_RAW_FIBERS.get())
+			.pattern("##")
+			.pattern("##")
+			.define('#', Textiles.ITEMS.FLAX_STALKS.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.FLAX_STALKS), RecipeHelper.hasItem(Textiles.ITEMS.FLAX_STALKS))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_RAW_FIBERS, Textiles.ITEMS.FLAX_STALKS));
 
 		// Wicker
 		this.addStickMeshRecipe(Textiles.ITEMS.WICKER, 3, Items.SUGAR_CANE, registrar);
 		this.addStickMeshRecipe(Textiles.ITEMS.WICKER, 3, Textiles.ITEMS.FLAX_STALKS.get(), registrar);
 		
 		// Silk Wisps from Cobwebs
-		ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.SILK_WISPS.get(), 9)
-			.addIngredient(Items.COBWEB)
-			.addCriterion(RecipeHelper.criterionName(Items.COBWEB), RecipeHelper.hasItem(Items.COBWEB))
-			.build(registrar);
+		ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.SILK_WISPS.get(), 9)
+			.requires(Items.COBWEB)
+			.unlockedBy(RecipeHelper.criterionName(Items.COBWEB), RecipeHelper.has(Items.COBWEB))
+			.save(registrar);
 		
 		// Silk from Silk Wisps
 		this.addLoopRecipe(Textiles.ITEMS.SILK, 1, Textiles.ITEMS.SILK_WISPS.get(), registrar);
 
 		// Chain Mesh
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CHAIN_MESH.get(), 5)
-			.patternLine("XX")
-			.patternLine("XX")
-			.key('X', Items.CHAIN)
-			.addCriterion(RecipeHelper.criterionName(Items.CHAIN), RecipeProvider.hasItem(Tags.Items.NUGGETS_IRON))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.CHAIN_MESH.get(), Items.IRON_NUGGET));
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.CHAIN_MESH.get(), 5)
+			.pattern("XX")
+			.pattern("XX")
+			.define('X', Items.CHAIN)
+			.unlockedBy(RecipeHelper.criterionName(Items.CHAIN), RecipeProvider.has(Tags.Items.NUGGETS_IRON))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.CHAIN_MESH.get(), Items.IRON_NUGGET));
 
 		// Chainmail Armor
 		final String chainmailCriterion = RecipeHelper.criterionName(Textiles.ITEMS.CHAIN_MESH);
-		final ICriterionInstance chainmailTrigger = RecipeProvider.hasItem(Textiles.ITEMS.CHAIN_MESH.get());
-		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_HELMET)
-			.patternLine("###")
-			.patternLine("# #")
-			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
-			.addCriterion(chainmailCriterion, chainmailTrigger)
-			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_HELMET, Textiles.ITEMS.CHAIN_MESH.get()));
+		final TriggerInstance chainmailTrigger = RecipeProvider.has(Textiles.ITEMS.CHAIN_MESH.get());
+		ShapedRecipeBuilder.shaped(Items.CHAINMAIL_HELMET)
+			.pattern("###")
+			.pattern("# #")
+			.define('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.unlockedBy(chainmailCriterion, chainmailTrigger)
+			.save(registrar, this.nameFromRecipe(Items.CHAINMAIL_HELMET, Textiles.ITEMS.CHAIN_MESH.get()));
 
-		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_CHESTPLATE)
-			.patternLine("# #")
-			.patternLine("###")
-			.patternLine("###")
-			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
-			.addCriterion(chainmailCriterion, chainmailTrigger)
-			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_CHESTPLATE, Textiles.ITEMS.CHAIN_MESH.get()));
+		ShapedRecipeBuilder.shaped(Items.CHAINMAIL_CHESTPLATE)
+			.pattern("# #")
+			.pattern("###")
+			.pattern("###")
+			.define('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.unlockedBy(chainmailCriterion, chainmailTrigger)
+			.save(registrar, this.nameFromRecipe(Items.CHAINMAIL_CHESTPLATE, Textiles.ITEMS.CHAIN_MESH.get()));
 
-		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_BOOTS)
-			.patternLine("# #")
-			.patternLine("# #")
-			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
-			.addCriterion(chainmailCriterion, chainmailTrigger)
-			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_BOOTS, Textiles.ITEMS.CHAIN_MESH.get()));
+		ShapedRecipeBuilder.shaped(Items.CHAINMAIL_BOOTS)
+			.pattern("# #")
+			.pattern("# #")
+			.define('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.unlockedBy(chainmailCriterion, chainmailTrigger)
+			.save(registrar, this.nameFromRecipe(Items.CHAINMAIL_BOOTS, Textiles.ITEMS.CHAIN_MESH.get()));
 
-		ShapedRecipeBuilder.shapedRecipe(Items.CHAINMAIL_LEGGINGS)
-			.patternLine("###")
-			.patternLine("# #")
-			.patternLine("# #")
-			.key('#', Textiles.ITEMS.CHAIN_MESH.get())
-			.addCriterion(chainmailCriterion, chainmailTrigger)
-			.build(registrar, this.nameFromRecipe(Items.CHAINMAIL_LEGGINGS, Textiles.ITEMS.CHAIN_MESH.get()));
+		ShapedRecipeBuilder.shaped(Items.CHAINMAIL_LEGGINGS)
+			.pattern("###")
+			.pattern("# #")
+			.pattern("# #")
+			.define('#', Textiles.ITEMS.CHAIN_MESH.get())
+			.unlockedBy(chainmailCriterion, chainmailTrigger)
+			.save(registrar, this.nameFromRecipe(Items.CHAINMAIL_LEGGINGS, Textiles.ITEMS.CHAIN_MESH.get()));
 		
 		// Basket
-		ShapedRecipeBuilder.shapedRecipe(Textiles.BLOCKS.BASKET.get()) 
-			.patternLine("#I#")
-			.patternLine("# #")
-			.patternLine("###")
-			.key('#', Textiles.ITEMS.WICKER.get())
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.WICKER), RecipeHelper.hasItem(Textiles.ITEMS.WICKER))
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET, Textiles.ITEMS.WICKER));
+		ShapedRecipeBuilder.shaped(Textiles.BLOCKS.BASKET.get()) 
+			.pattern("#I#")
+			.pattern("# #")
+			.pattern("###")
+			.define('#', Textiles.ITEMS.WICKER.get())
+			.define('I', Tags.Items.RODS_WOODEN)
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.WICKER), RecipeHelper.hasItem(Textiles.ITEMS.WICKER))
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.has(Tags.Items.RODS_WOODEN))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.BLOCK_BASKET, Textiles.ITEMS.WICKER));
 		
 		// Sturdy Basket
-		SmithingRecipeBuilder.smithingRecipe(
-				Ingredient.fromItems(Textiles.ITEMS.BLOCK_BASKET.get()),
-				Ingredient.fromItems(Items.TURTLE_HELMET), 
+		UpgradeRecipeBuilder.smithing(
+				Ingredient.of(Textiles.ITEMS.BLOCK_BASKET.get()),
+				Ingredient.of(Items.TURTLE_HELMET), 
 				Textiles.ITEMS.BLOCK_BASKET_STURDY.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_BASKET), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_BASKET))
-			.addCriterion(RecipeHelper.criterionName(Items.TURTLE_HELMET), RecipeHelper.hasItem(Items.TURTLE_HELMET))
-		.build(registrar, this.nameFromPath(Textiles.ITEMS.BLOCK_BASKET_STURDY.get()));
+			.unlocks(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_BASKET), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_BASKET))
+			.unlocks(RecipeHelper.criterionName(Items.TURTLE_HELMET), RecipeHelper.has(Items.TURTLE_HELMET))
+		.save(registrar, this.nameFromPath(Textiles.ITEMS.BLOCK_BASKET_STURDY.get()));
 		
 		// String tag override recipes
 		final String stringCriterion = RecipeHelper.criterionName(Items.STRING);
-		final ICriterionInstance stringTrigger = RecipeHelper.hasItem(Tags.Items.STRING);
+		final TriggerInstance stringTrigger = RecipeHelper.has(Tags.Items.STRING);
 		
 		final String stickCriterion = RecipeHelper.criterionName(Tags.Items.RODS_WOODEN);
-		final ICriterionInstance stickTrigger = RecipeHelper.hasItem(Tags.Items.RODS_WOODEN);
-		ShapedRecipeBuilder.shapedRecipe(Items.BOW)
-			.patternLine(" IS")
-			.patternLine("I S")
-			.patternLine(" IS")
-			.key('I', Tags.Items.RODS_WOODEN)
-			.key('S', Tags.Items.STRING)
-			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Textiles.createResource("bow"));
+		final TriggerInstance stickTrigger = RecipeHelper.has(Tags.Items.RODS_WOODEN);
+		ShapedRecipeBuilder.shaped(Items.BOW)
+			.pattern(" IS")
+			.pattern("I S")
+			.pattern(" IS")
+			.define('I', Tags.Items.RODS_WOODEN)
+			.define('S', Tags.Items.STRING)
+			.unlockedBy(stringCriterion, stringTrigger)
+			.save(registrar, Textiles.createResource("bow"));
 		
-		ShapedRecipeBuilder.shapedRecipe(Items.CROSSBOW)
-			.patternLine("I#I")
-			.patternLine("SPS")
-			.patternLine(" I ")
-			.key('I', Tags.Items.RODS_WOODEN)
-			.key('S', Tags.Items.STRING)
-			.key('#', Tags.Items.INGOTS_IRON)
-			.key('P', Items.TRIPWIRE_HOOK)
-			.addCriterion(stringCriterion, stringTrigger)
-			.addCriterion(stickCriterion, stickTrigger)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.INGOTS_IRON), RecipeHelper.hasItem(Tags.Items.INGOTS_IRON))
-			.addCriterion(RecipeHelper.criterionName(Items.TRIPWIRE_HOOK), RecipeHelper.hasItem(Items.TRIPWIRE_HOOK))
-			.build(registrar, Textiles.createResource("crossbow"));
+		ShapedRecipeBuilder.shaped(Items.CROSSBOW)
+			.pattern("I#I")
+			.pattern("SPS")
+			.pattern(" I ")
+			.define('I', Tags.Items.RODS_WOODEN)
+			.define('S', Tags.Items.STRING)
+			.define('#', Tags.Items.INGOTS_IRON)
+			.define('P', Items.TRIPWIRE_HOOK)
+			.unlockedBy(stringCriterion, stringTrigger)
+			.unlockedBy(stickCriterion, stickTrigger)
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.INGOTS_IRON), RecipeHelper.has(Tags.Items.INGOTS_IRON))
+			.unlockedBy(RecipeHelper.criterionName(Items.TRIPWIRE_HOOK), RecipeHelper.has(Items.TRIPWIRE_HOOK))
+			.save(registrar, Textiles.createResource("crossbow"));
 		
-		ShapedRecipeBuilder.shapedRecipe(Items.FISHING_ROD)
-			.patternLine("  I")
-			.patternLine(" IS")
-			.patternLine("I S")
-			.key('I', Tags.Items.RODS_WOODEN)
-			.key('S', Tags.Items.STRING)
-			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Textiles.createResource("fishing_rod"));
+		ShapedRecipeBuilder.shaped(Items.FISHING_ROD)
+			.pattern("  I")
+			.pattern(" IS")
+			.pattern("I S")
+			.define('I', Tags.Items.RODS_WOODEN)
+			.define('S', Tags.Items.STRING)
+			.unlockedBy(stringCriterion, stringTrigger)
+			.save(registrar, Textiles.createResource("fishing_rod"));
 		
-		ShapedRecipeBuilder.shapedRecipe(Items.LEAD)
-			.patternLine("SS ")
-			.patternLine("SO ")
-			.patternLine("  S")
-			.key('S', Tags.Items.STRING)
-			.key('O', Tags.Items.SLIMEBALLS)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.SLIMEBALLS), RecipeHelper.hasItem(Tags.Items.SLIMEBALLS))
-			.build(registrar, Textiles.createResource("lead"));
+		ShapedRecipeBuilder.shaped(Items.LEAD)
+			.pattern("SS ")
+			.pattern("SO ")
+			.pattern("  S")
+			.define('S', Tags.Items.STRING)
+			.define('O', Tags.Items.SLIMEBALLS)
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.SLIMEBALLS), RecipeHelper.has(Tags.Items.SLIMEBALLS))
+			.save(registrar, Textiles.createResource("lead"));
 		
-		ShapedRecipeBuilder.shapedRecipe(Items.LOOM)
-			.patternLine("SS")
-			.patternLine("##")
-			.key('S', Tags.Items.STRING)
-			.key('#', ItemTags.PLANKS)
-			.addCriterion(stringCriterion, stringTrigger)
-			.build(registrar, Textiles.createResource("loom"));
+		ShapedRecipeBuilder.shaped(Items.LOOM)
+			.pattern("SS")
+			.pattern("##")
+			.define('S', Tags.Items.STRING)
+			.define('#', ItemTags.PLANKS)
+			.unlockedBy(stringCriterion, stringTrigger)
+			.save(registrar, Textiles.createResource("loom"));
 		
 		// Plain Fabric from Twine
 		this.addLoopRecipe(Textiles.ITEMS.FABRIC_PLAIN, 2, Textiles.ITEMS.TWINE.get(), registrar);
 		
 		// White Fabric from Silk
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.FABRIC_WHITE.get(), 2)
-			.patternLine("SSS")
-			.patternLine("SSS")
-			.key('S', Textiles.ITEMS.SILK.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
-			.build(registrar, this.nameFromRecipe(Textiles.ITEMS.FABRIC_WHITE, Textiles.ITEMS.SILK));
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.FABRIC_WHITE.get(), 2)
+			.pattern("SSS")
+			.pattern("SSS")
+			.define('S', Textiles.ITEMS.SILK.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.TWINE), RecipeHelper.hasItem(Textiles.ITEMS.TWINE))
+			.save(registrar, this.nameFromRecipe(Textiles.ITEMS.FABRIC_WHITE, Textiles.ITEMS.SILK));
 		
 		// Fabrics from Wool
 		this.addFabricRecipe(Textiles.ITEMS.FABRIC_RED, Items.RED_WOOL, registrar);
@@ -288,22 +288,22 @@ final class RecipeGenerator extends RecipeHelper {
 		
 		// Flaxseed Oil
 		final int seedsPerBottle = 2;
-		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle)
-			.addIngredient(Items.GLASS_BOTTLE)
-			.addCriterion(RecipeHelper.criterionName(Items.GLASS_BOTTLE), RecipeHelper.hasItem(Items.GLASS_BOTTLE))
-			.build(registrar);
-		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle * 3)
-			.addIngredient(Items.BUCKET)
-			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
-			.build(registrar);
-		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3)
-			.addIngredient(Items.BUCKET)
-			.addCriterion(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.hasItem(Items.BUCKET))
-			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get(), "bottles"));
-		this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3), Items.GLASS_BOTTLE, 3)
-			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET))
-			.build(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), "bucket"));
+		this.applyToShapeless(ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle)
+			.requires(Items.GLASS_BOTTLE)
+			.unlockedBy(RecipeHelper.criterionName(Items.GLASS_BOTTLE), RecipeHelper.has(Items.GLASS_BOTTLE))
+			.save(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAX_SEEDS.get(), seedsPerBottle * 3)
+			.requires(Items.BUCKET)
+			.unlockedBy(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.has(Items.BUCKET))
+			.save(registrar);
+		this.applyToShapeless(ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3)
+			.requires(Items.BUCKET)
+			.unlockedBy(RecipeHelper.criterionName(Items.BUCKET), RecipeHelper.has(Items.BUCKET))
+			.save(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get(), "bottles"));
+		this.applyToShapeless(ShapelessRecipeBuilder.shapeless(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), 3), Items.GLASS_BOTTLE, 3)
+			.requires(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET))
+			.save(registrar, this.nameFrom(Textiles.ITEMS.FLAXSEED_OIL_BOTTLE.get(), "bucket"));
 		
 		// Wood Stain and Wood Bleach
 		this.stainItemRecipe(registrar, Textiles.ITEMS.WOOD_STAIN, Items.BROWN_MUSHROOM);
@@ -337,52 +337,52 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addStainRecipes(registrar, largeObjectStainQuantity, Items.BIRCH_TRAPDOOR, Items.OAK_TRAPDOOR, Items.SPRUCE_TRAPDOOR, Items.DARK_OAK_TRAPDOOR);
 		
 		// Packed Feathers
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
-			.patternLine("###")
-			.patternLine("###")
-			.patternLine("###")
-			.key('#', Items.FEATHER)
-			.addCriterion(RecipeHelper.createCriterionName(Items.FEATHER), RecipeHelper.hasItem(Items.FEATHER))
-			.build(registrar);
-		ShapelessRecipeBuilder.shapelessRecipe(Items.FEATHER, 9)
-			.addIngredient(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_PACKED_FEATHERS), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_PACKED_FEATHERS))
-			.build(registrar, this.nameFrom(Items.FEATHER, "unpacking"));
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.pattern("###")
+			.pattern("###")
+			.pattern("###")
+			.define('#', Items.FEATHER)
+			.unlockedBy(RecipeHelper.createCriterionName(Items.FEATHER), RecipeHelper.has(Items.FEATHER))
+			.save(registrar);
+		ShapelessRecipeBuilder.shapeless(Items.FEATHER, 9)
+			.requires(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.BLOCK_PACKED_FEATHERS), RecipeHelper.hasItem(Textiles.ITEMS.BLOCK_PACKED_FEATHERS))
+			.save(registrar, this.nameFrom(Items.FEATHER, "unpacking"));
 		
 		// Plain Cushion
-		ShapedRecipeBuilder.shapedRecipe(Textiles.ITEMS.CUSHION_PLAIN.get(), 2)
-			.patternLine("XXX")
-			.patternLine("S#S")
-			.patternLine("XXX")
-			.key('X', Textiles.ITEMS.FABRIC_PLAIN.get())
-			.key('S', Tags.Items.STRING)
-			.key('#', Ingredient.fromItems(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FABRIC_PLAIN), RecipeHelper.hasItem(Textiles.ITEMS.FABRIC_PLAIN))
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.hasItem(Tags.Items.STRING))
-			.addCriterion("has_padding", RecipeHelper.hasItem(ItemPredicate.Builder.create().item(Items.HAY_BLOCK).item(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
-			.build(registrar);
+		ShapedRecipeBuilder.shaped(Textiles.ITEMS.CUSHION_PLAIN.get(), 2)
+			.pattern("XXX")
+			.pattern("S#S")
+			.pattern("XXX")
+			.define('X', Textiles.ITEMS.FABRIC_PLAIN.get())
+			.define('S', Tags.Items.STRING)
+			.define('#', Ingredient.of(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.FABRIC_PLAIN), RecipeHelper.hasItem(Textiles.ITEMS.FABRIC_PLAIN))
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.has(Tags.Items.STRING))
+			.unlockedBy("has_padding", RecipeHelper.inventoryTrigger(ItemPredicate.Builder.item().of(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
+			.save(registrar);
 	}
 
 	/* Internal Methods */
 	
-	protected void stainItemRecipe(Consumer<IFinishedRecipe> registrar, RegistryObject<Item> result, IItemProvider input) {
-		ShapelessRecipeBuilder stainBuilder = this.applyToShapeless(ShapelessRecipeBuilder.shapelessRecipe(result.get(), 3), Items.GLASS_BOTTLE, 3)
-			.addIngredient(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
-			.addCriterion(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), RecipeHelper.hasItem(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()));
-		this.applyToShapeless(stainBuilder, input, 2).build(registrar);
+	protected void stainItemRecipe(Consumer<FinishedRecipe> registrar, RegistryObject<Item> result, ItemLike input) {
+		ShapelessRecipeBuilder stainBuilder = this.applyToShapeless(ShapelessRecipeBuilder.shapeless(result.get(), 3), Items.GLASS_BOTTLE, 3)
+			.requires(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get())
+			.unlockedBy(RecipeHelper.criterionName(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()), RecipeHelper.has(Textiles.ITEMS.FLAXSEED_OIL_BUCKET.get()));
+		this.applyToShapeless(stainBuilder, input, 2).save(registrar);
 	}
 	
-	protected void addSpecialStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+	protected void addSpecialStainRecipes(Consumer<FinishedRecipe> registrar, int strength, Item ... spectrum) {
 		this.addSpecialDyeRecipe(spectrum[0], Textiles.ITEMS.WOOD_STAIN.get(), Tags.Items.DYES_PINK, spectrum[1], strength, "special_stain", registrar);
 		this.addDyeRecipe(spectrum[1], Textiles.ITEMS.WOOD_BLEACH.get(), spectrum[0], strength, "special_bleach", registrar);
 		this.addStainRecipes(registrar, strength, Arrays.copyOfRange(spectrum, 1, spectrum.length));
 	}
 	
-	protected void addStainRecipes(Consumer<IFinishedRecipe> registrar, int strength, Item ... spectrum) {
+	protected void addStainRecipes(Consumer<FinishedRecipe> registrar, int strength, Item ... spectrum) {
 		this.addDyeSpectrumRecipes(Textiles.ITEMS.WOOD_STAIN.get(), Textiles.ITEMS.WOOD_BLEACH.get(), strength, registrar, spectrum);
 	}
 	
-	protected void addDyeSpectrumRecipes(IItemProvider forwardReagent, IItemProvider reverseReagent, int strength, Consumer<IFinishedRecipe> registrar, Item ... spectrum) {
+	protected void addDyeSpectrumRecipes(ItemLike forwardReagent, ItemLike reverseReagent, int strength, Consumer<FinishedRecipe> registrar, Item ... spectrum) {
 		if (spectrum.length >= 2) {
 			for (int index = 1; index < spectrum.length; index += 1) {
 				Item previous = spectrum[index - 1];
@@ -393,49 +393,49 @@ final class RecipeGenerator extends RecipeHelper {
 		}
 	}
 	
-	protected void addFabricRecipe(RegistryObject<Item> result, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
+	protected void addFabricRecipe(RegistryObject<Item> result, ItemLike ingredient, Consumer<FinishedRecipe> registrar) {
 		this.addLoopRecipe(result, 10, ingredient, registrar);
 	}
 
 	
-	protected void addCushionDyeRecipe(INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+	protected void addCushionDyeRecipe(TagKey<Item> dye, RegistryObject<Item> output, Consumer<FinishedRecipe> registrar) {
 		this.addDyeRecipe(Textiles.ITEMS.CUSHION_WHITE, dye, output, registrar);
 	}
 	
-	protected void addFabricDyeRecipe(INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+	protected void addFabricDyeRecipe(TagKey<Item> dye, RegistryObject<Item> output, Consumer<FinishedRecipe> registrar) {
 		this.addDyeRecipe(Textiles.ITEMS.FABRIC_WHITE, dye, output, registrar);
 	}
 	
-	protected void addDyeRecipe(RegistryObject<Item> input, INamedTag<Item> dye, RegistryObject<Item> output, Consumer<IFinishedRecipe> registrar) {
+	protected void addDyeRecipe(RegistryObject<Item> input, TagKey<Item> dye, RegistryObject<Item> output, Consumer<FinishedRecipe> registrar) {
 		this.addDyeRecipe(input.get(), dye, output.get(), 1, "dye", registrar);
 	}
 	
-	protected void addStickMeshRecipe(RegistryObject<Item> result, int quantity, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
-		ShapedRecipeBuilder.shapedRecipe(result.get(), quantity)
-			.patternLine("RIR")
-			.patternLine("IRI")
-			.patternLine("RIR")
-			.key('R', ingredient)
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
-			.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient))
-			.build(registrar, this.nameFromRecipe(result.get(), ingredient));
+	protected void addStickMeshRecipe(RegistryObject<Item> result, int quantity, ItemLike ingredient, Consumer<FinishedRecipe> registrar) {
+		ShapedRecipeBuilder.shaped(result.get(), quantity)
+			.pattern("RIR")
+			.pattern("IRI")
+			.pattern("RIR")
+			.define('R', ingredient)
+			.define('I', Tags.Items.RODS_WOODEN)
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.has(Tags.Items.RODS_WOODEN))
+			.unlockedBy(RecipeHelper.criterionName(ingredient), RecipeProvider.has(ingredient))
+			.save(registrar, this.nameFromRecipe(result.get(), ingredient));
 	}
 	
-	protected void addLoopRecipe(RegistryObject<Item> result, int quantity, IItemProvider ingredient, Consumer<IFinishedRecipe> registrar) {
-		final INamedTag<Item> coreItem = Tags.Items.RODS_WOODEN;
-		ShapedRecipeBuilder.shapedRecipe(result.get(), quantity)
-			.patternLine("###")
-			.patternLine("#I#")
-			.patternLine("###")
-			.key('#', ingredient)
-			.key('I', coreItem)
-			.addCriterion(RecipeHelper.criterionName(ingredient), RecipeHelper.hasItem(ingredient))
-			.addCriterion(RecipeHelper.criterionName(coreItem), RecipeHelper.hasItem(coreItem))
-			.build(registrar);
+	protected void addLoopRecipe(RegistryObject<Item> result, int quantity, ItemLike ingredient, Consumer<FinishedRecipe> registrar) {
+		final TagKey<Item> coreItem = Tags.Items.RODS_WOODEN;
+		ShapedRecipeBuilder.shaped(result.get(), quantity)
+			.pattern("###")
+			.pattern("#I#")
+			.pattern("###")
+			.define('#', ingredient)
+			.define('I', coreItem)
+			.unlockedBy(RecipeHelper.criterionName(ingredient), RecipeHelper.has(ingredient))
+			.unlockedBy(RecipeHelper.criterionName(coreItem), RecipeHelper.has(coreItem))
+			.save(registrar);
 	}
 	
-	protected void addSpecialDyeRecipe(IItemProvider input, IItemProvider dye, INamedTag<Item> augment, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+	protected void addSpecialDyeRecipe(ItemLike input, ItemLike dye, TagKey<Item> augment, ItemLike result, int quantity, String processName, Consumer<FinishedRecipe> registrar) {
 		Consumer<ShapelessRecipeBuilder> doubleDye = builder -> {
 			this.applyItemDye(builder, dye);
 			this.applyTagDye(builder, augment);
@@ -443,91 +443,91 @@ final class RecipeGenerator extends RecipeHelper {
 		this.addDyeRecipe(input, doubleDye, result, quantity, processName, registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, IItemProvider dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+	protected void addDyeRecipe(ItemLike input, ItemLike dye, ItemLike result, int quantity, String processName, Consumer<FinishedRecipe> registrar) {
 		this.addDyeRecipe(input, builder -> this.applyItemDye(builder, dye), result, quantity, processName, registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, INamedTag<Item> dye, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
+	protected void addDyeRecipe(ItemLike input, TagKey<Item> dye, ItemLike result, int quantity, String processName, Consumer<FinishedRecipe> registrar) {
 		this.addDyeRecipe(input, builder -> this.applyTagDye(builder, dye), result, quantity, processName, registrar);
 	}
 	
-	protected void addDyeRecipe(IItemProvider input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, IItemProvider result, int quantity, String processName, Consumer<IFinishedRecipe> registrar) {
-		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(result, quantity);
+	protected void addDyeRecipe(ItemLike input, Consumer<ShapelessRecipeBuilder> dyeApplicationFunction, ItemLike result, int quantity, String processName, Consumer<FinishedRecipe> registrar) {
+		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(result, quantity);
 		dyeApplicationFunction.accept(builder);
-		builder.addCriterion(RecipeHelper.criterionName(input), RecipeHelper.hasItem(input));
+		builder.unlockedBy(RecipeHelper.criterionName(input), RecipeHelper.has(input));
 		for (int count = 0; count < quantity; count += 1) {
-			builder.addIngredient(input);
+			builder.requires(input);
 		}
-		builder.build(registrar, this.nameFrom(result, processName));
+		builder.save(registrar, this.nameFrom(result, processName));
 	}
 	
-	protected void applyTagDye(ShapelessRecipeBuilder builder, INamedTag<Item> dye) {
-		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
+	protected void applyTagDye(ShapelessRecipeBuilder builder, TagKey<Item> dye) {
+		builder.requires(dye).unlockedBy(RecipeHelper.criterionName(dye), RecipeHelper.has(dye));
 	}
 	
-	protected void applyItemDye(ShapelessRecipeBuilder builder, IItemProvider dye) {
-		builder.addIngredient(dye).addCriterion(RecipeHelper.criterionName(dye), RecipeHelper.hasItem(dye));
+	protected void applyItemDye(ShapelessRecipeBuilder builder, ItemLike dye) {
+		builder.requires(dye).unlockedBy(RecipeHelper.criterionName(dye), RecipeHelper.has(dye));
 	}
 	
-	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, RegistryObject<Item> cushion, Consumer<IFinishedRecipe> registrar) {
-		final INamedTag<Item> woolTag = Utilities.Tags.forgeItemTag(ItemTagsGenerator.TAG_WOOL, color.getString());
-		final ICriterionInstance hasWool =  RecipeHelper.hasItem(woolTag);
+	protected void addWoolRecipesFor(DyeColor color, Item bed, Item banner, Item carpet, RegistryObject<Item> cushion, Consumer<FinishedRecipe> registrar) {
+		final TagKey<Item> woolTag = Utilities.Tags.forgeItemTag(ItemTagsGenerator.TAG_WOOL, color.getName());
+		final TriggerInstance hasWool =  RecipeHelper.has(woolTag);
 		final String hasWoolName = RecipeHelper.criterionName(woolTag);
 		
 		// Beds
-		ShapedRecipeBuilder.shapedRecipe(bed)
-			.patternLine("WWW")
-			.patternLine("###")
-			.key('W', woolTag)
-			.key('#', ItemTags.PLANKS)
-			.addCriterion(hasWoolName, hasWool)
-			.build(registrar, nameFromPath(bed));
+		ShapedRecipeBuilder.shaped(bed)
+			.pattern("WWW")
+			.pattern("###")
+			.define('W', woolTag)
+			.define('#', ItemTags.PLANKS)
+			.unlockedBy(hasWoolName, hasWool)
+			.save(registrar, nameFromPath(bed));
 		
 		// Banners
-		ShapedRecipeBuilder.shapedRecipe(banner)
-			.patternLine("###")
-			.patternLine("###")
-			.patternLine(" I ")
-			.key('#', woolTag)
-			.key('I', Tags.Items.RODS_WOODEN)
-			.addCriterion(hasWoolName, hasWool)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.hasItem(Tags.Items.RODS_WOODEN))
-			.build(registrar, nameFromPath(banner));
+		ShapedRecipeBuilder.shaped(banner)
+			.pattern("###")
+			.pattern("###")
+			.pattern(" I ")
+			.define('#', woolTag)
+			.define('I', Tags.Items.RODS_WOODEN)
+			.unlockedBy(hasWoolName, hasWool)
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.RODS_WOODEN), RecipeHelper.has(Tags.Items.RODS_WOODEN))
+			.save(registrar, nameFromPath(banner));
 		
 		// Carpets
-		ShapedRecipeBuilder.shapedRecipe(carpet, 3)
-			.patternLine("##")
-			.key('#', woolTag)
-			.addCriterion(hasWoolName, hasWool)
-			.build(registrar, nameFromPath(carpet));
+		ShapedRecipeBuilder.shaped(carpet, 3)
+			.pattern("##")
+			.define('#', woolTag)
+			.unlockedBy(hasWoolName, hasWool)
+			.save(registrar, nameFromPath(carpet));
 		
 		// Cushions
-		ShapedRecipeBuilder.shapedRecipe(cushion.get(), 2)
-			.patternLine("XXX")
-			.patternLine("S#S")
-			.patternLine("XXX")
-			.key('X', woolTag)
-			.key('S', Tags.Items.STRING)
-			.key('#', Ingredient.fromItems(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
-			.addCriterion(hasWoolName, hasWool)
-			.addCriterion(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.hasItem(Tags.Items.STRING))
-			.addCriterion("has_padding", RecipeHelper.hasItem(ItemPredicate.Builder.create().item(Items.HAY_BLOCK).item(Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
-			.build(registrar);
+		ShapedRecipeBuilder.shaped(cushion.get(), 2)
+			.pattern("XXX")
+			.pattern("S#S")
+			.pattern("XXX")
+			.define('X', woolTag)
+			.define('S', Tags.Items.STRING)
+			.define('#', Ingredient.of(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()))
+			.unlockedBy(hasWoolName, hasWool)
+			.unlockedBy(RecipeHelper.criterionName(Tags.Items.STRING), RecipeHelper.has(Tags.Items.STRING))
+			.unlockedBy("has_padding", RecipeHelper.inventoryTrigger(ItemPredicate.Builder.item().of(Items.HAY_BLOCK, Textiles.ITEMS.BLOCK_PACKED_FEATHERS.get()).build()))
+			.save(registrar);
 	}
 
-	protected void simpleShaplessMulti(final Consumer<IFinishedRecipe> registrar, Item output, Item input, int quantity) {
-		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapelessRecipe(output, 1);
-		this.applyToShapeless(builder, input, quantity).build(registrar, this.nameFromRecipe(output, input));
+	protected void simpleShaplessMulti(final Consumer<FinishedRecipe> registrar, Item output, Item input, int quantity) {
+		ShapelessRecipeBuilder builder = ShapelessRecipeBuilder.shapeless(output, 1);
+		this.applyToShapeless(builder, input, quantity).save(registrar, this.nameFromRecipe(output, input));
 	}
 	
-	protected ShapelessRecipeBuilder applyToShapeless(ShapelessRecipeBuilder builder, IItemProvider ingredient, int quantity) {
+	protected ShapelessRecipeBuilder applyToShapeless(ShapelessRecipeBuilder builder, ItemLike ingredient, int quantity) {
 		for (int count = 0; count < quantity; count += 1) {
-			builder.addIngredient(ingredient);
+			builder.requires(ingredient);
 		}
-		return builder.addCriterion(RecipeHelper.criterionName(ingredient), RecipeProvider.hasItem(ingredient));
+		return builder.unlockedBy(RecipeHelper.criterionName(ingredient), RecipeProvider.has(ingredient));
 	}
 	
-	protected ResourceLocation nameFromPath(IItemProvider output) {
+	protected ResourceLocation nameFromPath(ItemLike output) {
 		return Textiles.createResource(RecipeHelper.registryPathOf(output));
 	}
 	
@@ -535,7 +535,7 @@ final class RecipeGenerator extends RecipeHelper {
 		return this.nameFrom(output.get(), source);
 	}
 	
-	protected ResourceLocation nameFrom(IItemProvider output, String source) {
+	protected ResourceLocation nameFrom(ItemLike output, String source) {
 		return RecipeHelper.nameFrom(Textiles::createResource, output, source);
 	}
 	
@@ -543,7 +543,7 @@ final class RecipeGenerator extends RecipeHelper {
 		return this.nameFromRecipe(output.get(), input.get());
 	}
 
-	protected ResourceLocation nameFromRecipe(IItemProvider output, IItemProvider input) {
+	protected ResourceLocation nameFromRecipe(ItemLike output, ItemLike input) {
 		return RecipeHelper.nameFromIngredients(Textiles::createResource, output, input);
 	}
 

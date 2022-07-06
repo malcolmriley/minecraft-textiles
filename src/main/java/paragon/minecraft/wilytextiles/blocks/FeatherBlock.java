@@ -1,9 +1,10 @@
 package paragon.minecraft.wilytextiles.blocks;
 
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
 import paragon.minecraft.wilytextiles.Textiles;
 
 /**
@@ -24,15 +25,15 @@ public class FeatherBlock extends PaddedBlock {
 	/* Supertype Override Methods */
 
 	@Override
-	public void onFallenUpon(World world, BlockPos position, Entity entity, float distance) {
-		super.onFallenUpon(world, position, entity, distance);
+	public void fallOn(Level world, BlockState state, BlockPos position, Entity entity, float distance) {
+		super.fallOn(world, state, position, entity, distance);
 		if (distance > Textiles.CONFIG.getFeatherBlockBreakThreshold()) {
 			world.destroyBlock(position, true);
 		}
 	}
 
 	@Override
-	protected float getFallDistanceModifier(World world, BlockPos position, Entity fallen, float distance) {
+	protected float getFallDistanceModifier(Level world, BlockPos position, Entity fallen, float distance) {
 		return (float) (1.0 - Textiles.CONFIG.getFeatherFallReduction());
 	}
 

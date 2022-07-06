@@ -2,23 +2,23 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.MaterialColor;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import paragon.minecraft.wilytextiles.Textiles;
 
 public class CushionBlock extends PaddedBlock {
@@ -27,19 +27,19 @@ public class CushionBlock extends PaddedBlock {
 	public static final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
 
 	/* Internal Fields */
-	protected static final VoxelShape HALF_TOP = Block.makeCuboidShape(0, 8, 0, 16, 16, 16);
-	protected static final VoxelShape HALF_BOTTOM = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
-	protected static final VoxelShape HALF_NORTH = Block.makeCuboidShape(0, 0, 0, 16, 16, 8);
-	protected static final VoxelShape HALF_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16, 16);
-	protected static final VoxelShape HALF_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16, 16);
-	protected static final VoxelShape HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16, 16);
+	protected static final VoxelShape HALF_TOP = Block.box(0, 8, 0, 16, 16, 16);
+	protected static final VoxelShape HALF_BOTTOM = Block.box(0, 0, 0, 16, 8, 16);
+	protected static final VoxelShape HALF_NORTH = Block.box(0, 0, 0, 16, 16, 8);
+	protected static final VoxelShape HALF_SOUTH = Block.box(0, 0, 8, 16, 16, 16);
+	protected static final VoxelShape HALF_EAST = Block.box(8, 0, 0, 16, 16, 16);
+	protected static final VoxelShape HALF_WEST = Block.box(0, 0, 0, 8, 16, 16);
 	
-	protected static final VoxelShape PARTIAL_HALF_TOP = Block.makeCuboidShape(0, 8, 0, 16, 16 - SHAPE_OFFSET, 16);
-	protected static final VoxelShape PARTIAL_HALF_BOTTOM = Block.makeCuboidShape(0, 0, 0, 16, 8 - SHAPE_OFFSET, 16);
-	protected static final VoxelShape PARTIAL_HALF_NORTH = Block.makeCuboidShape(0, 0, 0, 16, 16 - SHAPE_OFFSET, 8);
-	protected static final VoxelShape PARTIAL_HALF_SOUTH = Block.makeCuboidShape(0, 0, 8, 16, 16 - SHAPE_OFFSET, 16);
-	protected static final VoxelShape PARTIAL_HALF_EAST = Block.makeCuboidShape(8, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
-	protected static final VoxelShape PARTIAL_HALF_WEST = Block.makeCuboidShape(0, 0, 0, 8, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_TOP = Block.box(0, 8, 0, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_BOTTOM = Block.box(0, 0, 0, 16, 8 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_NORTH = Block.box(0, 0, 0, 16, 16 - SHAPE_OFFSET, 8);
+	protected static final VoxelShape PARTIAL_HALF_SOUTH = Block.box(0, 0, 8, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_EAST = Block.box(8, 0, 0, 16, 16 - SHAPE_OFFSET, 16);
+	protected static final VoxelShape PARTIAL_HALF_WEST = Block.box(0, 0, 0, 8, 16 - SHAPE_OFFSET, 16);
 
 	public CushionBlock(MaterialColor color) {
 		this(PaddedBlock.createPropertiesFrom(color));
@@ -52,51 +52,49 @@ public class CushionBlock extends PaddedBlock {
 	/* Supertype Override Methods */
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter world, BlockPos position, CollisionContext context) {
 		return CushionBlock.getPartialShapeFrom(state);
 	}
 
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos position) {
+	public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos position, CollisionContext context) {
 		return CushionBlock.getFullShapeFrom(state);
 	}
 
 	@Override
-	public VoxelShape getRayTraceShape(BlockState state, IBlockReader reader, BlockPos position, ISelectionContext context) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter reader, BlockPos position, CollisionContext context) {
 		return CushionBlock.getFullShapeFrom(state);
 	}
 
-	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
-		return CushionBlock.getFullShapeFrom(state);
-	}
-
+	/*
+	 * TODO: Find alternative
 	@Override
 	public boolean isTransparent(BlockState state) {
 		return !SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(state));
 	}
+	*/
 
 	@Override
 	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getPos());
-		Direction facing = context.getFace();
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockState state = context.getLevel().getBlockState(context.getClickedPos());
+		Direction facing = context.getClickedFace();
 		if (!context.getPlayer().isCrouching()) {
 			// Swap facing if player isn't crouching, to allow placing cushions on near side of target block space
 			facing = facing.getOpposite();
 		}
-		return state.isIn(this) ? state.with(CushionBlock.TYPE, SlabType.DOUBLE) : CushionBlock.applyDirectionTo(this.getDefaultState(), facing);
+		return state.is(this) ? state.setValue(CushionBlock.TYPE, SlabType.DOUBLE) : CushionBlock.applyDirectionTo(this.defaultBlockState(), facing);
 	}
 
 	@Override
 	@SuppressWarnings("deprecation") // Return super.isReplaceable if not this, or if this and is SlabType.DOUBLE
-	public boolean isReplaceable(BlockState state, BlockItemUseContext context) {
-		return context.getItem().getItem().equals(this.asItem()) && !SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(state)) ? true : super.isReplaceable(state, context);
+	public boolean canBeReplaced(BlockState state, BlockPlaceContext context) {
+		return context.getItemInHand().getItem().equals(this.asItem()) && !SlabType.DOUBLE.equals(CushionBlock.getTypeFrom(state)) ? true : super.canBeReplaced(state, context);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(CushionBlock.TYPE);
 	}
 
@@ -106,7 +104,7 @@ public class CushionBlock extends PaddedBlock {
 	}
 	
 	@Override
-	protected float getFallDistanceModifier(World world, BlockPos position, Entity fallen, float distance) {
+	protected float getFallDistanceModifier(Level world, BlockPos position, Entity fallen, float distance) {
 		
 		// Get values from original fallen-upon cushion block
 		final BlockState originalState = world.getBlockState(position);
@@ -118,7 +116,7 @@ public class CushionBlock extends PaddedBlock {
 		
 		// If there are no gaps below this, count blocks below (If the original cushion slab is a double slab, or if it is a bottom slab aligned to the Y axis)
 		if (SlabType.DOUBLE.equals(originalSlabType) || (SlabType.BOTTOM.equals(originalSlabType) && Axis.Y.equals(originalAxis))) {
-			count += countCushions(world, position.down());
+			count += countCushions(world, position.below());
 		}
 		
 		return CushionBlock.calculateFallReduction(count);
@@ -126,26 +124,26 @@ public class CushionBlock extends PaddedBlock {
 
 	/* Internal Methods */
 	
-	protected int countCushions(World world, BlockPos originalPosition) {
+	protected int countCushions(Level world, BlockPos originalPosition) {
 		
 		final int maxSeekDepth = Textiles.CONFIG.getCushionFallMaxSeek();
 		int count = 0;
 		if (maxSeekDepth > 0) {
 			// Create mutable block Pos
-			BlockPos.Mutable examinedPosition = new BlockPos.Mutable(originalPosition.getX(), originalPosition.getY(), originalPosition.getZ());
+			BlockPos.MutableBlockPos examinedPosition = new BlockPos.MutableBlockPos(originalPosition.getX(), originalPosition.getY(), originalPosition.getZ());
 			
 			// Yes it's a label. Feast your eyes on my legitimate use case and despair
 			examine: for (int depth = 0; depth < maxSeekDepth; depth += 1) {
 				BlockState examinedState = world.getBlockState(examinedPosition);
 				// If the discovered Block isn't a cushion, stop counting.
-				if (!examinedState.isIn(this)) {
+				if (!examinedState.is(this)) {
 					break;
 				}
 				// If the cushion block is Y, evaluate whether there is a half-block gap
 				if (Axis.Y.equals(CushionBlock.getAxisFrom(examinedState))) {
 					switch (CushionBlock.getTypeFrom(examinedState)) {
+						// If there is a bottom-only cushion slab, there is a gap above it. Don't count the slab and stop counting.
 						case BOTTOM:
-							// If there is a bottom-only cushion slab, there is a gap above it. Don't count the slab and stop counting.
 							break examine;
 						case TOP:
 							// If there is a top-only cushion slab, there is a gap below it. Count the slab, but stop counting.
@@ -178,7 +176,7 @@ public class CushionBlock extends PaddedBlock {
 	}
 	
 	protected static VoxelShape getFullShapeFrom(BlockState state) {
-		return CushionBlock.selectShapeFrom(state, VoxelShapes.fullCube(), HALF_EAST, HALF_WEST, HALF_SOUTH, HALF_NORTH, HALF_TOP, HALF_BOTTOM);
+		return CushionBlock.selectShapeFrom(state, Shapes.block(), HALF_EAST, HALF_WEST, HALF_SOUTH, HALF_NORTH, HALF_TOP, HALF_BOTTOM);
 	}
 	
 	protected static VoxelShape getPartialShapeFrom(BlockState state) {
@@ -198,7 +196,9 @@ public class CushionBlock extends PaddedBlock {
 	}
 	
 	protected static BlockState applyDirectionTo(BlockState original, Direction facing) {
-		return original.with(CushionBlock.AXIS, facing.getAxis()).with(CushionBlock.TYPE, CushionBlock.typeFromFacing(facing));
+		return original
+			.setValue(CushionBlock.AXIS, facing.getAxis())
+			.setValue(CushionBlock.TYPE, CushionBlock.typeFromFacing(facing));
 	}
 	
 	protected static SlabType typeFromFacing(Direction facing) {
@@ -210,7 +210,7 @@ public class CushionBlock extends PaddedBlock {
 	}
 
 	protected static SlabType getTypeFrom(BlockState state) {
-		return state.get(CushionBlock.TYPE);
+		return state.getValue(CushionBlock.TYPE);
 	}
 
 }
