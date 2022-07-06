@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[36.2,)"
+loaderVersion="[40,)"
 license="CC-BY-4.0"
 issueTrackerURL="https://github.com/malcolmriley/minecraft-textiles/issues"
 
@@ -19,6 +19,6 @@ This mod centers around the acquisition of textile products from alternative sou
 [[dependencies.paragon_textiles]]
     modId="forge"
     mandatory=true
-    versionRange="[36.2,)"
+    versionRange="[40.1,)"
     ordering="NONE"
     side="BOTH"
