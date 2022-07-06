@@ -2,20 +2,20 @@ package paragon.minecraft.wilytextiles.init;
 
 import java.util.function.Supplier;
 
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraftforge.common.extensions.IForgeContainerType;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.ForgeRegistries;
-import paragon.minecraft.library.ContentProvider;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.internal.ContentProvider;
 import paragon.minecraft.wilytextiles.tileentities.TEBasket;
 
 /**
- * Holder and initializer class for {@link ContainerType} bearing {@link RegistryObject} instances.
+ * Holder and initializer class for {@link MenuType} bearing {@link RegistryObject} instances.
  * 
  * @author Malcolm Riley
  */
-public class ModContainers extends ContentProvider<ContainerType<?>> {
+public class ModContainers extends ContentProvider<MenuType<?>> {
 	
 	/* Constants */
 	private static final String PREFIX_CONTAINER = "container_";
@@ -26,20 +26,20 @@ public class ModContainers extends ContentProvider<ContainerType<?>> {
 	
 	/* RegistryObject Fields */
 	
-	public final RegistryObject<ContainerType<?>> BASKET = this.create(ModBlocks.Names.BASKET, () -> IForgeContainerType.create(TEBasket.ContainerImpl::createClientContainer));
+	public final RegistryObject<MenuType<?>> BASKET = this.create(ModBlocks.Names.BASKET, () -> IForgeMenuType.create(TEBasket.BasketMenu::create));
 	
 	/* Internal Fields */
 	
 	/**
-	 * Creates a {@link RegistryObject} holding desired {@link ContainerType} given the provided registry name and {@link Supplier}.
+	 * Creates a {@link RegistryObject} holding desired {@link MenuType} given the provided registry name and {@link Supplier}.
 	 * <p>
 	 * The provided name will be prefixed with {@link #PREFIX_CONTAINER}.
 	 * 
-	 * @param name - The registry name for the {@link ContainerType}
-	 * @param containerSupplier - A factory {@link Supplier} of the {@link ContainerType}
-	 * @return A {@link RegistryObject} holding the {@link ContainerType}.
+	 * @param name - The registry name for the {@link MenuType}
+	 * @param containerSupplier - A factory {@link Supplier} of the {@link MenuType}
+	 * @return A {@link RegistryObject} holding the {@link MenuType}.
 	 */
-	protected RegistryObject<ContainerType<?>> create(String name, Supplier<ContainerType<?>> containerSupplier) {
+	protected RegistryObject<MenuType<?>> create(String name, Supplier<MenuType<?>> containerSupplier) {
 		return super.add(PREFIX_CONTAINER + name, containerSupplier);
 	}
 

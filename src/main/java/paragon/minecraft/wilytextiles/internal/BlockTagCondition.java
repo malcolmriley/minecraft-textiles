@@ -7,18 +7,17 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.loot.ILootSerializer;
-import net.minecraft.loot.LootConditionType;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag.INamedTag;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.Serializer;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditionType;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,18 +25,18 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import paragon.minecraft.wilytextiles.Textiles;
 
-public class BlockTagCondition implements ILootCondition {
+public class BlockTagCondition implements LootItemCondition {
 	
 	/* Internal Fields */
-	private final Optional<INamedTag<Block>> BLOCK_TAG;
+	private final Optional<TagKey<Block>> BLOCK_TAG;
 	
 	/* Shared Fields */
-	protected static Optional<LootConditionType> TYPE = Optional.empty();
+	protected static Optional<LootItemConditionType> TYPE = Optional.empty();
 	
 	/* Constants */
 	protected static final String CONDITION_NAME = "block_has_tag";
 	
-	protected BlockTagCondition(INamedTag<Block> tag) {
+	protected BlockTagCondition(TagKey<Block> tag) {
 		this.BLOCK_TAG = Optional.ofNullable(tag);
 	}
 	
@@ -45,18 +44,18 @@ public class BlockTagCondition implements ILootCondition {
 
 	@Override
 	public boolean test(LootContext context) {
-		BlockState state = context.get(LootParameters.BLOCK_STATE);
-		return this.BLOCK_TAG.isPresent() && Objects.nonNull(state) ? state.isIn(this.BLOCK_TAG.get()) : false;
+		BlockState state = context.getParam(LootContextParams.BLOCK_STATE);
+		return this.BLOCK_TAG.isPresent() && Objects.nonNull(state) ? state.is(this.BLOCK_TAG.get()) : false;
 	}
 
 	@Override
-	public LootConditionType func_230419_b_() {
+	public LootItemConditionType getType() {
 		return BlockTagCondition.TYPE.orElse(null);
 	}
 	
 	/* Serializer */
 	
-	protected static class Serializer implements ILootSerializer<BlockTagCondition> {
+	protected static class BlockTagConditionSerializer implements Serializer<BlockTagCondition> {
 		
 		/* Constants */
 		protected static final String FIELD_TAG = "tag";
@@ -64,13 +63,13 @@ public class BlockTagCondition implements ILootCondition {
 		@Override
 		public void serialize(JsonObject serialized, BlockTagCondition instance, JsonSerializationContext context) {
 			if (instance.BLOCK_TAG.isPresent()) {
-				serialized.addProperty(FIELD_TAG, instance.BLOCK_TAG.get().getName().toString());
+				serialized.addProperty(FIELD_TAG, instance.BLOCK_TAG.get().location().toString());
 			}
 		}
 
 		@Override
 		public BlockTagCondition deserialize(JsonObject serialized, JsonDeserializationContext context) {
-			return new BlockTagCondition(BlockTags.createOptional(new ResourceLocation(JSONUtils.getString(serialized, FIELD_TAG))));
+			return new BlockTagCondition(TagKey.create(Registry.BLOCK_REGISTRY, new ResourceLocation(GsonHelper.getAsString(serialized, FIELD_TAG))));
 		}
 		
 	}
@@ -82,14 +81,14 @@ public class BlockTagCondition implements ILootCondition {
 		
 		@SubscribeEvent
 		public static void onRegisterLootModifiers(RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-			LootConditionType type = Registrar.registerType(CONDITION_NAME, new BlockTagCondition.Serializer());
+			LootItemConditionType type = Registrar.registerType(CONDITION_NAME, new BlockTagCondition.BlockTagConditionSerializer());
 			BlockTagCondition.TYPE = Optional.ofNullable(type);
 		}
 		
 		/* Internal Methods */
 		
-		protected static LootConditionType registerType(String name, ILootSerializer<? extends ILootCondition> serializer) {
-			return Registry.register(Registry.LOOT_CONDITION_TYPE, Textiles.createResource(name), new LootConditionType(serializer));
+		protected static LootItemConditionType registerType(String name, Serializer<? extends LootItemCondition> serializer) {
+			return Registry.register(Registry.LOOT_CONDITION_TYPE, Textiles.createResource(name), new LootItemConditionType(serializer));
 		}
 
 	}

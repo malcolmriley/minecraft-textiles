@@ -1,13 +1,15 @@
 package paragon.minecraft.wilytextiles.generators;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.BlockTagsProvider;
+import javax.annotation.Nullable;
+
 import net.minecraft.data.DataGenerator;
-import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import paragon.minecraft.library.Utilities;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 
 /**
  * Data Generator class for Block tags.
@@ -20,14 +22,19 @@ final class BlockTagsGenerator extends BlockTagsProvider {
 	
 	static final String TAG_GRASSES = "grass";
 
-	BlockTagsGenerator(DataGenerator generator, ExistingFileHelper helper) {
+	BlockTagsGenerator(DataGenerator generator, @Nullable ExistingFileHelper helper) {
 		super(generator, Textiles.MOD_ID, helper);
 	}
 
 	@Override
-	protected void registerTags() {
-		INamedTag<Block> grasses = Utilities.Tags.forgeBlockTag(TAG_GRASSES);
-		this.getOrCreateBuilder(grasses).add(Blocks.GRASS, Blocks.TALL_GRASS);
+	protected void addTags() {
+		TagKey<Block> grasses = Utilities.Tags.forgeBlockTag(TAG_GRASSES);
+		this.tag(grasses).add(Blocks.GRASS, Blocks.TALL_GRASS);
+	}
+
+	@Override
+	public String getName() {
+		return "Wily Textiles Block Tags Generator";
 	}
 
 }

@@ -2,13 +2,15 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import java.util.Random;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
@@ -35,27 +37,32 @@ public class FlaxCropBlock extends TallCropBlock {
 	 * This method is needed separately from the block-staying check methods because the top block of the tall block relies on being able to STAY on another flax block, 
 	 * but shouldn't be able to be planted there.
 	 * 
-	 * @param context - The {@link BlockItemUseContext} to use for the check
+	 * @param context - The {@link BlockPlaceContext} to use for the check
 	 * @return Whether the Flax Crop {@link BlockItem} should be able to be placed.
 	 */
-	public static boolean canPlaceAt(BlockItemUseContext context) {
-		return !context.getWorld().getBlockState(context.getPos().down()).isIn(Textiles.BLOCKS.FLAX_CROP.get());
+	public static boolean canPlaceAt(BlockPlaceContext context) {
+		return !context.getLevel().getBlockState(context.getClickedPos().below()).is(Textiles.BLOCKS.FLAX_CROP.get());
 	}
 	
 	/**
-	 * Returns the recommended default {@link AbstractBlock.Properties} for the {@link FlaxCropBlock} block, used by the no-arg constructor.
+	 * Returns the recommended default {@link BlockBehaviour.Properties} for the {@link FlaxCropBlock} block, used by the no-arg constructor.
 	 * 
-	 * @return The recommended default {@link AbstractBlock.Properties}.
+	 * @return The recommended default {@link BlockBehaviour.Properties}.
 	 */
-	public static AbstractBlock.Properties createDefaultProperties() {
-		return AbstractBlock.Properties.create(Material.PLANTS).sound(SoundType.PLANT).hardnessAndResistance(0.45F).notSolid().setOpaque(ModBlocks.ALWAYS_FALSE);
+	public static Properties createDefaultProperties() {
+		return Properties.of(Material.PLANT).sound(SoundType.HARD_CROP).explosionResistance(0.45F).noCollission().isViewBlocking(ModBlocks.ALWAYS_FALSE);
 	}
 	
 	/* Supertype Override Methods */
 
 	@Override
-	protected boolean shouldGrow(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
+	protected boolean shouldGrow(ServerLevel world, BlockState state, BlockPos position, Random RNG) {
 		return this.isLightAdequate(world, position) && RNG.nextDouble() < Textiles.CONFIG.flaxGrowthModifier();
+	}
+
+	@Override
+	public boolean isBonemealSuccess(Level level, Random RNG, BlockPos position, BlockState state) {
+		return true;
 	}
 	
 	/* Internal Methods */
@@ -63,12 +70,12 @@ public class FlaxCropBlock extends TallCropBlock {
 	/**
 	 * Method to check whether the light value at the provided {@link BlockPos} is adequate for flax growth.
 	 * 
-	 * @param world - The {@link ServerWorld} that should be used to query light values
+	 * @param world - The {@link ServerLevel} that should be used to query light values
 	 * @param position - The {@link BlockPos} to examine the light value of
 	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
 	 */
-	protected boolean isLightAdequate(ServerWorld world, BlockPos position) {
-		return world.getLight(position) >= Textiles.CONFIG.flaxMinLight();
+	protected boolean isLightAdequate(ServerLevel world, BlockPos position) {
+		return world.getLightEmission(position) >= Textiles.CONFIG.flaxMinLight();
 	}
 
 }

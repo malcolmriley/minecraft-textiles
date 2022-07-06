@@ -2,23 +2,21 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BushBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IPlantable;
 
@@ -30,40 +28,40 @@ import net.minecraftforge.common.IPlantable;
  * 
  * @author Malcolm Riley
  */
-public abstract class TallCropBlock extends BushBlock implements IGrowable {
+public abstract class TallCropBlock extends BushBlock implements IPlantable, BonemealableBlock {
 
 	/* Blockstate Properties */
 	public static final int MIN_AGE = 0;
 	public static final int MAX_AGE = 5;
-	public static final IntegerProperty AGE = BlockStateProperties.AGE_0_5;
+	public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
 	public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
 
 	private static final double HORIZONTAL_MIN = 0.25D;
 	private static final double HORIZONTAL_MAX = 1.0 - HORIZONTAL_MIN;
-	public static final VoxelShape SHAPE_HALF = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
-	public static final VoxelShape SHAPE_WHOLE = VoxelShapes.create(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
+	public static final VoxelShape SHAPE_HALF = Block.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 0.5, HORIZONTAL_MAX);
+	public static final VoxelShape SHAPE_WHOLE = Block.box(HORIZONTAL_MIN, 0.0, HORIZONTAL_MIN, HORIZONTAL_MAX, 1.0D, HORIZONTAL_MAX);
 
 	public TallCropBlock(Properties builder) {
-		super(builder.tickRandomly().doesNotBlockMovement());
-		this.setDefaultState(this.createDefaultState());
+		super(builder.randomTicks().noCollission());
+		this.registerDefaultState(this.createDefaultState());
 	}
 
 	/* Supertype Override Methods */
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos position, ISelectionContext context) {
-		int age = state.get(AGE).intValue();
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos position, CollisionContext context) {
+		int age = state.getValue(AGE).intValue();
 		return age > 2 ? SHAPE_WHOLE : SHAPE_HALF;
 	}
 
 	@Override
-	public void randomTick(BlockState state, ServerWorld world, BlockPos position, Random RNG) {
+	public void randomTick(BlockState state, ServerLevel world, BlockPos position, Random RNG) {
 		if (this.isBottomBlock(state)) {
 			final int age = this.getAgeFrom(state);
 			if (age >= (TallCropBlock.MAX_AGE - 1)) {
-				BlockPos abovePosition = position.up();
+				BlockPos abovePosition = position.above();
 				BlockState aboveState = world.getBlockState(abovePosition);
-				if (aboveState.isIn(this)) {
+				if (aboveState.is(this)) {
 					if (this.getAgeFrom(aboveState) < age) {
 						return;
 					}
@@ -78,52 +76,47 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	}
 
 	@Override
-	public boolean ticksRandomly(BlockState state) {
+	public boolean isRandomlyTicking(BlockState state) {
 		return this.belowMaxAge(state);
 	}
 
 	@Override
-	public boolean canSustainPlant(BlockState state, IBlockReader world, BlockPos position, Direction direction, IPlantable plantable) {
-		return (direction.equals(Direction.UP) && plantable.getPlant(world, position).isIn(this)) || super.canSustainPlant(state, world, position, direction, plantable);
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos position) {
+		return world.getBlockState(position.below()).getBlock().equals(this) || super.canSurvive(state, world, position);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(TallCropBlock.AGE, TallCropBlock.BOTTOM);
 	}
 
 	@Override
-	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return state.isIn(this) || super.isValidGround(state, worldIn, pos);
+	protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
+		return state.is(this) || super.mayPlaceOn(state, worldIn, pos);
 	}
 
 	/* IGrowable Compliance Methods */
 
 	@Override
-	public boolean canGrow(IBlockReader world, BlockPos position, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(BlockGetter world, BlockPos position, BlockState state, boolean isClient) {
 		final int age = this.getAgeFrom(state);
 		if (this.isBottomBlock(state)) {
 			if (age < (TallCropBlock.MAX_AGE - 1)) {
 				return true;
 			}
-			BlockPos abovePosition = position.up();
+			BlockPos abovePosition = position.above();
 			BlockState aboveState = world.getBlockState(abovePosition);
-			if (aboveState.isIn(this)) {
+			if (aboveState.is(this)) {
 				return this.belowMaxAge(aboveState) || this.belowMaxAge(state);
 			}
-			return this.canGrowInto(world, aboveState, abovePosition);
+			return aboveState.isAir();
 		}
 		return this.belowMaxAge(age);
 	}
 
 	@Override
-	public boolean canUseBonemeal(World world, Random RNG, BlockPos position, BlockState state) {
-		return this.canGrow(world, position, state, world.isRemote());
-	}
-
-	@Override
-	public void grow(ServerWorld world, Random RNG, BlockPos position, BlockState state) {
+	public void performBonemeal(ServerLevel world, Random RNG, BlockPos position, BlockState state) {
 		BlockPos targetPosition = position;
 		BlockState targetState = state;
 		int max = TallCropBlock.MAX_AGE;
@@ -131,13 +124,13 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 			final int age = this.getAgeFrom(state);
 			max = TallCropBlock.MAX_AGE - 1;
 			if (age >= (TallCropBlock.MAX_AGE - 1)) {
-				BlockPos abovePosition = position.up();
+				BlockPos abovePosition = position.above();
 				BlockState aboveState = world.getBlockState(abovePosition);
-				if (this.canGrowInto(world, aboveState, abovePosition)) {
+				if (aboveState.isAir()) {
 					this.growInto(world, state, position, abovePosition, this.getBonemealGrowth(RNG));
 					return;
 				}
-				if (aboveState.isIn(this)) {
+				if (aboveState.is(this)) {
 					if (this.belowMaxAge(aboveState)) {
 						targetPosition = abovePosition;
 						targetState = aboveState;
@@ -150,7 +143,7 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	}
 	
 	/* Abstract Methods */
-	protected abstract boolean shouldGrow(ServerWorld world, BlockState state, BlockPos position, Random RNG);
+	protected abstract boolean shouldGrow(ServerLevel world, BlockState state, BlockPos position, Random RNG);
 
 	/* Internal Methods */
 	
@@ -160,34 +153,29 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	 * @return The default {@link BlockState} for this {@link Block}.
 	 */
 	protected BlockState createDefaultState() {
-		return this.stateContainer.getBaseState()
-			.with(TallCropBlock.AGE, Integer.valueOf(0))
-			.with(TallCropBlock.BOTTOM, Boolean.TRUE);
+		return this.stateDefinition.any()
+			.setValue(TallCropBlock.AGE, Integer.valueOf(0))
+			.setValue(TallCropBlock.BOTTOM, Boolean.TRUE);
 	}
 
-	@SuppressWarnings("deprecation") // Forge has marked isAir(IBlockReader, BlockPos) deprecated, but this method is also the way they recommend one uses their API. For now. See https://github.com/MinecraftForge/MinecraftForge/pull/7657.
-	protected boolean canGrowInto(IBlockReader world, BlockState state, BlockPos position) {
-		return  state.isAir(world, position);
-	}
-
-	protected void tryApplyGrowth(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
+	protected void tryApplyGrowth(ServerLevel world, BlockState state, BlockPos position, Random RNG) {
 		if (this.belowMaxAge(state) && this.checkHooks(world, state, position, RNG)) {
 			this.applyGrowth(world, state, position, 1);
 			ForgeHooks.onCropsGrowPost(world, position, state);
 		}
 	}
 
-	protected void applyGrowth(ServerWorld world, BlockState state, BlockPos position, int quantity) {
+	protected void applyGrowth(ServerLevel world, BlockState state, BlockPos position, int quantity) {
 		this.applyGrowth(world, state, position, quantity, TallCropBlock.MAX_AGE);
 	}
 
-	protected void applyGrowth(ServerWorld world, BlockState state, BlockPos position, int quantity, int max) {
-		int newAge = MathHelper.clamp(this.getAgeFrom(state) + quantity, TallCropBlock.MIN_AGE, max);
-		world.setBlockState(position, state.with(TallCropBlock.AGE, newAge));
+	protected void applyGrowth(ServerLevel world, BlockState state, BlockPos position, int quantity, int max) {
+		int newAge = Mth.clamp(this.getAgeFrom(state) + quantity, TallCropBlock.MIN_AGE, max);
+		world.setBlockAndUpdate(position, state.setValue(TallCropBlock.AGE, newAge));
 	}
 
-	protected boolean tryGrowInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, BlockState aboveState, Random rng) {
-		if (this.canGrowInto(world, aboveState, abovePosition) && this.checkHooks(world, aboveState, abovePosition, rng)) {
+	protected boolean tryGrowInto(ServerLevel world, BlockState state, BlockPos position, BlockPos abovePosition, BlockState aboveState, Random rng) {
+		if (aboveState.isAir() && this.checkHooks(world, aboveState, abovePosition, rng)) {
 			this.growInto(world, state, position, abovePosition, TallCropBlock.MIN_AGE);
 			ForgeHooks.onCropsGrowPost(world, position, state);
 			return true;
@@ -198,13 +186,13 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	/**
 	 * Validates the pending growth tick with "external" validators - mod configuration and {@link ForgeHooks#onCropsGrowPre(World, BlockPos, BlockState, boolean)}.
 	 * 
-	 * @param world - The {@link ServerWorld} containing the crop
+	 * @param world - The {@link ServerLevel} containing the crop
 	 * @param state - The {@link BlockState} of the crop
 	 * @param position The position of the crop
 	 * @param RNG - A reference to a {@link Random} instance
 	 * @return Whether all "external" validators permit the growth.
 	 */
-	protected final boolean checkHooks(ServerWorld world, BlockState state, BlockPos position, Random RNG) {
+	protected final boolean checkHooks(ServerLevel world, BlockState state, BlockPos position, Random RNG) {
 		return ForgeHooks.onCropsGrowPre(world, position, state, this.shouldGrow(world, state, position, RNG));
 	}
 
@@ -212,15 +200,15 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	 * Performs the procedure of growing into a block, from the position specified to the position above. No checks are performed within this method.
 	 * <p>
 	 * Sets the {@link BlockState} at the provided "above" position to this, with the provided age, and sets the {@link #BOTTOM} property for both affected blocks.
-	 * @param world - The {@link ServerWorld} containing the crop
+	 * @param world - The {@link ServerLevel} containing the crop
 	 * @param state - The {@link BlockState} of the crop
 	 * @param position - The position of the crop
 	 * @param abovePosition - The position of the block above the crop
 	 * @param age - The age that the newly-added top {@link BlockState} should have. 
 	 */
-	protected void growInto(ServerWorld world, BlockState state, BlockPos position, BlockPos abovePosition, int age) {
-		world.setBlockState(abovePosition, this.getDefaultState().with(TallCropBlock.AGE, Integer.valueOf(age)).with(TallCropBlock.BOTTOM, Boolean.FALSE));
-		world.setBlockState(position, state.with(TallCropBlock.BOTTOM, Boolean.TRUE));
+	protected void growInto(ServerLevel world, BlockState state, BlockPos position, BlockPos abovePosition, int age) {
+		world.setBlockAndUpdate(abovePosition, this.defaultBlockState().setValue(TallCropBlock.AGE, Integer.valueOf(age)).setValue(TallCropBlock.BOTTOM, Boolean.FALSE));
+		world.setBlockAndUpdate(position, state.setValue(TallCropBlock.BOTTOM, Boolean.TRUE));
 	}
 
 	/**
@@ -230,7 +218,7 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	 * @return A value between 1 and 3, inclusive.
 	 */
 	protected int getBonemealGrowth(Random RNG) {
-		return MathHelper.nextInt(RNG, 1, 3);
+		return Mth.nextInt(RNG, 1, 3);
 	}
 
 	/**
@@ -260,7 +248,7 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	 * @return The value of the provided {@link BlockState}'s {@link #AGE} property.
 	 */
 	protected int getAgeFrom(BlockState state) {
-		return state.get(TallCropBlock.AGE).intValue();
+		return state.getValue(TallCropBlock.AGE).intValue();
 	}
 
 	/**
@@ -270,7 +258,7 @@ public abstract class TallCropBlock extends BushBlock implements IGrowable {
 	 * @return Whether the provided {@link BlockState} has a {@link #BOTTOM} value of {@code TRUE}.
 	 */
 	protected boolean isBottomBlock(BlockState state) {
-		return state.get(TallCropBlock.BOTTOM).booleanValue();
+		return state.getValue(TallCropBlock.BOTTOM).booleanValue();
 	}
 
 }

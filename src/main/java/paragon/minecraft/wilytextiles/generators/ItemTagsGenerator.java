@@ -1,18 +1,17 @@
 package paragon.minecraft.wilytextiles.generators;
 
-import net.minecraft.data.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.ItemTagsProvider;
-import net.minecraft.data.TagsProvider;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.data.tags.BlockTagsProvider;
+import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
-import paragon.minecraft.library.Utilities;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.wilytextiles.Textiles;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 
 /**
  * Data generator class for Item Tags.
@@ -33,23 +32,28 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 	/* Supertype Override Methods */
 
 	@Override
-	protected void registerTags() {
+	public String getName() {
+		return "Wily Textiles Item Tags";
+	}
+
+	@Override
+	protected void addTags() {
 		// Twine and Silk are String subtypes
 		final String stringTag = "string";
-		final INamedTag<Item> twine = Utilities.Tags.forgeItemTag(stringTag, "twine");
-		this.getOrCreateBuilder(twine).add(Textiles.ITEMS.TWINE.get());
-		final INamedTag<Item> silk = Utilities.Tags.forgeItemTag(stringTag, "silk");
-		this.getOrCreateBuilder(silk).add(Textiles.ITEMS.SILK.get());
-		this.getOrCreateBuilder(Tags.Items.STRING)
+		final TagKey<Item> twine = Utilities.Tags.forgeItemTag(stringTag, "twine");
+		this.tag(twine).add(Textiles.ITEMS.TWINE.get());
+		final TagKey<Item> silk = Utilities.Tags.forgeItemTag(stringTag, "silk");
+		this.tag(silk).add(Textiles.ITEMS.SILK.get());
+		this.tag(Tags.Items.STRING)
 			.addTag(twine)
 			.addTag(silk);
 		
 		// Flax seeds are seeds, believe it or not
-		final INamedTag<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
-		this.getOrCreateBuilder(seeds).add(Textiles.ITEMS.FLAX_SEEDS.get());
+		final TagKey<Item> seeds = Utilities.Tags.forgeItemTag("seeds");
+		this.tag(seeds).add(Textiles.ITEMS.FLAX_SEEDS.get());
 		
 		// Flax blossoms are flowers
-		this.getOrCreateBuilder(ItemTags.SMALL_FLOWERS)
+		this.tag(ItemTags.SMALL_FLOWERS)
 			.add(Textiles.ITEMS.FLAX_PALE.get())
 			.add(Textiles.ITEMS.FLAX_VIBRANT.get())
 			.add(Textiles.ITEMS.FLAX_PURPLE.get());
@@ -74,14 +78,14 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 		this.tagAsColoredWool(Textiles.ITEMS.FABRIC_BROWN, DyeColor.BROWN);
 		
 		// Flax Stalks are Flax Crops
-		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag("crops")).add(Textiles.ITEMS.FLAX_STALKS.get());
-		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag("crops/flax")).add(Textiles.ITEMS.FLAX_STALKS.get());
+		this.tag(Utilities.Tags.forgeItemTag("crops")).add(Textiles.ITEMS.FLAX_STALKS.get());
+		this.tag(Utilities.Tags.forgeItemTag("crops/flax")).add(Textiles.ITEMS.FLAX_STALKS.get());
 		
 		// Copy grass block tags to items
 		this.copy(Utilities.Tags.forgeBlockTag(BlockTagsGenerator.TAG_GRASSES), Utilities.Tags.forgeItemTag(BlockTagsGenerator.TAG_GRASSES));
 		
 		// Cushion Tagging
-		TagsProvider.Builder<Item> cushionTags = this.getOrCreateBuilder(Utilities.Tags.itemTag(modId, TAG_CUSHION));
+		TagAppender<Item> cushionTags = this.tag(Utilities.Tags.itemTag(modId, TAG_CUSHION));
 		Textiles.ITEMS.streamCushionItems().forEach(cushionTags::add);
 	}
 	
@@ -89,14 +93,14 @@ final class ItemTagsGenerator extends ItemTagsProvider {
 	
 	protected void tagAsWool(RegistryObject<Item> target) {
 		// Some mods use minecraft:wool, and some use forge:wool. Best to generate for both.
-		this.getOrCreateBuilder(ItemTags.WOOL).add(target.get());
-		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag(TAG_WOOL)).add(target.get());
+		this.tag(ItemTags.WOOL).add(target.get());
+		this.tag(Utilities.Tags.forgeItemTag(TAG_WOOL)).add(target.get());
 	}
 	
 	protected void tagAsColoredWool(RegistryObject<Item> target, DyeColor woolColor) {
 		this.tagAsWool(target);
-		final String colorName = woolColor.getString();
-		this.getOrCreateBuilder(Utilities.Tags.forgeItemTag(TAG_WOOL, colorName)).add(target.get());
-		this.getOrCreateBuilder(Utilities.Tags.itemTag(DOMAIN_MINECRAFT, TAG_WOOL, colorName)).add(target.get());
+		final String colorName = woolColor.getName();
+		this.tag(Utilities.Tags.forgeItemTag(TAG_WOOL, colorName)).add(target.get());
+		this.tag(Utilities.Tags.itemTag(DOMAIN_MINECRAFT, TAG_WOOL, colorName)).add(target.get());
 	}
 }

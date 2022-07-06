@@ -2,16 +2,16 @@ package paragon.minecraft.wilytextiles.blocks;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 /**
  * An axis-aligned block that appears to permit multiple objects within the same block space.
@@ -28,36 +28,35 @@ public class AxialMultipleBlock extends Block {
 
 	public AxialMultipleBlock(Properties properties) {
 		super(properties);
-		this.setDefaultState(this.createDefaultState());
+		this.registerDefaultState(this.createDefaultState());
 	}
 	
 	/* Supertype Override Methods */
 	
 	@Override
 	@Nullable
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		BlockState state = context.getWorld().getBlockState(context.getPos());
-		Axis axis = context.getPlacementHorizontalFacing().getAxis();
-		return state.isIn(this) ? AxialMultipleBlock.incrementCount(state) : AxialMultipleBlock.withAxis(this.getDefaultState(), axis);
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		BlockState state = context.getLevel().getBlockState(context.getClickedPos());
+		Axis axis = context.getHorizontalDirection().getAxis();
+		return state.is(this) ? AxialMultipleBlock.incrementCount(state) : AxialMultipleBlock.withAxis(this.defaultBlockState(), axis);
 	}
 
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader world, BlockPos position) {
-		final BlockPos belowPosition = position.down();
+	public boolean canSurvive(BlockState state, LevelReader world, BlockPos position) {
+		final BlockPos belowPosition = position.below();
 		final BlockState belowState = world.getBlockState(belowPosition);
 		return this.isBlockBelowValid(world, position, state, belowPosition, belowState);
 	}
 
-
 	@Override
 	@SuppressWarnings("deprecation") // Return super.isReplaceable as default if not this
-	public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-		return useContext.getItem().getItem().equals(this.asItem()) && (state.get(AxialMultipleBlock.COUNT).intValue() < AxialMultipleBlock.MAX_COUNT) ? true : super.isReplaceable(state, useContext);
+	public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
+		return useContext.getItemInHand().getItem().equals(this.asItem()) && (state.getValue(AxialMultipleBlock.COUNT).intValue() < AxialMultipleBlock.MAX_COUNT) ? true : super.canBeReplaced(state, useContext);
 	}
 
 	@Override
-	public void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(AxialMultipleBlock.FACING, AxialMultipleBlock.COUNT);
 	}
 	
@@ -69,15 +68,15 @@ public class AxialMultipleBlock extends Block {
 	 * This method is used by {@link #isValidPosition(BlockState, IWorldReader, BlockPos)} to determine whether this {@link AxialMultipleBlock} can be placed
 	 * and whether it can stay after a neighbor has changed.
 	 * 
-	 * @param world - An {@link IWorldReader} to use for state examination
+	 * @param world - An {@link LevelReader} to use for state examination
 	 * @param position - The {@link BlockPos} of this {@link AxialMultipleBlock}
 	 * @param state - The {@link BlockState} of this {@link AxialMultipleBlock}
 	 * @param belowPosition - The {@link BlockPos} beneath this {@link AxialMultipleBlock}
 	 * @param belowState - The {@link BlockState} beneath this {@link AxialMultipleBlock}
 	 * @return Whether the {@link BlockState} beneath this one can support this {@link AxialMultipleBlock}.
 	 */
-	protected boolean isBlockBelowValid(IWorldReader world, BlockPos position, BlockState state, BlockPos belowPosition, BlockState belowState) {
-		return Block.hasEnoughSolidSide(world, belowPosition, Direction.UP);
+	protected boolean isBlockBelowValid(LevelReader world, BlockPos position, BlockState state, BlockPos belowPosition, BlockState belowState) {
+		return Block.canSupportCenter(world, belowPosition, Direction.UP);
 	}
 	
 	/**
@@ -86,9 +85,9 @@ public class AxialMultipleBlock extends Block {
 	 * @return The default {@link BlockState} for this {@link Block}.
 	 */
 	protected BlockState createDefaultState() {
-		return this.stateContainer.getBaseState()
-			.with(AxialMultipleBlock.FACING, Direction.Axis.X)
-			.with(AxialMultipleBlock.COUNT, AxialMultipleBlock.MIN_COUNT);
+		return this.stateDefinition.any()
+			.setValue(AxialMultipleBlock.FACING, Direction.Axis.X)
+			.setValue(AxialMultipleBlock.COUNT, AxialMultipleBlock.MIN_COUNT);
 	}
 	
 	/**
@@ -99,7 +98,7 @@ public class AxialMultipleBlock extends Block {
 	 * @return The {@link BlockState}, with the applied axial facing.
 	 */
 	protected static BlockState withAxis(BlockState original, Axis facing) {
-		return facing.isHorizontal() ? original.with(AxialMultipleBlock.FACING, facing) : original;
+		return facing.isHorizontal() ? original.setValue(AxialMultipleBlock.FACING, facing) : original;
 	}
 	
 	/**
@@ -109,7 +108,7 @@ public class AxialMultipleBlock extends Block {
 	 * @return The {@link BlockState} after incrementing the {@link #COUNT} property.
 	 */
 	protected static BlockState incrementCount(BlockState original) {
-		return original.with(AxialMultipleBlock.COUNT, Math.min(AxialMultipleBlock.MAX_COUNT, AxialMultipleBlock.getCountFrom(original) + 1));
+		return original.setValue(AxialMultipleBlock.COUNT, Math.min(AxialMultipleBlock.MAX_COUNT, AxialMultipleBlock.getCountFrom(original) + 1));
 	}
 	
 	/**
@@ -119,7 +118,7 @@ public class AxialMultipleBlock extends Block {
 	 * @return The value of the {@link #COUNT} property.
 	 */
 	protected static int getCountFrom(BlockState state) {
-		return state.get(AxialMultipleBlock.COUNT).intValue();
+		return state.getValue(AxialMultipleBlock.COUNT).intValue();
 	}
 	
 	/**
@@ -129,7 +128,7 @@ public class AxialMultipleBlock extends Block {
 	 * @return The value of the {@link #FACING} property.
 	 */
 	protected static Axis getAxisFrom(BlockState state) {
-		return state.get(AxialMultipleBlock.FACING);
+		return state.getValue(AxialMultipleBlock.FACING);
 	}
 
 }

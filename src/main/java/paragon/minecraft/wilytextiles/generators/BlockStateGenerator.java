@@ -2,20 +2,19 @@ package paragon.minecraft.wilytextiles.generators;
 
 import java.util.stream.IntStream;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.RotatedPillarBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.SlabType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
+import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder;
 import net.minecraftforge.client.model.generators.VariantBlockStateBuilder.PartialBlockstate;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.fml.RegistryObject;
-import paragon.minecraft.library.Utilities;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.library.datageneration.BlockStateHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
@@ -25,6 +24,7 @@ import paragon.minecraft.wilytextiles.blocks.RawFiberBlock;
 import paragon.minecraft.wilytextiles.blocks.SoakableBlock;
 import paragon.minecraft.wilytextiles.blocks.TallCropBlock;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
+import paragon.minecraft.wilytextiles.internal.Utilities;
 
 /**
  * Data Generation class for JSON Block model files and JSON BlockState files.
@@ -101,7 +101,7 @@ final class BlockStateGenerator extends BlockStateHelper {
 		final String baseName = target.getRegistryName().getPath();
 		final ResourceLocation sidesName = this.textureForBlock(baseName, TEXTURE_SIDES);
 		final VariantBlockStateBuilder builder = this.getVariantBuilder(target);
-		for (Direction.Axis axis : CushionBlock.AXIS.getAllowedValues()) {
+		for (Direction.Axis axis : CushionBlock.AXIS.getPossibleValues()) {
 			final int xRotation = this.getXRotationFrom(axis);
 			final int yRotation = this.getYRotationFrom(axis);
 			IntStream.rangeClosed(1, 3).forEach(suffix -> {
@@ -128,14 +128,14 @@ final class BlockStateGenerator extends BlockStateHelper {
 		final VariantBlockStateBuilder basketBuilder = this.getVariantBuilder(target.get());
 		final ModelFile uprightModel = this.basketBlockModel(baseName, "upright");
 		final ModelFile sideModel = this.basketBlockModel(baseName, "side");
-		for (Direction facing : BasketBlock.FACING.getAllowedValues()) {
+		for (Direction facing : BasketBlock.FACING.getPossibleValues()) {
 			if (facing == Direction.UP) {
 				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(uprightModel).nextModel().modelFile(uprightModel).rotationY(90);
 				basketBuilder.addModels(basketBuilder.partialState().with(BasketBlock.FACING, facing), builder.build());
 			}
 			else {
 				ConfiguredModel.Builder<?> builder = ConfiguredModel.builder().modelFile(sideModel);
-				basketBuilder.addModels(basketBuilder.partialState().with(BasketBlock.FACING, facing), builder.rotationY((int)facing.getHorizontalAngle()).build());
+				basketBuilder.addModels(basketBuilder.partialState().with(BasketBlock.FACING, facing), builder.rotationY((int)facing.toYRot()).build());
 			}
 		}
 	}

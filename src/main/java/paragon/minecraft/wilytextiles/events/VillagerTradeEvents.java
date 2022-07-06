@@ -2,12 +2,12 @@ package paragon.minecraft.wilytextiles.events;
 
 import java.util.List;
 
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.merchant.villager.VillagerTrades.ITrade;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraftforge.common.BasicTrade;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerTrades.ItemListing;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.BasicItemListing;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,7 +44,7 @@ public final class VillagerTradeEvents {
 	public static void onVillagerTrade(final VillagerTradesEvent event) {
 		if (Textiles.CONFIG.allowShepherdTrade() && event.getType().equals(VillagerProfession.SHEPHERD)) {
 			// Documentation claims that the this should never be null. Indeed, it is populated with empty NonNullList directly before event fires.
-			List<ITrade> skillLevelTrades = event.getTrades().get(Textiles.CONFIG.getShepherdTradeThreshold());
+			List<ItemListing> skillLevelTrades = event.getTrades().get(Textiles.CONFIG.getShepherdTradeThreshold());
 			Textiles.ITEMS.streamFabricItems().map(VillagerTradeEvents::villagerSellsItem).forEach(skillLevelTrades::add);
 		}
 	}
@@ -67,30 +67,30 @@ public final class VillagerTradeEvents {
 	/* Internal Methods */
 	
 	/**
-	 * Generates an {@link ITrade} instance from the provided fabric {@link Item}, using the constants:
+	 * Generates an {@link ItemListing} instance from the provided fabric {@link Item}, using the constants:
 	 * <li> {@link #FABRIC_BOUGHT_PER_EMERALD}: The quantity that must be sold to the villager to receive an emerald
 	 * <li> {@link #FABRIC_MAX_TRADES}: The maximum daily trade cap
 	 * <li> {@link #FABRIC_XP}: The XP the villager gains for executing this trade
 	 * <li> {@link #FABRIC_MULTIPLIER}: The "economic" scalar applied per trade (affects internal simulated supply/demand mechanism)
 	 * 
 	 * @param fabricItem - The object being traded for emeralds.
-	 * @return A suitable {@link ITrade} instance, instantiated based on the specified values.
+	 * @return A suitable {@link ItemListing} instance, instantiated based on the specified values.
 	 */
-	protected static ITrade villagerBuysItem(Item fabricItem) {
-		return new BasicTrade(new ItemStack(fabricItem, FABRIC_BOUGHT_PER_EMERALD), new ItemStack(Items.EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
+	protected static ItemListing villagerBuysItem(Item fabricItem) {
+		return new BasicItemListing(new ItemStack(fabricItem, FABRIC_BOUGHT_PER_EMERALD), new ItemStack(Items.EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
 	}
 	
 	/**
-	 * Generates an {@link ITrade} instance from the provided fabric {@link Item}, using the constants:
+	 * Generates an {@link ItemListing} instance from the provided fabric {@link Item}, using the constants:
 	 * <li> {@link #FABRIC_SOLD_PER_EMERALD}: The quantity of fabric being sold by the villager per emerald
 	 * <li> {@link #FABRIC_MAX_TRADES}: The maximum daily trade cap
 	 * <li> {@link #FABRIC_XP}: The XP the villager gains for executing this trade
 	 * <li> {@link #FABRIC_MULTIPLIER}: The "economic" scalar applied per trade (affects internal simulated supply/demand mechanism)
 	 * 
 	 * @param fabricItem - The object being traded for emeralds.
-	 * @return A suitable {@link ITrade} instance, instantiated based on the specified values.
+	 * @return A suitable {@link ItemListing} instance, instantiated based on the specified values.
 	 */
-	protected static ITrade villagerSellsItem(Item fabricItem) {
-		return new BasicTrade(1, new ItemStack(fabricItem, FABRIC_SOLD_PER_EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
+	protected static ItemListing villagerSellsItem(Item fabricItem) {
+		return new BasicItemListing(1, new ItemStack(fabricItem, FABRIC_SOLD_PER_EMERALD), FABRIC_MAX_TRADES, FABRIC_XP, FABRIC_MULTIPLIER);
 	}
 }

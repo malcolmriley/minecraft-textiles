@@ -6,29 +6,29 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.advancements.criterion.EnchantmentPredicate;
-import net.minecraft.advancements.criterion.ItemPredicate;
-import net.minecraft.advancements.criterion.MinMaxBounds;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate;
-import net.minecraft.block.Block;
+import net.minecraft.advancements.critereon.EnchantmentPredicate;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.loot.BlockLootTables;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Items;
-import net.minecraft.loot.BinomialRange;
-import net.minecraft.loot.ConstantRange;
-import net.minecraft.loot.ItemLootEntry;
-import net.minecraft.loot.LootParameterSet;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTable.Builder;
-import net.minecraft.loot.RandomValueRange;
-import net.minecraft.loot.conditions.BlockStateProperty;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.loot.conditions.MatchTool;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.LootTable.Builder;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraftforge.registries.RegistryObject;
 import paragon.minecraft.library.datageneration.LootHelper;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.blocks.AxialMultipleBlock;
@@ -43,107 +43,107 @@ import paragon.minecraft.wilytextiles.blocks.TallCropBlock;
 final class LootGenerator extends LootHelper {
 
 	// Tool Predicates
-	private static final ILootCondition.IBuilder SILK_TOUCH = MatchTool.builder(ItemPredicate.Builder.create().enchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.IntBound.atLeast(1))));
-	private static final ILootCondition.IBuilder NO_SILK_TOUCH = SILK_TOUCH.inverted();
+	private static final LootItemCondition.Builder SILK_TOUCH = MatchTool.toolMatches(ItemPredicate.Builder.item().hasEnchantment(new EnchantmentPredicate(Enchantments.SILK_TOUCH, MinMaxBounds.Ints.atLeast(1))));
+	private static final LootItemCondition.Builder NO_SILK_TOUCH = SILK_TOUCH.invert();
 
 	LootGenerator(DataGenerator generator) {
 		super(generator);
 	}
 
 	@Override
-	protected void addLootTables(Consumer<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootParameterSet>> registrar) {
-		registrar.accept(Pair.of(BlockLootGenerator::new, LootParameterSets.BLOCK));
-		registrar.accept(Pair.of(BlockLootExtensions::new, LootParameterSets.BLOCK));
+	protected void addLootTables(Consumer<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, Builder>>>, LootContextParamSet>> registrar) {
+		registrar.accept(Pair.of(BlockLootGenerator::new, LootContextParamSets.BLOCK));
+		registrar.accept(Pair.of(BlockLootExtensions::new, LootContextParamSets.BLOCK));
 	}
 
 	/* Block loot tables */
 
-	private static final class BlockLootGenerator extends LootHelper.BlockLoot {
+	private static final class BlockLootGenerator extends BlockLootTables {
 
 		@Override
 		public void addTables() {
 			// Raw Fiber Bales
-			final LootTable.Builder baleBuilder = LootTable.builder();
+			final LootTable.Builder baleBuilder = LootTable.lootTable();
 			for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
-				baleBuilder.addLootPool(LootPool.builder()
-					.acceptCondition(this.count(Textiles.BLOCKS.RAW_FIBERS, count))
-					.rolls(ConstantRange.of(count))
-					.addEntry(ItemLootEntry.builder(Textiles.BLOCKS.RAW_FIBERS.get())));
+				baleBuilder.withPool(LootPool.lootPool()
+					.when(this.count(Textiles.BLOCKS.RAW_FIBERS, count))
+					.setRolls(ConstantValue.exactly(count))
+					.add(LootItem.lootTableItem(Textiles.BLOCKS.RAW_FIBERS.get())));
 			}
-			this.registerLootTable(Textiles.BLOCKS.RAW_FIBERS.get(), baleBuilder);
+			this.addLootFor(Textiles.BLOCKS.RAW_FIBERS, baleBuilder);
 
 			// Retted Fiber Bales
-			final LootTable.Builder rettedBales = LootTable.builder();
+			final LootTable.Builder rettedBales = LootTable.lootTable();
 			for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
-				rettedBales.addLootPool(LootPool.builder()
-					.acceptCondition(this.count(Textiles.BLOCKS.RETTED_FIBERS, count))
-					.rolls(RandomValueRange.of(count, count * 1.5F))
-					.bonusRolls(1.0F, 2.0F)
-					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.TWINE.get())));
+				rettedBales.withPool(LootPool.lootPool()
+					.when(this.count(Textiles.BLOCKS.RETTED_FIBERS, count))
+					.setRolls(UniformGenerator.between(count, count * 1.5F))
+					.setBonusRolls(UniformGenerator.between(1.0F, 2.0F))
+					.add(LootItem.lootTableItem(Textiles.ITEMS.TWINE.get())));
 			}
-			this.registerLootTable(Textiles.BLOCKS.RETTED_FIBERS.get(), rettedBales);
+			this.addLootFor(Textiles.BLOCKS.RETTED_FIBERS, rettedBales);
 
 			// Basket Blocks
-			this.registerLootTable(Textiles.BLOCKS.BASKET.get(), BlockLootTables.droppingWithName(Textiles.BLOCKS.BASKET.get()));
-			this.registerLootTable(Textiles.BLOCKS.BASKET_STURDY.get(), BlockLootTables.droppingWithContents(Textiles.BLOCKS.BASKET_STURDY.get()));
+			this.addLootFor(Textiles.BLOCKS.BASKET, BlockLootTables.createNameableBlockEntityTable(Textiles.BLOCKS.BASKET.get()));
+			this.addLootFor(Textiles.BLOCKS.BASKET_STURDY, BlockLootTables.createNameableBlockEntityTable(Textiles.BLOCKS.BASKET_STURDY.get()));
 
 			// Flax Crop
-			final LootTable.Builder flaxBuilder = LootTable.builder();
-			flaxBuilder.addLootPool(LootPool.builder()
-				.rolls(BinomialRange.of(1, 0.2F))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
+			final LootTable.Builder flaxBuilder = LootTable.lootTable();
+			flaxBuilder.withPool(LootPool.lootPool()
+				.setRolls(BinomialDistributionGenerator.binomial(1, 0.2F))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get())));
 
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE - 1))
-				.rolls(BinomialRange.of(3, 0.65F))
-				.bonusRolls(0, 2)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropTop(TallCropBlock.MAX_AGE - 1))
+				.setRolls(BinomialDistributionGenerator.binomial(3, 0.65F))
+				.setBonusRolls(UniformGenerator.between(0, 2))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get())));
 
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
-				.rolls(RandomValueRange.of(1.0F, 3.0F))
-				.bonusRolls(0, 1)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get())));
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
-				.rolls(BinomialRange.of(1, 0.6F))
-				.bonusRolls(0, 1)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
+				.setRolls(UniformGenerator.between(1.0F, 3.0F))
+				.setBonusRolls(UniformGenerator.between(0, 1))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_STALKS.get())));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropBottom(TallCropBlock.MAX_AGE - 1))
+				.setRolls(BinomialDistributionGenerator.binomial(1, 0.6F))
+				.setBonusRolls(UniformGenerator.between(0, 1))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get())));
 
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE))
-				.rolls(BinomialRange.of(1, 0.35F))
-				.bonusRolls(0, 1)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropTop(TallCropBlock.MAX_AGE))
-				.rolls(BinomialRange.of(2, 0.75F))
-				.bonusRolls(1, 2)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get()).weight(4))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(1)));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropTop(TallCropBlock.MAX_AGE))
+				.setRolls(BinomialDistributionGenerator.binomial(1, 0.35F))
+				.setBonusRolls(UniformGenerator.between(0, 1))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_PALE.get()).setWeight(10).setQuality(3))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_VIBRANT.get()).setWeight(6).setQuality(5))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_PURPLE.get()).setWeight(1).setQuality(7)));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropTop(TallCropBlock.MAX_AGE))
+				.setRolls(BinomialDistributionGenerator.binomial(2, 0.75F))
+				.setBonusRolls(UniformGenerator.between(1, 2))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get()).setWeight(4))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_STALKS.get()).setWeight(1)));
 
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE))
-				.rolls(BinomialRange.of(3, 0.8F))
-				.bonusRolls(1, 2)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get()).weight(1))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_STALKS.get()).weight(4)));
-			flaxBuilder.addLootPool(LootPool.builder()
-				.acceptCondition(this.tallCropBottom(TallCropBlock.MAX_AGE))
-				.rolls(BinomialRange.of(1, 0.1F))
-				.bonusRolls(1, 2)
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PALE.get()).weight(10).quality(3))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_VIBRANT.get()).weight(6).quality(5))
-				.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_PURPLE.get()).weight(1).quality(7)));
-			this.registerLootTable(Textiles.BLOCKS.FLAX_CROP.get(), flaxBuilder);
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropBottom(TallCropBlock.MAX_AGE))
+				.setRolls(BinomialDistributionGenerator.binomial(3, 0.8F))
+				.setBonusRolls(UniformGenerator.between(1, 2))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get()).setWeight(1))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_STALKS.get()).setWeight(4)));
+			flaxBuilder.withPool(LootPool.lootPool()
+				.when(this.tallCropBottom(TallCropBlock.MAX_AGE))
+				.setRolls(BinomialDistributionGenerator.binomial(1, 0.1F))
+				.setBonusRolls(UniformGenerator.between(1, 2))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_PALE.get()).setWeight(10).setQuality(3))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_VIBRANT.get()).setWeight(6).setQuality(5))
+				.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_PURPLE.get()).setWeight(1).setQuality(7)));
+			this.addLootFor(Textiles.BLOCKS.FLAX_CROP, flaxBuilder);
 			
 			// Packed Feathers
-			final LootTable.Builder featherBuilder = LootTable.builder().addLootPool(LootPool.builder()
-				.addEntry(ItemLootEntry.builder(Items.FEATHER))
-				.rolls(ConstantRange.of(9)));
-			this.registerLootTable(Textiles.BLOCKS.PACKED_FEATHERS.get(), featherBuilder);
+			final LootTable.Builder featherBuilder = LootTable.lootTable().withPool(LootPool.lootPool()
+				.add(LootItem.lootTableItem(Items.FEATHER))
+				.setRolls(ConstantValue.exactly(9)));
+			this.addLootFor(Textiles.BLOCKS.PACKED_FEATHERS, featherBuilder);
 			
 			// Fabric Blocks
 			Textiles.BLOCKS.streamFabricBlocks().forEach(this::fabricBlockLoot);
@@ -158,34 +158,34 @@ final class LootGenerator extends LootHelper {
 		}
 		
 		protected void cushionBlockLoot(Block target) {
-			this.registerLootTable(target, BlockLoot.droppingSlab(target));
+			this.add(target, BlockLoot.createSlabItemTable(target));
 		}
 		
 		protected void fabricBlockLoot(Block target) {
-			LootTable.Builder builder = LootTable.builder();
+			LootTable.Builder builder = LootTable.lootTable();
 			for (int count = AxialMultipleBlock.MIN_COUNT; count <= AxialMultipleBlock.MAX_COUNT; count += 1) {
-				builder.addLootPool(LootPool.builder()
-					.acceptCondition(BlockStateProperty.builder(target).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(AxialMultipleBlock.COUNT, count)))
-					.rolls(ConstantRange.of(count))
-					.addEntry(ItemLootEntry.builder(target)));
+				builder.withPool(LootPool.lootPool()
+					.when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(target).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AxialMultipleBlock.COUNT, count)))
+					.setRolls(ConstantValue.exactly(count))
+					.add(LootItem.lootTableItem(target)));
 			}
-			this.registerLootTable(target, builder);
+			this.add(target, builder);
 		}
 
-		protected BlockStateProperty.Builder tallCropTop(int age) {
+		protected LootItemBlockStatePropertyCondition.Builder tallCropTop(int age) {
 			return this.tallCropProperties(age, false);
 		}
 
-		protected BlockStateProperty.Builder tallCropBottom(int age) {
+		protected LootItemBlockStatePropertyCondition.Builder tallCropBottom(int age) {
 			return this.tallCropProperties(age, true);
 		}
 
-		protected BlockStateProperty.Builder tallCropProperties(int age, boolean bottom) {
-			return BlockStateProperty.builder(Textiles.BLOCKS.FLAX_CROP.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(TallCropBlock.AGE, age).withBoolProp(TallCropBlock.BOTTOM, bottom));
+		protected LootItemBlockStatePropertyCondition.Builder tallCropProperties(int age, boolean bottom) {
+			return LootItemBlockStatePropertyCondition.hasBlockStateProperties(Textiles.BLOCKS.FLAX_CROP.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(TallCropBlock.AGE, age).hasProperty(TallCropBlock.BOTTOM, bottom));
 		}
 
-		protected BlockStateProperty.Builder count(RegistryObject<Block> block, int count) {
-			return BlockStateProperty.builder(block.get()).fromProperties(StatePropertiesPredicate.Builder.newBuilder().withIntProp(SoakableBlock.COUNT, count));
+		protected LootItemBlockStatePropertyCondition.Builder count(RegistryObject<Block> block, int count) {
+			return LootItemBlockStatePropertyCondition.hasBlockStateProperties(block.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(SoakableBlock.COUNT, count));
 		}
 
 	}
@@ -197,19 +197,29 @@ final class LootGenerator extends LootHelper {
 		public void accept(BiConsumer<ResourceLocation, Builder> consumer) {
 			
 			/* Additional Grass Drops */
-			final LootTable.Builder addedGrassDrops = LootTable.builder()
-				.addLootPool(LootPool.builder()
-					.acceptCondition(LootGenerator.NO_SILK_TOUCH)
-					.rolls(BinomialRange.of(1, 0.08F))
-					.bonusRolls(0.5F, 1.5F)
-					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.FLAX_SEEDS.get())))
-				.addLootPool(LootPool.builder()
-					.acceptCondition(LootGenerator.NO_SILK_TOUCH)
-					.rolls(BinomialRange.of(2, 0.06F))
-					.bonusRolls(0.5F, 1.5F)
-					.addEntry(ItemLootEntry.builder(Textiles.ITEMS.PLANT_FIBERS.get()))
+			final LootTable.Builder addedGrassDrops = LootTable.lootTable()
+				.withPool(LootPool.lootPool()
+					.when(LootGenerator.NO_SILK_TOUCH)
+					.setRolls(BinomialDistributionGenerator.binomial(1, 0.08F))
+					.setBonusRolls(UniformGenerator.between(0.5F, 1.5F))
+					.add(LootItem.lootTableItem(Textiles.ITEMS.FLAX_SEEDS.get())))
+				.withPool(LootPool.lootPool()
+					.when(LootGenerator.NO_SILK_TOUCH)
+					.setRolls(BinomialDistributionGenerator.binomial(2, 0.06F))
+					.setBonusRolls(UniformGenerator.between(0.5F, 1.5F))
+					.add(LootItem.lootTableItem(Textiles.ITEMS.PLANT_FIBERS.get()))
 			);
 			consumer.accept(Textiles.createResource("blocks/added_grass_drops"), addedGrassDrops);
+		}
+
+		@Override
+		public void addTables() {
+			
+		}
+
+		@Override
+		protected Iterable<Block> getKnownBlocks() {
+			return () -> null;
 		}
 		
 	}
