@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -69,6 +70,11 @@ public class SoakableBlock extends Block implements SimpleWaterloggedBlock {
 	@SuppressWarnings("deprecation") // Return super.isReplaceable as default if not this
 	public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
 		return useContext.getItemInHand().getItem().equals(this.asItem()) && (state.getValue(SoakableBlock.COUNT).intValue() < SoakableBlock.MAX_COUNT) ? true : super.canBeReplaced(state, useContext);
+	}
+
+	@Override
+	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos position, PathComputationType pathType) {
+		return false;
 	}
 
 	@Override
