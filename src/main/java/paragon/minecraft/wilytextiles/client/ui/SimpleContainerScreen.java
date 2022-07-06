@@ -26,8 +26,11 @@ import paragon.minecraft.wilytextiles.internal.Utilities;
 @OnlyIn(Dist.CLIENT)
 public abstract class SimpleContainerScreen<C extends AbstractContainerMenu> extends AbstractContainerScreen<C> {
 
-	public SimpleContainerScreen(C screenContainer, Inventory inventory, Component title) {
+	public SimpleContainerScreen(C screenContainer, Inventory inventory, Component title, int width, int height, int labelOffset) {
 		super(screenContainer, inventory, title);
+		this.imageWidth = width;
+		this.imageHeight = height;
+		this.inventoryLabelY = this.height - labelOffset;
 	}
 
 	/* Supertype Override Methods */

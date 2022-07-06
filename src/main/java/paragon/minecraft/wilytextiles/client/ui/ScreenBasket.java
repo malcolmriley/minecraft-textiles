@@ -20,10 +20,7 @@ public class ScreenBasket extends SimpleContainerScreen<TEBasket.BasketMenu> {
 	private static final ResourceLocation UI_TEXTURE = Textiles.createResource(SimpleContainerScreen.backgroundTexturePath("basket"));
 
 	public ScreenBasket(TEBasket.BasketMenu container, Inventory inventory, Component title) {
-		super(container, inventory, title);
-		this.imageWidth = 176;
-		this.imageHeight = 192;
-		this.inventoryLabelY = this.height - 94;
+		super(container, inventory, title, 176, 192, 94);
 	}
 
 	/* Supertype Override Methods */
