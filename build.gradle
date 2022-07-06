@@ -17,7 +17,7 @@ apply from: 'project.config'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 version = "${ext.mc_version}-${ext.version}"
-archivesBaseName = "${ext.name}"
+archivesBaseName = "${ext.name}-Forge"
 
 /*************************** ONLY EDIT BELOW THIS LINE ***************************/
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
