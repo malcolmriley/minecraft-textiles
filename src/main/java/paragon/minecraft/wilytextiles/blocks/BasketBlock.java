@@ -85,7 +85,7 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 	 * @return Some suggested default properties for a {@link BasketBlock}.
 	 */
 	public static Properties createDefaultProperties() {
-		return Properties.of(Material.LEAVES).sound(SoundType.BAMBOO);
+		return Properties.of(Material.LEAVES).strength(0.6F).sound(SoundType.BAMBOO);
 	}
 
 	/**

@@ -50,7 +50,9 @@ public class FlaxCropBlock extends TallCropBlock {
 	 * @return The recommended default {@link BlockBehaviour.Properties}.
 	 */
 	public static Properties createDefaultProperties() {
-		return Properties.of(Material.PLANT).sound(SoundType.CROP).explosionResistance(0.45F).noCollission().isViewBlocking(ModBlocks.ALWAYS_FALSE);
+		return Properties.of(Material.PLANT).sound(SoundType.CROP).strength(0.45F)
+			.noCollission() // The frisson of incorrectly-spelled collision
+			.isViewBlocking(ModBlocks.ALWAYS_FALSE);
 	}
 	
 	/* Supertype Override Methods */

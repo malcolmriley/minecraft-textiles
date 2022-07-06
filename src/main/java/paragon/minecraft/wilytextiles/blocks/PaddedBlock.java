@@ -39,7 +39,7 @@ public abstract class PaddedBlock extends RotatedPillarBlock {
 	/* Public Methods */
 
 	public static BlockBehaviour.Properties createPropertiesFrom(MaterialColor color) {
-		return BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, color).sound(SoundType.WOOL).speedFactor(0.85F).explosionResistance(0.1F);
+		return BlockBehaviour.Properties.of(Material.CLOTH_DECORATION, color).sound(SoundType.WOOL).strength(0.85F, 0.1F);
 	}
 
 	/* Supertype Override Methods */
