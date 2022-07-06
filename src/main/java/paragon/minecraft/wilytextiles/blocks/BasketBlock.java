@@ -259,7 +259,7 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 	public static class KeepInventory extends BasketBlock {
 
 		/* Internal Fields */
-		protected static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
+		public static final ResourceLocation BLOCK_ENTITY_CONTENTS = ShulkerBoxBlock.CONTENTS;
 
 		public KeepInventory() {
 			this(BasketBlock.createDefaultProperties().explosionResistance(6.0F));
@@ -272,7 +272,7 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 		@Override
 		@SuppressWarnings("deprecation") // Return super.getDrops()
 		public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-			if (builder.getParameter(LootContextParams.BLOCK_ENTITY) instanceof TEBasket basket) {
+			if (builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY) instanceof TEBasket basket) {
 				if (!basket.isEmpty()) {
 					builder.withDynamicDrop(BLOCK_ENTITY_CONTENTS, (context, consumer) -> {
 						basket.getInventory().getItems().forEach(consumer);
