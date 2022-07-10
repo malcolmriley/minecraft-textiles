@@ -77,7 +77,7 @@ public class FlaxCropBlock extends TallCropBlock {
 	 * @return Whether the light value at the provided {@link BlockPos} is adequate for flax growth.
 	 */
 	protected boolean isLightAdequate(ServerLevel world, BlockPos position) {
-		return world.getLightEmission(position) >= Textiles.CONFIG.flaxMinLight();
+		return world.getRawBrightness(position, 0) >= Textiles.CONFIG.flaxMinLight();
 	}
 
 }
