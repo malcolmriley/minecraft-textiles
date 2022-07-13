@@ -5,12 +5,17 @@ import java.util.Random;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import paragon.minecraft.wilytextiles.Textiles;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 
@@ -19,6 +24,7 @@ import paragon.minecraft.wilytextiles.init.ModBlocks;
  * 
  * @author Malcolm Riley
  */
+@EventBusSubscriber(bus = Bus.FORGE, modid = Textiles.MOD_ID)
 public class FlaxCropBlock extends TallCropBlock {
 	
 	public FlaxCropBlock() {
@@ -27,6 +33,15 @@ public class FlaxCropBlock extends TallCropBlock {
 
 	public FlaxCropBlock(Properties builder) {
 		super(builder);
+	}
+	
+	/* Event Handler Methods */
+	
+	@SubscribeEvent
+	public static void onGetBreakSpeed(PlayerEvent.BreakSpeed event) {
+		if (event.getState().is(Textiles.BLOCKS.FLAX_CROP.get()) && event.getPlayer().getMainHandItem().getItem() instanceof ShearsItem) {
+			event.setNewSpeed(event.getNewSpeed() * Textiles.CONFIG.flaxShearsHarvestModifier());
+		}
 	}
 	
 	/* Public Methods */
