@@ -68,11 +68,11 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 	public static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(OFFSET, 0, 0, 16 - OFFSET, 16 - (OFFSET * 2), 16);
 	public static final VoxelShape SHAPE_EAST_WEST = Block.box(0, 0, OFFSET, 16, 16 - (OFFSET * 2), 16 - OFFSET);
 
-	public static final VoxelShape CAPTURE_UP = Block.box(0, 0, 0, 16, 24, 16);
-	public static final VoxelShape CAPTURE_NORTH = Block.box(0, 0, -8, 0, 16, 16);
-	public static final VoxelShape CAPTURE_SOUTH = Block.box(0, 0, 16, 16, 16, 24);
-	public static final VoxelShape CAPTURE_EAST = Block.box(16, 0, 0, 24, 16, 16);
-	public static final VoxelShape CAPTURE_WEST = Block.box(-8, 0, 0, 0, 16, 16);
+	public static final VoxelShape CAPTURE_UP = SHAPE_UPRIGHT.move(0, 0.5, 0);
+	public static final VoxelShape CAPTURE_NORTH = SHAPE_NORTH_SOUTH.move(0, 0, -0.5);
+	public static final VoxelShape CAPTURE_SOUTH = SHAPE_NORTH_SOUTH.move(0, 0, 0.5);
+	public static final VoxelShape CAPTURE_EAST = SHAPE_EAST_WEST.move(0.5, 0, 0);
+	public static final VoxelShape CAPTURE_WEST = SHAPE_EAST_WEST.move(-0.5, 0, 0);
 
 	public BasketBlock(Properties builder) {
 		super(builder);
