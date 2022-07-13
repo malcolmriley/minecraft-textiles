@@ -17,6 +17,7 @@ public class ModConfiguration extends AbstractConfiguration {
 	/* Internal Fields */
 	protected double BALE_PROGRESS_CHANCE = 0.65D;
 	protected double FLAX_GROWTH_MODIFIER = 1.0D;
+	protected float FLAX_SHEARS_HARVEST_MODIFIER = 1.0F;
 	protected int FLAX_MIN_LIGHTLEVEL = 8;
 	protected boolean SHEPHERD_TRADES_FABRIC = true;
 	protected boolean WANDERER_TRADES_FABRIC = true;
@@ -48,6 +49,13 @@ public class ModConfiguration extends AbstractConfiguration {
 	 */
 	public double flaxGrowthModifier() {
 		return this.FLAX_GROWTH_MODIFIER;
+	}
+	
+	/**
+	 * @return The bonus break speed awarded when breaking Flax crops with shears.
+	 */
+	public float flaxShearsHarvestModifier() {
+		return 1.0F + this.FLAX_SHEARS_HARVEST_MODIFIER;
 	}
 	
 	/**
@@ -140,6 +148,11 @@ public class ModConfiguration extends AbstractConfiguration {
 				"The minimum light level that Flax needs in order to grow.",
 				"The light level at the crop's position must equal or exceed this value, else no growth will occur.")
 			.defineInRange("flax_min_lightlevel", 8, 0, 15));
+		this.defineValue(value -> this.FLAX_SHEARS_HARVEST_MODIFIER = value.floatValue(), builder
+			.comment("The additive percentage harvest speed bonus awarded when breaking flax crops with shears.",
+				"For example, a value of 1.0 means a break speed bonus of +100% (twice as fast), and a value of 2.53 means a break speed bonus of +253% (more than three times as fast).",
+				"Modify with caution as this value is cumulative with other effects that modify break speed, such as potion effects.")
+			.defineInRange("flax_shears_harvest_bonus", 1.0, 0.0, Double.MAX_VALUE));
 		builder.pop();
 		
 		builder.push("Trading");
