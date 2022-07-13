@@ -178,8 +178,8 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		Direction facing = context.getClickedFace() == Direction.DOWN ? Direction.UP : context.getClickedFace();
-		return super.getStateForPlacement(context).setValue(BasketBlock.FACING, facing);
+		Direction facing = context.getPlayer().isCrouching() ? context.getNearestLookingDirection().getOpposite() : context.getClickedFace();
+		return super.getStateForPlacement(context).setValue(BasketBlock.FACING, BasketBlock.correctFacing(facing));
 	}
 
 	@Override
@@ -202,6 +202,20 @@ public abstract class BasketBlock extends BaseEntityBlock implements SimpleWater
 	}
 
 	/* Internal Methods */
+	
+	/**
+	 * Baskets cannot face downwards - this method corrects the incoming {@link Direction} property to be compatible
+	 * with the state definition.
+	 * <p>
+	 * If the input {@link Direction} is {@link Direction#DOWN}, returns {@link Direction#UP}. In all other cases, returns
+	 * the input {@link Direction}.
+	 * 
+	 * @param input - The {@link Direction} to correct
+	 * @return A basket blockstate-compatible {@link Direction}.
+	 */
+	protected static Direction correctFacing(Direction input) {
+		return (input == Direction.DOWN) ? Direction.UP: input;
+	}
 
 	/**
 	 * Extracts the {@link #FACING} property from the provided {@link BlockState}.
