@@ -74,8 +74,12 @@ minecraft {
 sourceSets.main.resources {
 	srcDir 'src/generated/resources'
 	exclude '.cache'
+	exclude '*.DS_Store*'
 }
-sourceSets.main.java { exclude "paragon/minecraft/${packagename}/generators".toString() }
+sourceSets.main.java { 
+	exclude "paragon/minecraft/${packagename}/generators".toString()
+	exclude '*.DS_Store*'
+}
 
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}".toString()
