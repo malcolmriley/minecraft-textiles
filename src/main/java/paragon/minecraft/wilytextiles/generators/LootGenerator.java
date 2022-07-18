@@ -77,9 +77,16 @@ final class LootGenerator extends LootHelper {
 			for (int count = 1; count <= SoakableBlock.MAX_COUNT; count += 1) {
 				rettedBales.withPool(LootPool.lootPool()
 					.when(this.count(Textiles.BLOCKS.RETTED_FIBERS, count))
+					.when(NO_SILK_TOUCH)
 					.setRolls(UniformGenerator.between(count, count * 1.5F))
 					.setBonusRolls(UniformGenerator.between(1.0F, 2.0F))
 					.add(LootItem.lootTableItem(Textiles.ITEMS.TWINE.get())));
+				rettedBales.withPool(LootPool.lootPool()
+					.when(this.count(Textiles.BLOCKS.RETTED_FIBERS, count))
+					.when(SILK_TOUCH)
+					.setRolls(ConstantValue.exactly(count))
+					.add(LootItem.lootTableItem(Textiles.ITEMS.BLOCK_RETTED_FIBERS.get()))
+					);
 			}
 			this.addLootFor(Textiles.BLOCKS.RETTED_FIBERS, rettedBales);
 
