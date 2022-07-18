@@ -158,6 +158,18 @@ public final class Utilities {
 		public static <T> boolean sameContents(Optional<T> first, Optional<T> second) {
 			return Objects.equals(first.orElse(null), second.orElse(null));
 		}
+		
+		/**
+		 * Returns a {@link Stream} over the non-null references held by the provided {@link RegistryObjects}.
+		 * 
+		 * @param <T> The type held by the provided {@link RegistryObject}
+		 * @param holders - The {@link RegistryObject} holders to use
+		 * @return A stream over the non-null references held by those {@link RegistryObject}.
+		 */
+		@SafeVarargs // Iterate and map
+		public static <T extends IForgeRegistryEntry<T>> Stream<T> streamPresent(RegistryObject<T> ... holders) {
+			return Stream.of(holders).filter(RegistryObject::isPresent).map(RegistryObject::get);
+		}
 
 	}
 
