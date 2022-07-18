@@ -6,7 +6,9 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import paragon.minecraft.wilytextiles.init.CommonInit;
 import paragon.minecraft.wilytextiles.init.ModBlocks;
 import paragon.minecraft.wilytextiles.init.ModConfiguration;
 import paragon.minecraft.wilytextiles.init.ModContainers;
@@ -37,6 +39,9 @@ public class Textiles {
 		Textiles.CONFIG.registerTo(bus);
 		Textiles.TILE_ENTITIES.registerTo(bus);
 		Textiles.CONTAINERS.registerTo(bus);
+		
+		// Miscellaneous setup
+		bus.addListener(Textiles::onCommonSetup);
 	}
 
 	/**
@@ -70,5 +75,13 @@ public class Textiles {
 	 */
 	protected IEventBus getBus() {
 		return FMLJavaModLoadingContext.get().getModEventBus();
+	}
+	
+	/**
+	 * Performs miscellaneous initializations during the {@link FMLCommonSetupEvent}.
+	 * @param event - The event to use
+	 */
+	protected static final void onCommonSetup(FMLCommonSetupEvent event) {
+		event.enqueueWork(CommonInit::addCompostables);
 	}
 }
