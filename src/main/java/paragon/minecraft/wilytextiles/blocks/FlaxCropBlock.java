@@ -39,7 +39,7 @@ public class FlaxCropBlock extends TallCropBlock {
 	
 	@SubscribeEvent
 	public static void onGetBreakSpeed(PlayerEvent.BreakSpeed event) {
-		if (event.getState().is(Textiles.BLOCKS.FLAX_CROP.get()) && event.getPlayer().getMainHandItem().getItem() instanceof ShearsItem) {
+		if (Textiles.BLOCKS.FLAX_CROP.isPresent() && event.getState().is(Textiles.BLOCKS.FLAX_CROP.get()) && event.getPlayer().getMainHandItem().getItem() instanceof ShearsItem) {
 			event.setNewSpeed(event.getNewSpeed() * Textiles.CONFIG.flaxShearsHarvestModifier());
 		}
 	}
