@@ -10,6 +10,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -101,6 +102,17 @@ public abstract class TallCropBlock extends BushBlock implements IPlantable, Bon
 	@Override
 	public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos position, PathComputationType pathType) {
 		return false;
+	}
+
+	@Override
+	public BlockBehaviour.OffsetType getOffsetType() {
+		return BlockBehaviour.OffsetType.XZ;
+	}
+
+	@Override
+	@SuppressWarnings("deprecation") // Return super.getSeed if bottom block
+	public long getSeed(BlockState state, BlockPos position) {
+		return this.isBottomBlock(state) ? super.getSeed(state, position) : Mth.getSeed(position.getX(), position.below().getY(), position.getZ()) ;
 	}
 
 	/* IGrowable Compliance Methods */
